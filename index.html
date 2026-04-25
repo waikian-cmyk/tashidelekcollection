@@ -1959,8 +1959,8 @@
         <div class="grid" id="grid"></div>
     </section>
     <section id="how">
-        <span class="section-eyebrow">Simple · Fast · Personal</span>
-        <h2 class="section-title">How to Order</h2>
+        <span class="section-eyebrow" id="howEyebrow">Simple · Fast · Personal</span>
+        <h2 class="section-title" id="howTitle">How to Order</h2>
         <div class="gold-divider">
             <span>❋</span>
         </div>
@@ -2012,13 +2012,13 @@
                 </svg>
             </div>
             <div class="about-badge">
-                <span class="about-badge-num">15+</span>
-                <span class="about-badge-txt">Years Sourcing</span>
+                <span class="about-badge-num" id="aboutBadgeNumber">15+</span>
+                <span class="about-badge-txt" id="aboutBadgeText">Years Sourcing</span>
             </div>
         </div>
         <div class="about-text">
-            <span class="section-eyebrow">Our Story</span>
-            <h2 class="section-title">
+            <span class="section-eyebrow" id="aboutEyebrow">Our Story</span>
+            <h2 class="section-title" id="aboutTitle">
                 More Than a Shop -
                 <br>
                 A Sacred Practice
@@ -2054,8 +2054,8 @@
         </div>
     </section>
     <section id="reviews">
-        <span class="section-eyebrow">What Customers Say</span>
-        <h2 class="section-title">Trusted by Collectors</h2>
+        <span class="section-eyebrow" id="reviewsEyebrow">What Customers Say</span>
+        <h2 class="section-title" id="reviewsTitle">Trusted by Collectors</h2>
         <div class="gold-divider">
             <span>❋</span>
         </div>
@@ -2099,8 +2099,8 @@
         </div>
     </section>
     <section id="faq">
-        <span class="section-eyebrow" style="text-align:center;display:block">Common Questions</span>
-        <h2 class="section-title" style="text-align:center">Frequently Asked</h2>
+        <span class="section-eyebrow" id="faqEyebrow" style="text-align:center;display:block">Common Questions</span>
+        <h2 class="section-title" id="faqTitle" style="text-align:center">Frequently Asked</h2>
         <div class="gold-divider">
             <span>❋</span>
         </div>
@@ -2146,9 +2146,9 @@
     <section id="contact">
         <div class="contact-inner">
             <div class="contact-info">
-                <span class="section-eyebrow">Reach Out</span>
-                <h2 class="section-title" style="text-align:left">Get in Touch</h2>
-                <p>Have questions about dzi beads, incense, mala or crystals? Send us a message. The website will open WhatsApp with your enquiry prepared.</p>
+                <span class="section-eyebrow" id="contactEyebrow">Reach Out</span>
+                <h2 class="section-title" id="contactTitle" style="text-align:left">Get in Touch</h2>
+                <p id="contactText">Have questions about dzi beads, incense, mala or crystals? Send us a message. The website will open WhatsApp with your enquiry prepared.</p>
                 <div class="contact-channels">
                     <a class="channel wa-channel" id="waContactLink" href="#" target="_blank" rel="noopener">
                         <span class="channel-icon">💬</span>
@@ -2168,14 +2168,14 @@
                         <span class="channel-icon">🕐</span>
                         <div>
                             <div class="channel-label">Response Time</div>
-                            <div class="channel-value">Usually within 2-4 hours</div>
+                            <div class="channel-value" id="responseTimeDisplay">Usually within 2-4 hours</div>
                         </div>
                     </div>
                     <div class="channel">
                         <span class="channel-icon">🌏</span>
                         <div>
                             <div class="channel-label">Based In</div>
-                            <div class="channel-value">Kuala Lumpur, Malaysia</div>
+                            <div class="channel-value" id="locationDisplay">Kuala Lumpur, Malaysia</div>
                         </div>
                     </div>
                 </div>
@@ -2317,7 +2317,7 @@
        - No random colour/pattern icon names
     ========================= */
     const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbxBVPXiNiwnoKBhbx6krvHYil2rme2MWjsZ_1IyNzBquvAJXo6PE_wa1vqIC2A5VMw/exec';
-    const FALLBACK_WHATSAPP = '60165023699';
+    const FALLBACK_WHATSAPP = '60123456789';
 
     let products = [];
     let sel = {};
@@ -2446,23 +2446,85 @@
         }
         return fallback;
     }
+    function variantNameFromAny(value) {
+        if (value === undefined || value === null)
+            return '';
+        if (typeof value !== 'object')
+            return normalizeText(value);
+
+        // Handles old backend objects such as {name:'2 Eyed'}, {label:'2 Eyed'}, {variant:'2 Eyed'}.
+        const direct = value.name || value.label || value.value || value.text || value.title ||
+        value.variant || value.option || value.pattern || value.colour || value.color ||
+        value['Colour / Pattern Variants'] || value['Color / Pattern Variants'];
+
+        if (direct && typeof direct !== 'object')
+            return normalizeText(direct);
+        return '';
+    }
+
     function toVariantObjects(value) {
-        if (!value)
+        if (value === undefined || value === null || value === '')
             return [];
+
+        let rawItems = [];
+
         if (Array.isArray(value)) {
-            return value.map(v => {
-                if (typeof v === 'object' && v !== null)
-                    return {
-                        name: normalizeText(v.name || v.label || v.value || v.variant || v.pattern || v.colour || v.color)
-                    };
-                return {
-                    name: normalizeText(v)
-                };
-            }).filter(v => v.name);
+            rawItems = value;
+        } else if (typeof value === 'object') {
+            // IMPORTANT FIX:
+            // Do not stringify a variants object, because that creates "[object Object]".
+            // Extract the real list from whichever structure the Apps Script returns.
+            const inner = value.variant || value.variants || value.options || value.option ||
+            value.pattern || value.patterns || value.colour || value.colours || value.color || value.colors;
+
+            if (inner !== undefined && inner !== null && inner !== value) {
+                return toVariantObjects(inner);
+            }
+
+            rawItems = Object.values(value);
+        } else {
+            rawItems = splitList(value);
         }
-        return splitList(value).map(v => ({
-            name: v
-        }));
+
+        const seen = new Set();
+        const result = [];
+
+        rawItems.forEach(item => {
+            if (Array.isArray(item)) {
+                toVariantObjects(item).forEach(v => {
+                    const key = v.name.toLowerCase();
+                    if (!seen.has(key)) {
+                        seen.add(key);
+                        result.push(v);
+                    }
+                });
+                return;
+            }
+
+            if (typeof item === 'object' && item !== null && !(item.name || item.label || item.value || item.variant || item.pattern || item.colour || item.color)) {
+                toVariantObjects(item).forEach(v => {
+                    const key = v.name.toLowerCase();
+                    if (!seen.has(key)) {
+                        seen.add(key);
+                        result.push(v);
+                    }
+                });
+                return;
+            }
+
+            const name = variantNameFromAny(item);
+            if (!name)
+                return;
+            const key = name.toLowerCase();
+            if (!seen.has(key)) {
+                seen.add(key);
+                result.push({
+                    name
+                });
+            }
+        });
+
+        return result;
     }
 
     function settingsArrayToObject(rows) {
@@ -2485,8 +2547,10 @@
         const cat = slugify(catRaw);
 
         // IMPORTANT: only ONE variant source. This uses exact text from your Sheet column.
-        // Preferred column name: Colour / Pattern Variants
-        const variantValue = pick(row, [
+        // Preferred column name: Colour / Pattern Variants.
+        // If the backend still returns an old object like variants.pattern / variants.color,
+        // toVariantObjects() extracts the object.name values instead of printing [object Object].
+        let variantValue = pick(row, [
         'Colour / Pattern Variants',
         'Color / Pattern Variants',
         'Colour/Pattern Variants',
@@ -2494,10 +2558,13 @@
         'Colour Pattern Variants',
         'Color Pattern Variants',
         'Variant',
-        'Variants',
-        'variant',
-        'variants'
+        'variant'
         ], '');
+
+        if (!variantValue && row.variants)
+            variantValue = row.variants;
+        if (!variantValue && row.Variants)
+            variantValue = row.Variants;
 
         return {
             id: normalizeText(pick(row, ['id', 'ID', 'sku', 'SKU'], `p-${index + 1}`)),
@@ -2557,12 +2624,13 @@
         showLoading();
         try {
             const separator = SHEET_API_URL.includes('?') ? '&' : '?';
-            const res = await fetch(SHEET_API_URL + separator + 'v=' + Date.now(), {
+            const res = await fetch(SHEET_API_URL + separator + 'action=all&v=' + Date.now(), {
                 cache: 'no-store'
             });
             if (!res.ok)
                 throw new Error(`Sheet returned ${res.status}`);
             const data = await res.json();
+            console.log('Dharma House Sheet API response:', data);
             const normalized = normalizePayload(data);
             products = normalized.length ? normalized : sampleProducts.map(normalizeProduct);
             initSelection();
@@ -2817,6 +2885,44 @@
         window.open(waLink(msg), '_blank');
     }
 
+    function getSettingValue(keys, fallback='') {
+        for (const key of keys) {
+            if (settings[key] !== undefined && settings[key] !== null && String(settings[key]).trim() !== '')
+                return settings[key];
+        }
+        return fallback;
+    }
+    function setTextById(id, value) {
+        const el = document.getElementById(id);
+        if (el && value !== undefined && value !== null && String(value).trim() !== '')
+            el.textContent = String(value).trim();
+    }
+    function setHtmlById(id, value) {
+        const el = document.getElementById(id);
+        if (!el || value === undefined || value === null || String(value).trim() === '')
+            return;
+        const parts = normalizeText(value).split('|').map(escapeHtml);
+        el.innerHTML = parts.length > 1 ? `${parts[0]}<span>${parts.slice(1).join(' ')}</span>` : parts[0];
+    }
+    function aliasSetting(source, target, aliases) {
+        if (source[target])
+            return;
+        for (const key of aliases) {
+            if (source[key] !== undefined && source[key] !== null && String(source[key]).trim() !== '') {
+                source[target] = source[key];
+                return;
+            }
+        }
+    }
+
+    function applyTextToAll(selector, value) {
+        if (value === undefined || value === null || String(value).trim() === '')
+            return;
+        document.querySelectorAll(selector).forEach(el => {
+            el.textContent = value;
+        });
+    }
+
     function applySettings(newSettings) {
         if (!newSettings || typeof newSettings !== 'object')
             return;
@@ -2824,56 +2930,67 @@
         const mapped = {
             ...newSettings
         };
+
+        // Robust aliases for your ⚙️ Settings tab.
+        aliasSetting(mapped, 'shopName', ['shop', 'storeName', 'companyName', 'businessName', 'brandName', 'siteName']);
+        aliasSetting(mapped, 'brandName', ['logoName', 'websiteName']);
+        aliasSetting(mapped, 'brandSub', ['logoSubtitle', 'logoSub', 'subtitle', 'tagline', 'slogan']);
+        aliasSetting(mapped, 'whatsapp', ['whatsappNumber', 'whatsAppNumber', 'whatsappNo', 'phone', 'phoneNumber', 'contactNumber']);
+        aliasSetting(mapped, 'email', ['emailAddress', 'contactEmail']);
+        aliasSetting(mapped, 'location', ['basedIn', 'address', 'businessLocation']);
+        aliasSetting(mapped, 'heroText', ['heroSubtitle', 'heroDescription', 'heroParagraph']);
+        aliasSetting(mapped, 'contactText', ['contactDescription', 'contactParagraph']);
+
         if (mapped.shopName && !mapped.brandName)
             mapped.brandName = '☸ ' + mapped.shopName;
-        if (mapped.siteName && !mapped.brandName)
-            mapped.brandName = '☸ ' + mapped.siteName;
-        if (mapped.businessName && !mapped.brandName)
-            mapped.brandName = '☸ ' + mapped.businessName;
-        if (mapped.logoSub && !mapped.brandSub)
-            mapped.brandSub = mapped.logoSub;
-        if (mapped.subtitle && !mapped.brandSub)
-            mapped.brandSub = mapped.subtitle;
-        if (mapped.whatsappNumber && !mapped.whatsapp)
-            mapped.whatsapp = mapped.whatsappNumber;
-        if (mapped.phone && !mapped.whatsapp)
-            mapped.whatsapp = mapped.phone;
-        if (mapped.heroSubtitle && !mapped.heroText)
-            mapped.heroText = mapped.heroSubtitle;
-        if (mapped.heroDescription && !mapped.heroText)
-            mapped.heroText = mapped.heroDescription;
+        if (mapped.brandName && !String(mapped.brandName).includes('☸'))
+            mapped.brandName = '☸ ' + mapped.brandName;
 
         settings = {
             ...settings,
             ...mapped
         };
 
-        const logo = document.getElementById('brandLogo');
-        const sub = document.getElementById('brandSub');
-        if (logo && mapped.brandName)
-            logo.textContent = mapped.brandName;
-        if (sub && mapped.brandSub)
-            sub.textContent = mapped.brandSub;
+        setTextById('brandLogo', getSettingValue(['brandName'], '☸ Dharma House'));
+        setTextById('brandSub', getSettingValue(['brandSub'], 'Sacred Beads · Crystals · Mala'));
 
-        const heroEyebrow = document.getElementById('heroEyebrow');
-        const heroTitle = document.getElementById('heroTitle');
-        const heroText = document.getElementById('heroText');
-        if (heroEyebrow && mapped.heroEyebrow)
-            heroEyebrow.textContent = mapped.heroEyebrow;
-        if (heroTitle && mapped.heroTitle) {
-            const parts = normalizeText(mapped.heroTitle).split('|').map(escapeHtml);
-            heroTitle.innerHTML = parts.length > 1 ? `${parts[0]}<span>${parts.slice(1).join(' ')}</span>` : parts[0];
-        }
-        if (heroText && mapped.heroText)
-            heroText.textContent = mapped.heroText;
+        // Also update footer/duplicate logos that may not have IDs.
+        applyTextToAll('.footer-brand .logo', getSettingValue(['brandName'], '☸ Dharma House'));
+        applyTextToAll('.footer-brand .logo-sub', getSettingValue(['brandSub'], 'Sacred Beads · Crystals · Mala'));
 
-        const email = document.getElementById('emailDisplay');
-        if (email && mapped.email)
-            email.textContent = mapped.email;
+        setTextById('heroEyebrow', getSettingValue(['heroEyebrow']));
+        setHtmlById('heroTitle', getSettingValue(['heroTitle']));
+        setTextById('heroText', getSettingValue(['heroText']));
+
+        setTextById('howEyebrow', getSettingValue(['howEyebrow']));
+        setTextById('howTitle', getSettingValue(['howTitle']));
+
+        setTextById('aboutEyebrow', getSettingValue(['aboutEyebrow']));
+        setHtmlById('aboutTitle', getSettingValue(['aboutTitle']));
+        setTextById('aboutBadgeNumber', getSettingValue(['aboutBadgeNumber', 'yearsSourcing']));
+        setTextById('aboutBadgeText', getSettingValue(['aboutBadgeText']));
+
+        const aboutPs = document.querySelectorAll('#about .about-text > p');
+        ['aboutParagraph1', 'aboutParagraph2', 'aboutParagraph3'].forEach((key, idx) => {
+            if (aboutPs[idx] && settings[key])
+                aboutPs[idx].textContent = settings[key];
+        });
+
+        setTextById('reviewsEyebrow', getSettingValue(['reviewsEyebrow', 'testimonialEyebrow']));
+        setTextById('reviewsTitle', getSettingValue(['reviewsTitle', 'testimonialTitle']));
+        setTextById('faqEyebrow', getSettingValue(['faqEyebrow']));
+        setTextById('faqTitle', getSettingValue(['faqTitle']));
+
+        setTextById('contactEyebrow', getSettingValue(['contactEyebrow']));
+        setTextById('contactTitle', getSettingValue(['contactTitle']));
+        setTextById('contactText', getSettingValue(['contactText']));
+        setTextById('emailDisplay', getSettingValue(['email', 'emailAddress']));
+        setTextById('locationDisplay', getSettingValue(['location', 'basedIn']));
+        setTextById('responseTimeDisplay', getSettingValue(['responseTime']));
 
         const waDisplay = document.getElementById('waDisplayNumber');
         if (waDisplay)
-            waDisplay.textContent = mapped.whatsappDisplay || ('+' + cleanWhatsappNumber(settings.whatsapp));
+            waDisplay.textContent = settings.whatsappDisplay || ('+' + cleanWhatsappNumber(settings.whatsapp));
 
         initWaLinks();
     }
