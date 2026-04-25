@@ -1075,8 +1075,8 @@ function renderCard(product) {
       <div class="card-name">${product.name}</div>
       <div class="card-subtitle">${product.sub}</div>
       ${renderVariants(product)}
-      <div class="price-row">
-        <div><span class="price">$${product.price.toLocaleString()}</span>${product.originalPrice?`<span class="price-old">$${product.originalPrice}</span>`:''}</div>
+      //<div class="price-row">
+        //<div><span class="price">$${product.price.toLocaleString()}</span>${product.originalPrice?`<span class="price-old">$${product.originalPrice}</span>`:''}</div>
         <button class="wa-card-btn" onclick="orderViaWa(event,${product.id})">💬 Order</button>
       </div>
     </div>
@@ -1179,7 +1179,7 @@ function openModal(productId) {
     <p class="modal-desc">${p.desc}</p>
     <div class="variant-block"><div class="var-label">${hasP?'Pattern':'Colour'} <em id="m-vl">${s.variant}</em></div><div class="${hasP?'pattern-swatches':'color-swatches'}" id="m-vs">${sw}</div></div>
     <div class="variant-block" style="margin-top:0.9rem"><div class="var-label">Size <em id="m-sl">${s.size||'—'}</em></div><div class="size-row" id="m-sr">${sz}</div></div>
-    <div class="modal-price-row"><span class="modal-price">$${p.price.toLocaleString()}</span>${p.originalPrice?`<span class="modal-price-old">$${p.originalPrice}</span>`:''}</div>
+   // <div class="modal-price-row"><span class="modal-price">$${p.price.toLocaleString()}</span>${p.originalPrice?`<span class="modal-price-old">$${p.originalPrice}</span>`:''}</div>
     <button class="modal-wa-btn" onclick="orderViaWa(null,${p.id},true)">💬 Order via WhatsApp</button>
     <p class="modal-note">We'll confirm availability & send you real photos</p>`;
   document.getElementById('modalBg').classList.add('open');
