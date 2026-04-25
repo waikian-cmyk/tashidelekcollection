@@ -2313,7 +2313,7 @@
        CLEAN SINGLE JAVASCRIPT BLOCK
        Keep this as the only script block for page logic.
     ========================= */
-    const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbz-Y2nxxh2LEHu5fcy3z61Qk-m36u7kKCp8zrUgU4XrGgNArVNAzhr_qGO7jjBwXD_O/exec';
+    const SHEET_API_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
     const FALLBACK_WHATSAPP = '60123456789';
 
     let products = [];
@@ -2477,58 +2477,28 @@
     function safeId(value) {
         return normalizeText(value).replace(/[^a-zA-Z0-9_-]/g, '_');
     }
-    function toVariantObjects(value, kind='pattern') {
+    function toVariantObjects(value) {
         if (!value)
             return [];
         if (Array.isArray(value)) {
             return value.map(v => {
-                if (typeof v === 'object' && v !== null) {
+                if (typeof v === 'object' && v !== null)
                     return {
-                        name: normalizeText(v.name || v.label || v.value),
-                        hex: normalizeText(v.hex || v.color || v.colour, '#7A5820'),
-                        sym: normalizeText(v.sym || v.symbol || v.name || v.label || v.value)
+                        name: normalizeText(v.name || v.label || v.value || v.variant || v.pattern || v.colour || v.color)
                     };
-                }
                 return {
-                    name: normalizeText(v),
-                    hex: '#7A5820',
-                    sym: normalizeText(v)
+                    name: normalizeText(v)
                 };
             }).filter(v => v.name);
         }
         return splitList(value).map(v => ({
-            name: v,
-            hex: kind === 'color' ? guessColor(v) : '#7A5820',
-            sym: v
+            name: v
         }));
-    }
-    function guessColor(name) {
-        const n = normalizeText(name).toLowerCase();
-        if (n.includes('black'))
-            return '#111111';
-        if (n.includes('white'))
-            return '#e8e1d1';
-        if (n.includes('red'))
-            return '#8B2E22';
-        if (n.includes('green'))
-            return '#3C6B3C';
-        if (n.includes('blue'))
-            return '#315B8A';
-        if (n.includes('purple'))
-            return '#6F4E8C';
-        if (n.includes('gold'))
-            return '#C9963A';
-        if (n.includes('brown'))
-            return '#7B4B2A';
-        return '#7A5820';
     }
 
     function normalizeProduct(row, index) {
         const rawVariants = row.variants || {};
-        const patternValue = rawVariants.pattern || row.patterns || row.pattern || row['Pattern'] || row['Colour / Pattern Variants'] || row['Color / Pattern Variants'];
-        const colorValue = rawVariants.color || rawVariants.colour || row.colors || row.colours || row.color || row.colour || row['Colour'] || row['Color'];
-        const sizeValue = rawVariants.size || row.sizes || row.size || row['Size'] || row['Size Variants'];
-        const unavailValue = rawVariants.unavail || rawVariants.unavailable || row.unavailable || row['Unavailable Sizes'];
+        const variantValue = rawVariants.variant || rawVariants.options || rawVariants.option || rawVariants.pattern || rawVariants.colour || rawVariants.color || row['Colour / Pattern Variants'] || row['Color / Pattern Variants'] || row['Pattern'] || row.patterns || row.pattern || row['Colour'] || row['Color'] || row.colours || row.colors || row.colour || row.color || row['Variant'] || row.variants;
         const cat = slugify(row.cat || row.category || row.Category || 'uncategorized');
 
         return {
@@ -2546,10 +2516,11 @@
             artAccent: normalizeText(row.artAccent || '#C9963A'),
             stockNote: normalizeText(row.stockNote || row.stock || ''),
             variants: {
-                pattern: toVariantObjects(patternValue, 'pattern'),
-                color: toVariantObjects(colorValue, 'color'),
-                size: splitList(sizeValue).length ? splitList(sizeValue) : ['Standard'],
-                unavail: splitList(unavailValue)
+                options: toVariantObjects(variantValue),
+                pattern: [],
+                color: [],
+                size: [],
+                unavail: []
             }
         };
     }
@@ -2568,14 +2539,11 @@
     function initSelection() {
         sel = {};
         products.forEach(p => {
-            const firstPattern = p.variants.pattern[0]?.name;
-            const firstColor = p.variants.color[0]?.name;
-            const firstSize = p.variants.size.find(s => !p.variants.unavail.includes(s)) || p.variants.size[0] || '';
+            const firstVariant = (p.variants.options || [])[0]?.name || '';
             sel[p.id] = {
-                variant: firstPattern || firstColor || '',
-                variantType: firstPattern ? 'pattern' : 'color',
-                size: firstSize
+                variant: firstVariant
             };
+
         });
     }
 
@@ -2646,8 +2614,7 @@
             variant: '',
             size: ''
         };
-        const hasPattern = p.variants.pattern.length > 0;
-        const variantItems = hasPattern ? p.variants.pattern : p.variants.color;
+        const variantItems = p.variants.options || [];
         return `<article class="card">
             <div class="card-image" onclick="openModal('${escapeHtml(p.id)}')">
               ${p.badgeText ? `<div class="card-badge badge-${escapeHtml(p.badge || 'gold')}">${escapeHtml(p.badgeText)}</div>` : ''}
@@ -2658,21 +2625,16 @@
               <div class="card-category">${escapeHtml(p.catLabel)}</div>
               <div class="card-name">${escapeHtml(p.name)}</div>
               <div class="card-subtitle">${escapeHtml(p.sub)}</div>
-              ${variantItems.length ? renderVariantBlock(p, hasPattern ? 'pattern' : 'color') : ''}
-              ${renderSizeBlock(p)}
+              ${variantItems.length ? renderVariantBlock(p) : ''}
               <div class="price-row"><span class="enquire-label">Enquire for price</span><button class="wa-card-btn" type="button" onclick="addToCart(event,'${escapeHtml(p.id)}')">🛍 Add</button></div>
             </div>
           </article>`;
     }
-    function renderVariantBlock(p, type) {
+    function renderVariantBlock(p) {
         const s = sel[p.id] || {};
-        const items = type === 'pattern' ? p.variants.pattern : p.variants.color;
-        const label = type === 'pattern' ? 'Pattern' : 'Colour';
-        const buttons = items.map(item => type === 'pattern'
-        ? `<button class="pattern-pill ${s.variant === item.name ? 'active' : ''}" title="${escapeHtml(item.name)}" onclick="selectVariant(event,'${escapeHtml(p.id)}','${escapeHtml(item.name)}','pattern')">${escapeHtml(item.name)}</button>`
-        : `<button class="cswatch ${s.variant === item.name ? 'active' : ''}" title="${escapeHtml(item.name)}" aria-label="${escapeHtml(item.name)}" style="background:${escapeHtml(item.hex || guessColor(item.name))}" onclick="selectVariant(event,'${escapeHtml(p.id)}','${escapeHtml(item.name)}','color')"></button>`
-        ).join('');
-        return `<div class="variant-block"><div class="var-label">${label} <em id="vl-${safeId(p.id)}">${escapeHtml(s.variant || '—')}</em></div><div class="${type === 'pattern' ? 'pattern-swatches' : 'color-swatches'}">${buttons}</div></div>`;
+        const items = p.variants.options || [];
+        const buttons = items.map(item => `<button class="pattern-pill ${s.variant === item.name ? 'active' : ''}" title="${escapeHtml(item.name)}" onclick="selectVariant(event,'${escapeHtml(p.id)}','${escapeHtml(item.name)}')">${escapeHtml(item.name)}</button>`).join('');
+        return `<div class="variant-block"><div class="var-label">Variant</div><div class="pattern-swatches">${buttons}</div></div>`;
     }
     function renderSizeBlock(p) {
         const s = sel[p.id] || {};
@@ -2683,7 +2645,7 @@
             const unavailable = p.variants.unavail.includes(size);
             return `<button class="spill ${s.size === size ? 'active' : ''} ${unavailable ? 'unavail' : ''}" ${unavailable ? 'disabled' : ''} onclick="selectSize(event,'${escapeHtml(p.id)}','${escapeHtml(size)}')">${escapeHtml(size)}</button>`;
         }).join('');
-        return `<div class="variant-block"><div class="var-label">Size <em id="sl-${safeId(p.id)}">${escapeHtml(s.size || '—')}</em></div><div class="size-row">${buttons}</div></div>`;
+        return `<div class="variant-block"><div class="var-label">Variant</div><div class="size-row">${buttons}</div></div>`;
     }
 
     function renderArt(p, variantName='') {
@@ -2704,13 +2666,12 @@
         return `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;background:${escapeHtml(bg)}"><div style="text-align:center;color:${escapeHtml(accent)}"><div style="font-size:4rem;line-height:1;margin-bottom:.8rem">${icon}</div><div style="font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;opacity:.75">${label}</div></div><div class="no-image-hint">Add image URL in Sheet</div></div>`;
     }
 
-    function selectVariant(event, productId, name, type) {
+    function selectVariant(event, productId, name) {
         if (event)
             event.stopPropagation();
         if (!sel[productId])
             sel[productId] = {};
         sel[productId].variant = name;
-        sel[productId].variantType = type;
         renderGrid();
     }
     function selectSize(event, productId, size) {
@@ -2731,19 +2692,14 @@
             size: ''
         };
         document.getElementById('modalArt').innerHTML = `<button class="modal-close" onclick="closeModal()">✕</button><div style="width:100%;height:100%;min-height:340px">${renderArt(p, s.variant)}</div>`;
-        document.getElementById('modalInfo').innerHTML = `<div class="modal-cat">${escapeHtml(p.catLabel)}</div><div class="modal-name">${escapeHtml(p.name)}</div><div class="modal-sub">${escapeHtml(p.sub)}</div><p class="modal-desc">${escapeHtml(p.desc)}</p>${(p.variants.pattern.length || p.variants.color.length) ? renderModalVariantBlock(p) : ''}${renderModalSizeBlock(p)}<div class="modal-price-row"><span class="modal-enquire">Enquire for price</span></div><button class="modal-wa-btn" onclick="addToCart(null,'${escapeHtml(p.id)}'); closeModal(); openCart();">🛍 Add to Enquiry Bag</button><button class="modal-wa-btn" style="margin-top:.7rem;background:var(--gold-dim)" onclick="orderViaWa(null,'${escapeHtml(p.id)}',true)">💬 Enquire This Item</button><p class="modal-note">We confirm current price and availability through WhatsApp</p>`;
+        document.getElementById('modalInfo').innerHTML = `<div class="modal-cat">${escapeHtml(p.catLabel)}</div><div class="modal-name">${escapeHtml(p.name)}</div><div class="modal-sub">${escapeHtml(p.sub)}</div><p class="modal-desc">${escapeHtml(p.desc)}</p>${(p.variants.options || []).length ? renderModalVariantBlock(p) : ''}<div class="modal-price-row"><span class="modal-enquire">Enquire for price</span></div><button class="modal-wa-btn" onclick="addToCart(null,'${escapeHtml(p.id)}'); closeModal(); openCart();">🛍 Add to Enquiry Bag</button><button class="modal-wa-btn" style="margin-top:.7rem;background:var(--gold-dim)" onclick="orderViaWa(null,'${escapeHtml(p.id)}',true)">💬 Enquire This Item</button><p class="modal-note">We confirm current price and availability through WhatsApp</p>`;
         document.getElementById('modalBg').classList.add('open');
     }
     function renderModalVariantBlock(p) {
-        const type = p.variants.pattern.length ? 'pattern' : 'color';
-        const items = type === 'pattern' ? p.variants.pattern : p.variants.color;
+        const items = p.variants.options || [];
         const s = sel[p.id] || {};
-        const label = type === 'pattern' ? 'Pattern' : 'Colour';
-        const buttons = items.map(item => type === 'pattern'
-        ? `<button class="pattern-pill ${s.variant === item.name ? 'active' : ''}" onclick="mSelectV('${escapeHtml(p.id)}','${escapeHtml(item.name)}','pattern')">${escapeHtml(item.name)}</button>`
-        : `<button class="cswatch ${s.variant === item.name ? 'active' : ''}" title="${escapeHtml(item.name)}" style="background:${escapeHtml(item.hex || guessColor(item.name))}" onclick="mSelectV('${escapeHtml(p.id)}','${escapeHtml(item.name)}','color')"></button>`
-        ).join('');
-        return `<div class="variant-block"><div class="var-label">${label} <em id="m-vl">${escapeHtml(s.variant || '—')}</em></div><div class="${type === 'pattern' ? 'pattern-swatches' : 'color-swatches'}" id="m-vs">${buttons}</div></div>`;
+        const buttons = items.map(item => `<button class="pattern-pill ${s.variant === item.name ? 'active' : ''}" onclick="mSelectV('${escapeHtml(p.id)}','${escapeHtml(item.name)}')">${escapeHtml(item.name)}</button>`).join('');
+        return `<div class="variant-block"><div class="var-label">Variant</div><div class="pattern-swatches" id="m-vs">${buttons}</div></div>`;
     }
     function renderModalSizeBlock(p) {
         const s = sel[p.id] || {};
@@ -2751,13 +2707,12 @@
             const unavailable = p.variants.unavail.includes(size);
             return `<button class="spill ${s.size === size ? 'active' : ''} ${unavailable ? 'unavail' : ''}" ${unavailable ? 'disabled' : ''} onclick="mSelectS('${escapeHtml(p.id)}','${escapeHtml(size)}')">${escapeHtml(size)}</button>`;
         }).join('');
-        return `<div class="variant-block"><div class="var-label">Size <em id="m-sl">${escapeHtml(s.size || '—')}</em></div><div class="size-row" id="m-sr">${buttons}</div></div>`;
+        return `<div class="variant-block"><div class="var-label">Variant</div><div class="size-row" id="m-sr">${buttons}</div></div>`;
     }
-    function mSelectV(productId, name, type) {
+    function mSelectV(productId, name) {
         if (!sel[productId])
             sel[productId] = {};
         sel[productId].variant = name;
-        sel[productId].variantType = type;
         openModal(productId);
         renderGrid();
     }
@@ -2777,7 +2732,7 @@
     }
 
     function cartKey(item) {
-        return `${item.id}|${item.variant}|${item.size}`;
+        return `${item.id}|${item.variant}`;
     }
     function addToCart(event, productId) {
         if (event)
@@ -2786,19 +2741,13 @@
         if (!p)
             return;
         const s = sel[p.id] || {};
-        if (p.variants.size.length && !s.size) {
-            showToast('Please select a size first');
-            return;
-        }
         const item = {
             id: p.id,
             name: p.name,
             catLabel: p.catLabel,
             sub: p.sub,
             imageUrl: p.imageUrl,
-            variant: s.variant || '',
-            variantType: s.variantType || '',
-            size: s.size || ''
+            variant: s.variant || ''
         };
         if (!cart.some(x => cartKey(x) === cartKey(item)))
             cart.push(item);
@@ -2825,7 +2774,7 @@
             body.innerHTML = `<div class="cart-empty"><div class="cart-empty-icon">🪬</div><p>Your bag is empty</p><p style="margin-top:.5rem;font-style:italic;font-size:.8rem;color:var(--ash)">Add items to enquire about multiple pieces at once</p></div>`;
             return;
         }
-        body.innerHTML = cart.map((item, i) => `<div class="cart-item"><div class="cart-item-thumb">${item.imageUrl ? `<img src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(item.name)}">` : '🪬'}</div><div class="cart-item-info"><div class="cart-item-name">${escapeHtml(item.name)}</div><div class="cart-item-meta">${escapeHtml(item.catLabel)}${item.variant ? `<br>${escapeHtml(item.variantType || 'Variant')}: ${escapeHtml(item.variant)}` : ''}${item.size ? `<br>Size: ${escapeHtml(item.size)}` : ''}</div></div><button class="cart-item-remove" onclick="removeCartItem(${i})">✕</button></div>`).join('');
+        body.innerHTML = cart.map((item, i) => `<div class="cart-item"><div class="cart-item-thumb">${item.imageUrl ? `<img src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(item.name)}">` : '🪬'}</div><div class="cart-item-info"><div class="cart-item-name">${escapeHtml(item.name)}</div><div class="cart-item-meta">${escapeHtml(item.catLabel)}${item.variant ? `<br>Variant: ${escapeHtml(item.variant)}` : ''}</div></div><button class="cart-item-remove" onclick="removeCartItem(${i})">✕</button></div>`).join('');
     }
     function openCart() {
         document.getElementById('cartOverlay').classList.add('open');
@@ -2861,7 +2810,7 @@
     }
     function selectedProductMessage(p) {
         const s = sel[p.id] || {};
-        return `Hi, I want to enquire about this item:\n\nProduct: ${p.name}\nCategory: ${p.catLabel}${s.variant ? `\nVariant: ${s.variant}` : ''}${s.size ? `\nSize: ${s.size}` : ''}\n\nPlease confirm current price and availability. Thank you.`;
+        return `Hi, I want to enquire about this item:\n\nProduct: ${p.name}\nCategory: ${p.catLabel}${s.variant ? `\nVariant: ${s.variant}` : ''}\n\nPlease confirm current price and availability. Thank you.`;
     }
     function orderViaWa(event, productId, fromModal=false) {
         if (event)
@@ -2882,8 +2831,6 @@
             msg += `Category: ${item.catLabel}\n`;
             if (item.variant)
                 msg += `Variant: ${item.variant}\n`;
-            if (item.size)
-                msg += `Size: ${item.size}\n`;
             msg += '\n';
         });
         msg += 'Please confirm current price, availability and payment details. Thank you.';
