@@ -2327,7 +2327,6 @@
         brandName: '☸ Dharma House',
         brandSub: 'Sacred Beads · Crystals · Mala',
         whatsapp: FALLBACK_WHATSAPP,
-        whatsappDisplay: '+60 12-345 6789',
         email: 'hello@dharmahouse.com',
         location: 'Kuala Lumpur, Malaysia'
     };
@@ -2832,12 +2831,14 @@
             if (el)
                 el.href = base;
         });
+
         const display = document.getElementById('waDisplayNumber');
         if (display)
-            display.textContent = settings.whatsappDisplay || ('+' + cleanWhatsappNumber(settings.whatsapp));
+            display.textContent = formatWhatsappDisplay(getSettingValue(['whatsappDisplay', 'whatsappNumber', 'whatsapp', 'phoneNumber', 'phone', 'contactNumber'], FALLBACK_WHATSAPP));
+
         const email = document.getElementById('emailDisplay');
         if (email)
-            email.textContent = settings.email || 'hello@dharmahouse.com';
+            email.textContent = getSettingValue(['emailAddress', 'email', 'contactEmail'], 'hello@dharmahouse.com');
     }
     function selectedProductMessage(p) {
         const s = sel[p.id] || {};
@@ -2931,69 +2932,108 @@
             ...newSettings
         };
 
-        // Robust aliases for your ⚙️ Settings tab.
+        // Exact keys created by your Apps Script:
+        // Shop Name -> shopName, Tagline -> tagline, Email Address -> emailAddress,
+        // WhatsApp Number -> whatsappNumber, Website Title -> websiteTitle, etc.
         aliasSetting(mapped, 'shopName', ['shop', 'storeName', 'companyName', 'businessName', 'brandName', 'siteName']);
-        aliasSetting(mapped, 'brandName', ['logoName', 'websiteName']);
-        aliasSetting(mapped, 'brandSub', ['logoSubtitle', 'logoSub', 'subtitle', 'tagline', 'slogan']);
-        aliasSetting(mapped, 'whatsapp', ['whatsappNumber', 'whatsAppNumber', 'whatsappNo', 'phone', 'phoneNumber', 'contactNumber']);
-        aliasSetting(mapped, 'email', ['emailAddress', 'contactEmail']);
+        aliasSetting(mapped, 'brandSub', ['tagline', 'logoSubtitle', 'logoSub', 'subtitle', 'slogan']);
+        aliasSetting(mapped, 'whatsapp', ['whatsappNumber', 'whatsAppNumber', 'whatsappNo', 'phoneNumber', 'phone', 'contactNumber']);
+        aliasSetting(mapped, 'email', ['emailAddress', 'contactEmail', 'businessEmail']);
         aliasSetting(mapped, 'location', ['basedIn', 'address', 'businessLocation']);
         aliasSetting(mapped, 'heroText', ['heroSubtitle', 'heroDescription', 'heroParagraph']);
         aliasSetting(mapped, 'contactText', ['contactDescription', 'contactParagraph']);
 
-        if (mapped.shopName && !mapped.brandName)
-            mapped.brandName = '☸ ' + mapped.shopName;
-        if (mapped.brandName && !String(mapped.brandName).includes('☸'))
+        // Do not keep the old hard-coded +60 12-345 6789 display.
+        // If the Sheet has WhatsApp Display, use it. Otherwise display the real WhatsApp Number.
+        if (!mapped.whatsappDisplay && mapped.whatsapp) {
+            mapped.whatsappDisplay = formatWhatsappDisplay(mapped.whatsapp);
+        }
+
+        if (mapped.shopName) {
+            mapped.brandName = String(mapped.shopName).includes('☸') ? String(mapped.shopName) : '☸ ' + mapped.shopName;
+        } else if (mapped.brandName && !String(mapped.brandName).includes('☸')) {
             mapped.brandName = '☸ ' + mapped.brandName;
+        }
 
         settings = {
             ...settings,
             ...mapped
         };
 
+        // Browser/SEO settings
+        if (settings.websiteTitle)
+            document.title = settings.websiteTitle;
+        const metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc && settings.metaDescription)
+            metaDesc.setAttribute('content', settings.metaDescription);
+
+        // Header + footer brand
         setTextById('brandLogo', getSettingValue(['brandName'], '☸ Dharma House'));
-        setTextById('brandSub', getSettingValue(['brandSub'], 'Sacred Beads · Crystals · Mala'));
-
-        // Also update footer/duplicate logos that may not have IDs.
+        setTextById('brandSub', getSettingValue(['brandSub', 'tagline'], 'Sacred Beads · Crystals · Mala'));
         applyTextToAll('.footer-brand .logo', getSettingValue(['brandName'], '☸ Dharma House'));
-        applyTextToAll('.footer-brand .logo-sub', getSettingValue(['brandSub'], 'Sacred Beads · Crystals · Mala'));
+        applyTextToAll('.footer-brand .logo-sub', getSettingValue(['brandSub', 'tagline'], 'Sacred Beads · Crystals · Mala'));
 
+        // Hero section
         setTextById('heroEyebrow', getSettingValue(['heroEyebrow']));
         setHtmlById('heroTitle', getSettingValue(['heroTitle']));
-        setTextById('heroText', getSettingValue(['heroText']));
+        setTextById('heroText', getSettingValue(['heroText', 'heroSubtitle']));
 
+        // How section
         setTextById('howEyebrow', getSettingValue(['howEyebrow']));
         setTextById('howTitle', getSettingValue(['howTitle']));
 
+        // About section
         setTextById('aboutEyebrow', getSettingValue(['aboutEyebrow']));
         setHtmlById('aboutTitle', getSettingValue(['aboutTitle']));
         setTextById('aboutBadgeNumber', getSettingValue(['aboutBadgeNumber', 'yearsSourcing']));
         setTextById('aboutBadgeText', getSettingValue(['aboutBadgeText']));
 
         const aboutPs = document.querySelectorAll('#about .about-text > p');
-        ['aboutParagraph1', 'aboutParagraph2', 'aboutParagraph3'].forEach((key, idx) => {
-            if (aboutPs[idx] && settings[key])
-                aboutPs[idx].textContent = settings[key];
+        const aboutKeys = [
+        ['aboutParagraph1', 'aboutText1', 'aboutText'],
+        ['aboutParagraph2', 'aboutText2'],
+        ['aboutParagraph3', 'aboutText3']
+        ];
+        aboutKeys.forEach((keys, idx) => {
+            const value = getSettingValue(keys);
+            if (aboutPs[idx] && value)
+                aboutPs[idx].textContent = value;
         });
 
+        // Reviews + FAQ headings
         setTextById('reviewsEyebrow', getSettingValue(['reviewsEyebrow', 'testimonialEyebrow']));
         setTextById('reviewsTitle', getSettingValue(['reviewsTitle', 'testimonialTitle']));
         setTextById('faqEyebrow', getSettingValue(['faqEyebrow']));
         setTextById('faqTitle', getSettingValue(['faqTitle']));
 
+        // Contact section
         setTextById('contactEyebrow', getSettingValue(['contactEyebrow']));
         setTextById('contactTitle', getSettingValue(['contactTitle']));
         setTextById('contactText', getSettingValue(['contactText']));
-        setTextById('emailDisplay', getSettingValue(['email', 'emailAddress']));
-        setTextById('locationDisplay', getSettingValue(['location', 'basedIn']));
-        setTextById('responseTimeDisplay', getSettingValue(['responseTime']));
+        setTextById('emailDisplay', getSettingValue(['email', 'emailAddress'], 'hello@dharmahouse.com'));
+        setTextById('locationDisplay', getSettingValue(['location', 'basedIn', 'address'], 'Kuala Lumpur, Malaysia'));
+        setTextById('responseTimeDisplay', getSettingValue(['responseTime', 'replyTime'], 'Usually within 2-4 hours'));
 
-        const waDisplay = document.getElementById('waDisplayNumber');
-        if (waDisplay)
-            waDisplay.textContent = settings.whatsappDisplay || ('+' + cleanWhatsappNumber(settings.whatsapp));
+        // Footer email link
+        document.querySelectorAll('a[href^="mailto:"]').forEach(a => {
+            const email = getSettingValue(['email', 'emailAddress'], 'hello@dharmahouse.com');
+            a.href = 'mailto:' + email;
+        });
 
+        // WhatsApp links + displayed number
         initWaLinks();
     }
+
+    function formatWhatsappDisplay(value) {
+        const raw = normalizeText(value);
+        if (!raw)
+            return '+' + cleanWhatsappNumber(FALLBACK_WHATSAPP);
+        if (raw.includes('+') || raw.includes('-') || raw.includes(' '))
+            return raw;
+        const digits = cleanWhatsappNumber(raw);
+        return digits ? '+' + digits : raw;
+    }
+
     function applyTestimonials(items) {
         if (!Array.isArray(items) || !items.length)
             return;
