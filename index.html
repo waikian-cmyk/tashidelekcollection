@@ -2316,8 +2316,8 @@
        - Shows only ONE text-based Variant section
        - No random colour/pattern icon names
     ========================= */
-    const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbwQqrKhwdJ087E3naz3CcWZD_Ru8bN6cRAvZ9kVGJ4nXsWExo4LJvbNb2YCDgdWNodh/exec';
-    const FALLBACK_WHATSAPP = '60123456789';
+    const SHEET_API_URL = 'PASTE_YOUR_CORRECT_APPS_SCRIPT_WEB_APP_URL_HERE';
+    const FALLBACK_WHATSAPP = '60165023699';
 
     let products = [];
     let sel = {};
@@ -2821,11 +2821,13 @@
         return normalizeText(value || FALLBACK_WHATSAPP).replace(/[^0-9]/g, '');
     }
     function waLink(message='') {
-        const number = cleanWhatsappNumber(settings.whatsapp);
+        const number = cleanWhatsappNumber(getSettingValue(['whatsapp', 'whatsappNumber', 'phoneNumber', 'phone', 'contactNumber'], FALLBACK_WHATSAPP));
         return `https://wa.me/${number}${message ? `?text=${encodeURIComponent(message)}` : ''}`;
     }
     function initWaLinks() {
-        const base = waLink('Hello, I would like to enquire about your products.');
+        const greeting = getSettingValue(['defaultGreeting', 'whatsappGreeting', 'greeting'], 'Hello, I would like to enquire about your products.');
+        const base = waLink(greeting);
+
         ['waHeaderBtn', 'waFloat', 'waContactLink'].forEach(id => {
             const el = document.getElementById(id);
             if (el)
@@ -2833,12 +2835,18 @@
         });
 
         const display = document.getElementById('waDisplayNumber');
-        if (display)
-            display.textContent = formatWhatsappDisplay(getSettingValue(['whatsappDisplay', 'whatsappNumber', 'whatsapp', 'phoneNumber', 'phone', 'contactNumber'], FALLBACK_WHATSAPP));
+        if (display) {
+            // Show exactly what your Sheet says in WhatsApp Display.
+            // If blank, show WhatsApp Number exactly. No forced + sign.
+            display.textContent = getSettingValue(
+            ['whatsappDisplay', 'whatsappNumber', 'whatsapp', 'phoneNumber', 'phone', 'contactNumber'],
+            FALLBACK_WHATSAPP
+            );
+        }
 
         const email = document.getElementById('emailDisplay');
         if (email)
-            email.textContent = getSettingValue(['emailAddress', 'email', 'contactEmail'], 'hello@dharmahouse.com');
+            email.textContent = getSettingValue(['email', 'emailAddress', 'contactEmail', 'businessEmail'], 'hello@dharmahouse.com');
     }
     function selectedProductMessage(p) {
         const s = sel[p.id] || {};
@@ -2932,60 +2940,94 @@
             ...newSettings
         };
 
-        // Exact keys created by your Apps Script:
-        // Shop Name -> shopName, Tagline -> tagline, Email Address -> emailAddress,
-        // WhatsApp Number -> whatsappNumber, Website Title -> websiteTitle, etc.
+        // Keys returned by your Apps Script are camelCase.
+        // Example: "WhatsApp Number" => whatsappNumber, "Email Address" => emailAddress.
         aliasSetting(mapped, 'shopName', ['shop', 'storeName', 'companyName', 'businessName', 'brandName', 'siteName']);
         aliasSetting(mapped, 'brandSub', ['tagline', 'logoSubtitle', 'logoSub', 'subtitle', 'slogan']);
         aliasSetting(mapped, 'whatsapp', ['whatsappNumber', 'whatsAppNumber', 'whatsappNo', 'phoneNumber', 'phone', 'contactNumber']);
         aliasSetting(mapped, 'email', ['emailAddress', 'contactEmail', 'businessEmail']);
         aliasSetting(mapped, 'location', ['basedIn', 'address', 'businessLocation']);
+        aliasSetting(mapped, 'responseTime', ['orderHours', 'replyTime', 'businessHours']);
+
+        // Hero fields from your Settings tab.
+        if (!mapped.heroTitle && (mapped.heroTitleLine1 || mapped.heroTitleLine2)) {
+            mapped.heroTitle = `${mapped.heroTitleLine1 || ''}|${mapped.heroTitleLine2 || ''}`;
+        }
         aliasSetting(mapped, 'heroText', ['heroSubtitle', 'heroDescription', 'heroParagraph']);
+
+        // About fields from your Settings tab.
+        aliasSetting(mapped, 'aboutBadgeNumber', ['yearsInBusiness', 'yearsSourcing']);
+        aliasSetting(mapped, 'aboutText1', ['aboutParagraph1', 'aboutDescription1']);
+        aliasSetting(mapped, 'aboutText2', ['aboutParagraph2', 'aboutDescription2']);
+        aliasSetting(mapped, 'aboutText3', ['aboutParagraph3', 'aboutDescription3']);
+
+        // Contact text fallback.
         aliasSetting(mapped, 'contactText', ['contactDescription', 'contactParagraph']);
 
-        // Do not keep the old hard-coded +60 12-345 6789 display.
-        // If the Sheet has WhatsApp Display, use it. Otherwise display the real WhatsApp Number.
-        if (!mapped.whatsappDisplay && mapped.whatsapp) {
-            mapped.whatsappDisplay = formatWhatsappDisplay(mapped.whatsapp);
-        }
-
+        // Brand display.
         if (mapped.shopName) {
             mapped.brandName = String(mapped.shopName).includes('☸') ? String(mapped.shopName) : '☸ ' + mapped.shopName;
         } else if (mapped.brandName && !String(mapped.brandName).includes('☸')) {
             mapped.brandName = '☸ ' + mapped.brandName;
         }
 
+        // Important: keep WhatsApp Display exact from Sheet.
+        // Do not auto-format into +60 unless your Sheet includes +60.
+        if (!mapped.whatsappDisplay && mapped.whatsapp) {
+            mapped.whatsappDisplay = String(mapped.whatsapp).trim();
+        }
+
         settings = {
             ...settings,
             ...mapped
         };
+        console.log('Applied website settings:', settings);
 
-        // Browser/SEO settings
+        // Browser/SEO settings.
         if (settings.websiteTitle)
             document.title = settings.websiteTitle;
         const metaDesc = document.querySelector('meta[name="description"]');
         if (metaDesc && settings.metaDescription)
             metaDesc.setAttribute('content', settings.metaDescription);
 
-        // Header + footer brand
+        // Header + footer brand.
         setTextById('brandLogo', getSettingValue(['brandName'], '☸ Dharma House'));
         setTextById('brandSub', getSettingValue(['brandSub', 'tagline'], 'Sacred Beads · Crystals · Mala'));
         applyTextToAll('.footer-brand .logo', getSettingValue(['brandName'], '☸ Dharma House'));
         applyTextToAll('.footer-brand .logo-sub', getSettingValue(['brandSub', 'tagline'], 'Sacred Beads · Crystals · Mala'));
 
-        // Hero section
+        // Hero section.
         setTextById('heroEyebrow', getSettingValue(['heroEyebrow']));
         setHtmlById('heroTitle', getSettingValue(['heroTitle']));
         setTextById('heroText', getSettingValue(['heroText', 'heroSubtitle']));
 
-        // How section
+        // Hero buttons.
+        const heroButtons = document.querySelectorAll('.hero-ctas a');
+        const heroButton1 = getSettingValue(['heroButton1', 'browseButton', 'primaryCta']);
+        const heroButton2 = getSettingValue(['heroButton2', 'howButton', 'secondaryCta']);
+        if (heroButtons[0] && heroButton1)
+            heroButtons[0].textContent = heroButton1;
+        if (heroButtons[1] && heroButton2)
+            heroButtons[1].textContent = heroButton2;
+
+        // Trust strip badges.
+        for (let i = 1; i <= 5; i++) {
+            const badgeText = getSettingValue([`badge${i}`, `trust${i}`]);
+            if (badgeText) {
+                const el = document.querySelector(`.trust-strip .trust-item:nth-child(${i}) .trust-text`);
+                if (el)
+                    el.textContent = badgeText;
+            }
+        }
+
+        // How section.
         setTextById('howEyebrow', getSettingValue(['howEyebrow']));
         setTextById('howTitle', getSettingValue(['howTitle']));
 
-        // About section
+        // About section.
         setTextById('aboutEyebrow', getSettingValue(['aboutEyebrow']));
         setHtmlById('aboutTitle', getSettingValue(['aboutTitle']));
-        setTextById('aboutBadgeNumber', getSettingValue(['aboutBadgeNumber', 'yearsSourcing']));
+        setTextById('aboutBadgeNumber', getSettingValue(['aboutBadgeNumber', 'yearsInBusiness', 'yearsSourcing']));
         setTextById('aboutBadgeText', getSettingValue(['aboutBadgeText']));
 
         const aboutPs = document.querySelectorAll('#about .about-text > p');
@@ -3000,38 +3042,56 @@
                 aboutPs[idx].textContent = value;
         });
 
-        // Reviews + FAQ headings
+        // Reviews + FAQ headings.
         setTextById('reviewsEyebrow', getSettingValue(['reviewsEyebrow', 'testimonialEyebrow']));
         setTextById('reviewsTitle', getSettingValue(['reviewsTitle', 'testimonialTitle']));
         setTextById('faqEyebrow', getSettingValue(['faqEyebrow']));
         setTextById('faqTitle', getSettingValue(['faqTitle']));
 
-        // Contact section
+        // Contact section.
         setTextById('contactEyebrow', getSettingValue(['contactEyebrow']));
         setTextById('contactTitle', getSettingValue(['contactTitle']));
         setTextById('contactText', getSettingValue(['contactText']));
         setTextById('emailDisplay', getSettingValue(['email', 'emailAddress'], 'hello@dharmahouse.com'));
         setTextById('locationDisplay', getSettingValue(['location', 'basedIn', 'address'], 'Kuala Lumpur, Malaysia'));
-        setTextById('responseTimeDisplay', getSettingValue(['responseTime', 'replyTime'], 'Usually within 2-4 hours'));
+        setTextById('responseTimeDisplay', getSettingValue(['responseTime', 'orderHours', 'replyTime'], 'Usually within 2-4 hours'));
 
-        // Footer email link
+        // Footer email link.
         document.querySelectorAll('a[href^="mailto:"]').forEach(a => {
             const email = getSettingValue(['email', 'emailAddress'], 'hello@dharmahouse.com');
             a.href = 'mailto:' + email;
         });
 
-        // WhatsApp links + displayed number
+        // Social links.
+        const instagramUrl = getSettingValue(['instagramUrl']);
+        const facebookUrl = getSettingValue(['facebookUrl']);
+        if (instagramUrl) {
+            document.querySelectorAll('.footer-col a').forEach(a => {
+                if (a.textContent.trim().toLowerCase() === 'instagram') {
+                    a.href = instagramUrl;
+                    a.target = '_blank';
+                    a.rel = 'noopener';
+                }
+            });
+        }
+        if (facebookUrl) {
+            document.querySelectorAll('.footer-col a').forEach(a => {
+                if (a.textContent.trim().toLowerCase() === 'facebook') {
+                    a.href = facebookUrl;
+                    a.target = '_blank';
+                    a.rel = 'noopener';
+                }
+            });
+        }
+
+        // WhatsApp links + displayed number.
         initWaLinks();
     }
 
     function formatWhatsappDisplay(value) {
+        // Keep the visible number exactly as provided by Settings where possible.
         const raw = normalizeText(value);
-        if (!raw)
-            return '+' + cleanWhatsappNumber(FALLBACK_WHATSAPP);
-        if (raw.includes('+') || raw.includes('-') || raw.includes(' '))
-            return raw;
-        const digits = cleanWhatsappNumber(raw);
-        return digits ? '+' + digits : raw;
+        return raw || FALLBACK_WHATSAPP;
     }
 
     function applyTestimonials(items) {
