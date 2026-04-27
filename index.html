@@ -1987,8 +1987,8 @@
         </h1>
         <p class="hero-p" id="heroText">Dzi beads of ancient power, healing crystals of the earth, incense and hand-knotted mala for your practice. Choose a few pieces and enquire once through WhatsApp.</p>
         <div class="hero-ctas">
-            <a href="#shop" class="btn-primary">Browse Collection</a>
-            <a href="#how" class="btn-outline">How to Order</a>
+            <a href="#shop" class="btn-primary" id="heroButton1">Browse Collection</a>
+            <a href="#how" class="btn-outline" id="heroButton2">How to Order</a>
         </div>
     </section>
     <div class="trust-strip">
@@ -2414,6 +2414,46 @@
         ]
     };
 
+
+    const DEFAULT_ABOUT_VALUES = {
+        en: [
+        {
+            title: 'Authentic',
+            desc: 'Carefully sourced dzi beads and sacred items.'
+        },
+        {
+            title: 'Respectful',
+            desc: 'Presented with cultural and spiritual respect.'
+        },
+        {
+            title: 'Selected',
+            desc: 'Curated products rather than mass listings.'
+        },
+        {
+            title: 'Personal',
+            desc: 'WhatsApp enquiry before final confirmation.'
+        }
+        ],
+        zh: [
+        {
+            title: '真实',
+            desc: '用心寻访天珠、藏香、佛珠与藏传圣物。'
+        },
+        {
+            title: '恭敬',
+            desc: '以尊重藏传文化与信仰的方式呈现每一件物品。'
+        },
+        {
+            title: '精选',
+            desc: '重视品相、材质与缘分，不做大量杂乱上架。'
+        },
+        {
+            title: '亲自咨询',
+            desc: '通过 WhatsApp 先行咨询，确认细节后再结缘。'
+        }
+        ]
+    };
+
     const DEFAULT_FAQ = [
     {
         question: 'Why are prices not shown?',
@@ -2756,7 +2796,7 @@
             settings = data.settings || data.Settings || {};
             faqItems = normalizeArray(data.faq || data.FAQ || data.faqs);
             testimonialItems = normalizeArray(data.testimonials || data.reviews || []);
-            const rows = normalizeArray(data.products || data.Products || data.items || data.data);
+            const rows = Array.isArray(data) ? data : normalizeArray(data.products || data.Products || data.items || data.data || data.productRows || data.rows);
             products = rows.map(normalizeProduct).filter(p => p.name);
             if (!products.length)
                 throw new Error('No products returned from API');
@@ -2818,6 +2858,8 @@
         const heroEyebrow = byId('heroEyebrow');
         if (heroEyebrow)
             heroEyebrow.style.display = 'none';
+        setText('heroButton1', currentLang === 'zh' ? '浏览系列' : 'Browse Collection');
+        setText('heroButton2', currentLang === 'zh' ? '如何下单' : 'How to Order');
         const bagBtn = document.querySelector('.bag-wrap .wa-header-btn');
         if (bagBtn)
             bagBtn.textContent = tr('enquiryBag');
@@ -2857,6 +2899,15 @@
         const formNote = document.querySelector('.form-note');
         if (formNote)
             formNote.textContent = tr('formNote');
+        document.querySelectorAll('#about .about-values .value-item').forEach((item, i) => {
+            const data = DEFAULT_ABOUT_VALUES[currentLang][i] || DEFAULT_ABOUT_VALUES.en[i];
+            const title = item.querySelector('.value-title');
+            const desc = item.querySelector('.value-desc');
+            if (title && data)
+                title.textContent = data.title;
+            if (desc && data)
+                desc.textContent = data.desc;
+        });
         const footerP = document.querySelector('.footer-brand p');
         if (footerP)
             footerP.textContent = tr('footerBrand');
@@ -2901,6 +2952,8 @@
         if (hero)
             hero.innerHTML = esc(h1) + '<span>' + esc(h2) + '</span>';
         setText('heroText', setting(['heroSubtitle', 'heroText'], ['heroSubtitleCn', 'heroTextCn'], currentLang === 'zh' ? '精选天珠、藏香、佛珠与藏传佛教供养佛具，以恭敬心整理呈现，方便您咨询结缘。' : 'Dzi beads, Tibetan incense and Buddhist mala for your practice. Choose a few pieces and enquire once through WhatsApp.'));
+        setText('heroButton1', currentLang === 'zh' ? (settings.heroButton1Cn || '浏览系列') : (settings.heroButton1 || 'Browse Collection'));
+        setText('heroButton2', currentLang === 'zh' ? (settings.heroButton2Cn || '如何下单') : (settings.heroButton2 || 'How to Order'));
         setHtml('aboutTitle', setting(['aboutTitle'], ['aboutTitleCn'], currentLang === 'zh' ? '不只是收藏|更是一条有意义的道路' : 'More Than a Collection|A Path of Meaning'));
         setText('aboutBadgeNumber', setting(['yearsInBusiness', 'aboutBadgeNumber'], [], '17+'));
         setText('aboutBadgeText', setting(['aboutBadgeText'], ['aboutBadgeTextCn'], currentLang === 'zh' ? '年寻访经验' : 'Years Sourcing'));
@@ -2914,8 +2967,13 @@
         setText('responseTimeDisplay', setting(['orderHours', 'responseTime'], ['orderHoursCn', 'responseTimeCn'], currentLang === 'zh' ? '通常 2–4 小时内回复' : 'Usually within 2-4 hours'));
         for (let i = 1; i <= 5; i++) {
             const el = document.querySelector(`.trust-strip .trust-item:nth-child(${i}) .trust-text`);
-            if (el)
-                el.textContent = setting([`badge${i}`, `trust${i}`], [`badge${i}Cn`, `trust${i}Cn`], DEFAULT_TRUST[currentLang][i - 1]);
+            if (!el)
+                continue;
+            if (currentLang === 'zh') {
+                el.textContent = settings[`badge${i}Cn`] || settings[`trust${i}Cn`] || DEFAULT_TRUST.zh[i - 1];
+            } else {
+                el.textContent = settings[`badge${i}`] || settings[`trust${i}`] || DEFAULT_TRUST.en[i - 1];
+            }
         }
     }
 
@@ -2979,12 +3037,29 @@
             closeModal();
     }
 
+    function faqFallbackCn(question, answer) {
+        const q = clean(question).toLowerCase();
+        const found = DEFAULT_FAQ.find(item => clean(item.question).toLowerCase() === q);
+        return {
+            qCn: found ? found.questionCn : '',
+            aCn: found ? found.answerCn : ''
+        };
+    }
     function renderFaq() {
         const list = byId('faqList');
         if (!list)
             return;
         const items = faqItems.length ? faqItems : DEFAULT_FAQ;
-        list.innerHTML = items.map(f => `<div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">${esc(local(pick(f, ['question', 'Question'], '') || '', pick(f, ['questionCn', 'questionCN', 'Question CN'], '')))} <span class="faq-icon">+</span></button><div class="faq-a"><p>${esc(local(pick(f, ['answer', 'Answer'], ''), pick(f, ['answerCn', 'answerCN', 'Answer CN'], '')))}</p></div></div>`).join('');
+        list.innerHTML = items.map(f => {
+            const qEn = pick(f, ['question', 'Question'], '');
+            const aEn = pick(f, ['answer', 'Answer'], '');
+            const fb = faqFallbackCn(qEn, aEn);
+            const qCn = pick(f, ['questionCn', 'questionCN', 'Question CN'], fb.qCn);
+            const aCn = pick(f, ['answerCn', 'answerCN', 'Answer CN'], fb.aCn);
+            const q = currentLang === 'zh' ? (qCn || qEn) : qEn;
+            const a = currentLang === 'zh' ? (aCn || aEn) : aEn;
+            return `<div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">${esc(q)} <span class="faq-icon">+</span></button><div class="faq-a"><p>${esc(a)}</p></div></div>`;
+        }).join('');
     }
     function renderTestimonials() {
         const grid = byId('reviewsGrid');
