@@ -7,7 +7,7 @@
     <meta name="description" content="Authentic Tibetan dzi beads, healing crystals, incense and hand-knotted Buddhist mala. Enquire through WhatsApp."/>
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet"/>
     <style>
     :root {
         --void: #0D0A07;
@@ -1867,6 +1867,68 @@
             grid-template-columns: 1fr
         }
     }
+
+    .lang-toggle {
+        display: flex;
+        gap: .35rem;
+        align-items: center;
+        margin-left:.2rem
+    }
+
+    .lang-toggle button {
+        font-family: 'Cinzel', serif;
+        font-size: .55rem;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        background: none;
+        color: var(--parchment);
+        border: 1px solid rgba(201, 150, 58, .3);
+        padding: .38rem .55rem;
+        cursor: pointer;
+        transition:.2s
+    }
+
+    .lang-toggle button:hover {
+        border-color: var(--gold);
+        color:var(--gold-light)
+    }
+
+    .lang-toggle button.active {
+        background: var(--gold);
+        color: var(--void);
+        border-color:var(--gold)
+    }
+
+    body.lang-zh {
+        font-family: 'EB Garamond', 'Noto Serif SC', 'Songti SC', 'PingFang SC', serif
+    }
+
+    body.lang-zh .section-eyebrow, body.lang-zh .trust-text, body.lang-zh nav a, body.lang-zh .filter-pill, body.lang-zh .card-category, body.lang-zh .var-label, body.lang-zh .pattern-pill, body.lang-zh .spill, body.lang-zh .wa-card-btn, body.lang-zh .channel-label, body.lang-zh .form-label, body.lang-zh .footer-col h4 {
+        letter-spacing: .12em
+    }/* Polished Chinese language display */
+    .hero-eyebrow {
+        display: none !important
+    }
+
+    .lang-zh .hero-h1 {
+        font-family: 'Noto Serif SC', 'Songti SC', 'STSong', 'PingFang SC', serif;
+        font-weight: 500;
+        letter-spacing: .08em;
+        line-height: 1.28;
+    }
+
+    .lang-zh .hero-h1 span {
+        font-weight: 600;
+        letter-spacing: .1em;
+    }
+
+    .lang-zh .section-title, .lang-zh .logo, .lang-zh .card-name, .lang-zh .modal-name {
+        font-family: 'Noto Serif SC', 'Songti SC', 'STSong', 'PingFang SC', serif;
+    }
+
+    .lang-zh .logo-sub {
+        letter-spacing: .25em
+    }
     </style>
 </head>
 <body>
@@ -1890,6 +1952,10 @@
                 <span class="bag-count-badge" id="bagBadge">0</span>
             </div>
             <a class="wa-header-btn" id="waHeaderBtn" href="#" target="_blank" rel="noopener">💬 WhatsApp</a>
+            <div class="lang-toggle" aria-label="Language">
+                <button id="langEn" type="button" onclick="setLanguage('en')">EN</button>
+                <button id="langZh" type="button" onclick="setLanguage('zh')">中文</button>
+            </div>
         </div>
     </header>
     <div class="mobile-nav" id="mobileNav">
@@ -2308,27 +2374,327 @@
         </div>
     </div>
     <div class="toast" id="toast"></div>
+
     <script>
-    /* =========================
-       CLEAN SINGLE JAVASCRIPT BLOCK
-       - Uses your real Apps Script URL
-       - Reads Products + Setting tab
-       - Shows only ONE text-based Variant section
-       - No random colour/pattern icon names
-    ========================= */
-    const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbwQqrKhwdJ087E3naz3CcWZD_Ru8bN6cRAvZ9kVGJ4nXsWExo4LJvbNb2YCDgdWNodh/exec';
+    /* ============================================================
+       TASHI DELEK COLLECTION — FRONTEND JS WITH EN / 中文 TOGGLE
+       - Replace SHEET_API_URL with your correct Apps Script Web App URL.
+       - English comes from your existing Sheet fields.
+       - Chinese uses CN fields if present, otherwise built-in translations for website UI.
+       - Product CN columns supported: Product Name CN, Subtitle CN, Short Description CN,
+         Category CN, Colour / Pattern Variants CN.
+       - Settings CN rows supported: Shop Name CN, Tagline CN, Hero Title Line 1 CN,
+         Hero Title Line 2 CN, Hero Subtitle CN, About Paragraph 1 CN, etc.
+    ============================================================ */
+    const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbwQqrKhwdJ087E3naz3CcWZD_Ru8bN6cRAvZ9kVGJ4nXsWExo4LJvbNb2YCDgdWNodh/exec'; // replace with your Apps Script Web App URL
     const FALLBACK_WHATSAPP = '60165023699';
 
     let products = [];
     let sel = {};
     let cart = [];
     let currentFilter = 'all';
+    let currentLang = localStorage.getItem('td_lang') || 'en';
     let settings = {
-        brandName: '☸ Dharma House',
-        brandSub: 'Sacred Beads · Crystals · Mala',
+        brandName: '☸ Tashi Delek Collection',
+        brandSub: 'Dzi Beads · Tibetan Incense · Buddhist Mala',
         whatsapp: FALLBACK_WHATSAPP,
         email: 'hello@dharmahouse.com',
         location: 'Kuala Lumpur, Malaysia'
+    };
+
+    const UI = {
+        en: {
+            navShop: 'Shop',
+            navHow: 'How to Order',
+            navAbout: 'About',
+            navReviews: 'Reviews',
+            navFaq: 'FAQ',
+            navContact: 'Contact',
+            navAboutUs: 'About Us',
+            enquiryBag: '🛍 Enquiry Bag',
+            whatsapp: '💬 WhatsApp',
+            allPieces: 'All Pieces',
+            collection: 'Collection',
+            pieces: 'pieces',
+            noItems: 'No items in this category yet.',
+            viewDetails: 'View Details',
+            variant: 'Variant',
+            enquireForPrice: 'Enquire for price',
+            add: '🛍 Add',
+            addToBag: '🛍 Add to Enquiry Bag',
+            enquireThisItem: '💬 Enquire This Item',
+            modalNote: 'We confirm current price and availability through WhatsApp',
+            addImage: 'Add image URL in Sheet',
+            sacredItem: 'Sacred Item',
+            howEyebrow: 'Simple · Fast · Personal',
+            howTitle: 'How to Order',
+            step1Title: 'Browse & Choose',
+            step1Desc: 'Explore the collection. Select pattern, colour and size where available.',
+            step2Title: 'Add to Bag',
+            step2Desc: 'Add one or multiple items to the enquiry bag without showing prices publicly.',
+            step3Title: 'WhatsApp Us',
+            step3Desc: 'Send all interested items in one WhatsApp message. We confirm availability and price.',
+            step4Title: 'Confirm & Ship',
+            step4Desc: 'After confirmation and payment, your item is wrapped and shipped safely.',
+            reviewsEyebrow: 'What Customers Say',
+            reviewsTitle: 'Trusted by Collectors',
+            faqEyebrow: 'Common Questions',
+            faqTitle: 'Frequently Asked',
+            contactEyebrow: 'Reach Out',
+            contactTitle: 'Get in Touch',
+            contactText: 'Have questions about dzi beads, incense, mala or crystals? Send us a message. The website will open WhatsApp with your enquiry prepared.',
+            waFastest: 'WhatsApp Fastest',
+            email: 'Email',
+            responseTime: 'Response Time',
+            basedIn: 'Based In',
+            formName: 'Your Name',
+            formNamePH: 'Full name',
+            formPhone: 'WhatsApp / Phone',
+            formPhonePH: '+60 12 345 6789',
+            formEmail: 'Email Address',
+            formEmailPH: 'your@email.com',
+            formInterest: "I'm Interested In",
+            formSelect: 'Select a category...',
+            formDzi: 'Dzi Beads',
+            formIncense: 'Incense',
+            formCrystals: 'Crystals',
+            formMala: 'Buddhist Mala',
+            formCustom: 'Custom Order / Wholesale',
+            formGeneral: 'General Enquiry',
+            formMessage: 'Message',
+            formMessagePH: "Tell us what you're looking for, or ask any question...",
+            formSubmit: '💬 Send via WhatsApp',
+            formNote: 'Your message will open in WhatsApp for you to send directly.',
+            footerBrand: 'Authentic Tibetan treasures, incense and practice objects, managed through Google Sheet and ordered by WhatsApp enquiry.',
+            footerShop: 'Shop',
+            footerInfo: 'Information',
+            footerContact: 'Contact',
+            footerAbout: 'About Us',
+            footerWhatsapp: 'WhatsApp Us',
+            footerRights: '© 2026 Dharma House · All rights reserved',
+            footerAvailability: 'Enquire for current price and availability',
+            floatLabel: 'Order on WhatsApp',
+            cartTitle: '🛍 Enquiry Bag',
+            cartLineSingular: 'item in your enquiry bag',
+            cartLinePlural: 'items in your enquiry bag',
+            cartEmpty: 'Your bag is empty',
+            cartEmptyHint: 'Add items to enquire about multiple pieces at once',
+            cartSend: '💬 Send Enquiry via WhatsApp',
+            cartNote: 'Prices are confirmed personally through WhatsApp.',
+            remove: 'Remove',
+            toastAdded: 'Added to enquiry bag',
+            toastName: 'Please enter your name',
+            toastMessage: 'Please write a message',
+            toastSample: 'Sheet not connected - showing sample data',
+            loading: 'Loading Collection...',
+            msgSingleTitle: 'Hi, I want to enquire about this item:',
+            msgProduct: 'Product',
+            msgCategory: 'Category',
+            msgVariant: 'Variant',
+            msgConfirm: 'Please confirm current price and availability. Thank you.',
+            msgCartTitle: 'Hi, I want to enquire about these items:',
+            msgCartConfirm: 'Please confirm current price, availability and payment details. Thank you.',
+            msgContactHello: 'Hello Tashi Delek! 🙏',
+            msgNewEnquiry: 'New enquiry from website',
+            msgName: 'Name',
+            msgPhone: 'Phone',
+            msgEmail: 'Email',
+            msgInterest: 'Interested in',
+            msgMessage: 'Message',
+            msgThanks: 'Thank you!'
+        },
+        zh: {
+            navShop: '产品',
+            navHow: '如何订购',
+            navAbout: '关于我们',
+            navReviews: '客户评价',
+            navFaq: '常见问题',
+            navContact: '联系我们',
+            navAboutUs: '关于我们',
+            enquiryBag: '🛍 咨询清单',
+            whatsapp: '💬 WhatsApp',
+            allPieces: '全部产品',
+            collection: '产品系列',
+            pieces: '件产品',
+            noItems: '此分类暂时没有产品。',
+            viewDetails: '查看详情',
+            variant: '款式',
+            enquireForPrice: '咨询价格',
+            add: '🛍 加入',
+            addToBag: '🛍 加入咨询清单',
+            enquireThisItem: '💬 咨询此产品',
+            modalNote: '我们会通过 WhatsApp 确认最新价格与库存。',
+            addImage: '请在表格加入图片链接',
+            sacredItem: '圣物',
+            howEyebrow: '简单 · 快速 · 个人化',
+            howTitle: '如何订购',
+            step1Title: '浏览与选择',
+            step1Desc: '浏览产品系列，并在有提供时选择款式、颜色或尺寸。',
+            step2Title: '加入清单',
+            step2Desc: '可把一个或多个感兴趣的产品加入咨询清单，价格不会公开显示。',
+            step3Title: 'WhatsApp 咨询',
+            step3Desc: '把所有感兴趣的产品一次过发送到 WhatsApp，我们会回复库存与价格。',
+            step4Title: '确认与寄送',
+            step4Desc: '确认付款后，我们会妥善包装并安排寄送。',
+            reviewsEyebrow: '客户怎么说',
+            reviewsTitle: '深受收藏者信赖',
+            faqEyebrow: '常见问题',
+            faqTitle: '常见问题',
+            contactEyebrow: '联系咨询',
+            contactTitle: '联系我们',
+            contactText: '若您想了解天珠、藏香、佛珠或其他供养佛具，欢迎通过 WhatsApp 与我们联系。我们会为您整理咨询内容，并亲自回复价格、库存与适合选择。',
+            waFastest: 'WhatsApp 最快回复',
+            email: '电邮',
+            responseTime: '回复时间',
+            basedIn: '所在地',
+            formName: '您的姓名',
+            formNamePH: '姓名',
+            formPhone: 'WhatsApp / 电话',
+            formPhonePH: '+60 12 345 6789',
+            formEmail: '电邮地址',
+            formEmailPH: 'your@email.com',
+            formInterest: '我感兴趣的是',
+            formSelect: '请选择分类...',
+            formDzi: '天珠',
+            formIncense: '供香 / 藏香',
+            formCrystals: '水晶',
+            formMala: '佛珠 / 念珠',
+            formCustom: '定制 / 批发',
+            formGeneral: '一般咨询',
+            formMessage: '留言',
+            formMessagePH: '请告诉我们您想寻找的产品，或写下您的问题...',
+            formSubmit: '💬 通过 WhatsApp 发送',
+            formNote: '您的信息会在 WhatsApp 打开，由您确认发送。',
+            footerBrand: '正信藏传佛教圣物、天珠、藏香与佛珠，可通过 Google Sheet 管理，并以 WhatsApp 进行咨询结缘。',
+            footerShop: '产品',
+            footerInfo: '资讯',
+            footerContact: '联系',
+            footerAbout: '关于我们',
+            footerWhatsapp: 'WhatsApp 咨询',
+            footerRights: '© 2026 Tashi Delek Collection · 版权所有',
+            footerAvailability: '请咨询最新价格与库存',
+            floatLabel: 'WhatsApp 订购',
+            cartTitle: '🛍 咨询清单',
+            cartLineSingular: '件产品在咨询清单中',
+            cartLinePlural: '件产品在咨询清单中',
+            cartEmpty: '咨询清单为空',
+            cartEmptyHint: '加入多个产品后，可一次过发送咨询。',
+            cartSend: '💬 通过 WhatsApp 发送咨询',
+            cartNote: '价格会通过 WhatsApp 私下确认。',
+            remove: '移除',
+            toastAdded: '已加入咨询清单',
+            toastName: '请输入您的姓名',
+            toastMessage: '请填写留言内容',
+            toastSample: '未连接表格，正在显示示范产品',
+            loading: '正在加载产品...',
+            msgSingleTitle: '您好，我想咨询以下产品：',
+            msgProduct: '产品',
+            msgCategory: '分类',
+            msgVariant: '款式',
+            msgConfirm: '请确认最新价格与库存，谢谢。',
+            msgCartTitle: '您好，我想咨询以下产品：',
+            msgCartConfirm: '请确认最新价格、库存与付款方式，谢谢。',
+            msgContactHello: '您好，Tashi Delek！🙏',
+            msgNewEnquiry: '网站新咨询',
+            msgName: '姓名',
+            msgPhone: '电话',
+            msgEmail: '电邮',
+            msgInterest: '感兴趣项目',
+            msgMessage: '留言',
+            msgThanks: '谢谢！'
+        }
+    };
+
+    const ZH_TERMS = {
+        'Dharma House': 'Tashi Delek Collection',
+        'Tashi Delek Collection': 'Tashi Delek Collection',
+        'Sacred Beads · Crystals · Mala': '天珠 · 藏香 · 佛珠',
+        'Tibetan Buddhism Collection Shop· Sacred Beads · Crystals · Mala': '藏传佛教珍藏店 · 天珠 · 藏香 · 佛珠',
+        'Dzi Bead': '天珠',
+        'Dzi Beads': '天珠',
+        'Crystal': '水晶',
+        'Crystals': '水晶',
+        'Buddhist Mala': '佛珠',
+        'Mala': '佛珠',
+        'Incense': '供香',
+        'Bracelet': '手串',
+        'Pendant': '吊坠',
+        'Accessory': '配件',
+        'Singing Bowl': '颂钵',
+        'Thangka': '唐卡',
+        'Nine-Eyed Dzi': '九眼天珠',
+        '9 Eyes': '九眼',
+        '3 Eyes': '三眼',
+        '1 Eye': '一眼',
+        '2 Eyed Dzi': '二眼天珠',
+        '2 Eyed': '二眼',
+        'Tiger': '虎纹',
+        'Dragon': '龙纹',
+        'Lotus': '莲花',
+        'Wheel': '法轮',
+        'Natural Brown': '天然棕',
+        'Dark Brown': '深棕',
+        'Small': '小',
+        'Medium': '中',
+        'Large': '大',
+        'Sandalwood': '檀香',
+        'Juniper': '杜松',
+        'Medicine Buddha': '药师佛',
+        'Tibetan Incense': '藏香',
+        'Amethyst Cluster': '紫水晶簇',
+        'Bodhi Seed Mala': '菩提子佛珠',
+        'Agate Dzi': '玛瑙天珠',
+        'Harmony Dzi': '和合天珠',
+        'Traditional Offering Incense': '传统供香',
+        '108 Beads': '108颗',
+        'Natural Crystal': '天然水晶',
+        'Rare': '稀有',
+        'Selected': '精选',
+        'Popular': '热门',
+        'New': '新品',
+        'Gold': '精选',
+        'Sale': '优惠',
+        'Authentic · Consecrated · Rare': '',
+        'Sacred': '如意吉祥',
+        'Tibetan Treasures': '藏传珍宝佛具流通处',
+        'Dzi beads of ancient power, healing crystals of the earth...': '古老能量的天珠、来自大地的疗愈水晶……',
+        'Browse Collection': '浏览产品',
+        'How to Order': '如何订购',
+        'Authentic Sourcing': '正品来源',
+        'Consecrated Items': '加持圣物',
+        'Malaysia & Worldwide': '马来西亚与全球寄送',
+        'Enquire via WhatsApp': 'WhatsApp 咨询',
+        'Selected Pieces': '精选珍品',
+        'More Than a Shop - A Sacred Practice': '不只是一家商店 — 更是一份修持心意',
+        'More Than a Collection — A Path of Meaning': '不只是收藏 — 更是一条有意义的道路',
+        'Our Story': '我们的故事',
+        'Years Sourcing': '年寻访经验',
+        'Tashi Delek Collection began from a sincere respect for Tibetan Buddhism...': '扎西德勒珍藏源自我们对藏传佛教与圣物的真诚尊重……',
+        'Every item in our collection is chosen with care. We look closely at the pattern,': '每一件藏品都经过细心挑选，我们重视其纹饰、材质、状态与整体感觉。',
+        'When you order from Tashi Delek Collection, you are not just buying an': '当您从扎西德勒珍藏订购时，您选择的不只是一件物品，而是一份具有意义的祝福与提醒。'
+        ,
+        'Why are prices not shown?': '为什么不公开显示价格？'
+        ,
+        'Some sacred and collectible items vary by availability, grade and condition. Please add items to the enquiry bag and we will confirm the latest price by WhatsApp.': '部分圣物与收藏品会因品质、状态、来源与库存而有所不同。请将感兴趣的产品加入咨询清单，我们会通过 WhatsApp 为您确认最新价格。'
+        ,
+        'How does WhatsApp ordering work?': 'WhatsApp 如何下单？'
+        ,
+        'Select the items you are interested in, add them to the enquiry bag, then send the prepared WhatsApp message. We will reply with price, availability and details.': '请选择您感兴趣的产品并加入咨询清单，系统会准备好 WhatsApp 信息。发送后，我们会回复价格、库存与详情。'
+        ,
+        'Can I enquire about multiple items?': '可以一次咨询多个产品吗？'
+        ,
+        'Yes. The enquiry bag is designed for this. Add a few items and send all details in one WhatsApp message.': '可以。咨询清单就是为此设计的。您可以加入多件商品，再一次过通过 WhatsApp 发送给我们。'
+        ,
+        'Can products be updated from Google Sheet?': '产品可以从 Google Sheet 更新吗？'
+        ,
+        'Yes. Product names, categories, images, patterns, colours and sizes can be managed from your backend sheet.': '可以。产品名称、分类、图片、款式、说明与库存资料都可以从后台表格管理。'
+        ,
+        'Tashi Delek Collection began from a sincere respect for Tibetan Buddhism, sacred objects, and the quiet meaning they bring into daily life. What started as a personal journey of learning, collecting, and understanding dzi beads, mala, incense, and blessed items slowly became a way to share these meaningful pieces with others.': 'Tashi Delek Collection 源于对藏传佛教、圣物以及它们为日常生活带来的宁静意义的真诚敬意。最初，这只是个人学习、收藏与理解天珠、佛珠、藏香和加持圣物的旅程；慢慢地，它成为一种把这些有意义的物件分享给更多人的方式。'
+        ,
+        'Every item in our collection is chosen with care. We look closely at the pattern, material, condition, feel, and overall character of each piece before offering it to customers. For dzi beads especially, we understand that people are not only looking for beauty, but also symbolism, protection, blessing, and a personal connection.': '我们用心挑选每一件藏品。在呈现给客户之前，我们会仔细观察其纹饰、材质、状态、手感以及整体气质。尤其是天珠，我们明白人们寻找的不只是外在之美，也包括象征、护佑、祝福以及与自己内心相应的缘分。'
+        ,
+        'When you order from Tashi Delek Collection, you are not just buying an object. You are choosing something meaningful for your practice, altar, collection, protection, or daily reminder of peace and mindfulness. Each piece is handled with care and sent with sincere good wishes.': '当您从 Tashi Delek Collection 结缘一件物品时，您选择的不只是一件物件，而是一份可用于修持、供桌、收藏、护身，或在日常中提醒自己保持平静与正念的意义。每一件物品都会被用心处理，并带着真诚的祝愿寄出。'
+
     };
 
     const sampleProducts = [
@@ -2336,75 +2702,125 @@
         id: 1,
         cat: 'dzi',
         catLabel: 'Dzi Bead',
+        catLabelCn: '天珠',
         name: 'Nine-Eyed Dzi',
+        nameCn: '九眼天珠',
         sub: 'Agate Dzi',
+        subCn: '玛瑙天珠',
         desc: 'One of the most auspicious dzi patterns, traditionally associated with protection, clarity and merit.',
+        descCn: '最具吉祥寓意的天珠纹饰之一，传统上象征护佑、清明与福德。',
         type: 'dzi',
         badge: 'rare',
         badgeText: 'Rare',
+        badgeTextCn: '稀有',
         imageUrl: '',
-        variant: '9 Eyes, 3 Eyes, 1 Eye'
+        variant: '9 Eyes, 3 Eyes, 1 Eye',
+        variantCn: '九眼, 三眼, 一眼'
     },
     {
         id: 2,
         cat: 'dzi',
         catLabel: 'Dzi Bead',
+        catLabelCn: '天珠',
         name: '2 Eyed Dzi',
+        nameCn: '二眼天珠',
         sub: 'Harmony Dzi',
+        subCn: '和合天珠',
         desc: 'A meaningful dzi pattern often chosen for relationship harmony and balance.',
+        descCn: '二眼天珠常被视为和合、平衡与良缘的象征。',
         type: 'dzi',
         badge: 'gold',
         badgeText: 'Selected',
+        badgeTextCn: '精选',
         imageUrl: '',
-        variant: '2 Eyed'
+        variant: '2 Eyed',
+        variantCn: '二眼'
     },
     {
         id: 3,
         cat: 'incense',
         catLabel: 'Incense',
+        catLabelCn: '供香',
         name: 'Tibetan Incense',
+        nameCn: '藏香',
         sub: 'Traditional Offering Incense',
+        subCn: '传统供香',
         desc: 'Aromatic incense suitable for daily offering, meditation and space cleansing.',
+        descCn: '适合日常供养、禅修与净化空间的传统香品。',
         type: 'incense',
         badge: 'gold',
         badgeText: 'Popular',
+        badgeTextCn: '热门',
         imageUrl: '',
-        variant: 'Sandalwood, Juniper, Medicine Buddha'
+        variant: 'Sandalwood, Juniper, Medicine Buddha',
+        variantCn: '檀香, 杜松, 药师佛'
     },
     {
         id: 4,
         cat: 'mala',
         catLabel: 'Buddhist Mala',
+        catLabelCn: '佛珠',
         name: 'Bodhi Seed Mala',
+        nameCn: '菩提子佛珠',
         sub: '108 Beads',
+        subCn: '108颗',
         desc: 'A hand-knotted mala for chanting, meditation and daily practice.',
+        descCn: '手工编结佛珠，适合持咒、禅修与日常修持。',
         type: 'mala',
         badge: '',
         badgeText: '',
         imageUrl: '',
-        variant: 'Natural Brown, Dark Brown'
+        variant: 'Natural Brown, Dark Brown',
+        variantCn: '天然棕, 深棕'
     },
     {
         id: 5,
         cat: 'crystal',
         catLabel: 'Crystal',
+        catLabelCn: '水晶',
         name: 'Amethyst Cluster',
+        nameCn: '紫水晶簇',
         sub: 'Natural Crystal',
+        subCn: '天然水晶',
         desc: 'A calming crystal often placed on an altar, desk or meditation area.',
+        descCn: '具有安定氛围的水晶，适合摆放在供桌、书桌或禅修空间。',
         type: 'crystal',
         badge: 'gold',
         badgeText: 'New',
+        badgeTextCn: '新品',
         imageUrl: '',
-        variant: 'Small, Medium, Large'
+        variant: 'Small, Medium, Large',
+        variantCn: '小, 中, 大'
     }
     ];
 
+
+    const DEFAULT_ABOUT_EN = [
+    'Tashi Delek Collection began from a sincere respect for Tibetan Buddhism, sacred objects, and the quiet meaning they bring into daily life. What started as a personal journey of learning, collecting, and understanding dzi beads, mala, incense, and blessed items slowly became a way to share these meaningful pieces with others.',
+    'Every item in our collection is chosen with care. We look closely at the pattern, material, condition, feel, and overall character of each piece before offering it to customers. For dzi beads especially, we understand that people are not only looking for beauty, but also symbolism, protection, blessing, and a personal connection.',
+    'When you order from Tashi Delek Collection, you are not just buying an object. You are choosing something meaningful for your practice, altar, collection, protection, or daily reminder of peace and mindfulness. Each piece is handled with care and sent with sincere good wishes.'
+    ];
+    const DEFAULT_ABOUT_CN = [
+    'Tashi Delek Collection 源于对藏传佛教、圣物以及它们为日常生活带来的宁静意义的真诚敬意。最初，这只是个人学习、收藏与理解天珠、佛珠、藏香和加持圣物的旅程；慢慢地，它成为一种把这些有意义的物件分享给更多人的方式。',
+    '我们用心挑选每一件藏品。在呈现给客户之前，我们会仔细观察其纹饰、材质、状态、手感以及整体气质。尤其是天珠，我们明白人们寻找的不只是外在之美，也包括象征、护佑、祝福以及与自己内心相应的缘分。',
+    '当您从 Tashi Delek Collection 结缘一件物品时，您选择的不只是一件物件，而是一份可用于修持、供桌、收藏、护身，或在日常中提醒自己保持平静与正念的意义。每一件物品都会被用心处理，并带着真诚的祝愿寄出。'
+    ];
+    function isPlaceholderText(value) {
+        const v = normalizeText(value).toLowerCase();
+        return !v || v.includes('...') || v.includes('your value') || v.includes('description / instructions');
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
+        updateLangButtons();
+        applyStaticLanguage();
         initWaLinks();
         renderCart();
         fetchFromSheet();
     });
 
+    function t(key) {
+        return (UI[currentLang] && UI[currentLang][key]) || UI.en[key] || key;
+    }
     function normalizeText(value, fallback='') {
         if (value === undefined || value === null)
             return fallback;
@@ -2430,13 +2846,27 @@
     function safeId(value) {
         return normalizeText(value).replace(/[^a-zA-Z0-9_-]/g, '_');
     }
+    function autoZh(value) {
+        const v = normalizeText(value);
+        return ZH_TERMS[v] || v;
+    }
+    function localText(enValue, cnValue='') {
+        const en = normalizeText(enValue);
+        const cn = normalizeText(cnValue);
+        return currentLang === 'zh' ? (cn || autoZh(en)) : en;
+    }
+    function displayProduct(p, field) {
+        return localText(p[field], p[field + 'Cn']);
+    }
+    function displayVariant(item) {
+        return localText(item.name, item.nameCn);
+    }
     function pick(row, names, fallback='') {
         if (!row || typeof row !== 'object')
             return fallback;
-        for (const name of names) {
+        for (const name of names)
             if (row[name] !== undefined && row[name] !== null && String(row[name]).trim() !== '')
                 return row[name];
-        }
         const normalizedNames = names.map(n => String(n).toLowerCase().replace(/[^a-z0-9]/g, ''));
         for (const key of Object.keys(row)) {
             const cleanKey = String(key).toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -2450,67 +2880,50 @@
             return '';
         if (typeof value !== 'object')
             return normalizeText(value);
-
-        // Handles old backend objects such as {name:'2 Eyed'}, {label:'2 Eyed'}, {variant:'2 Eyed'}.
-        const direct = value.name || value.label || value.value || value.text || value.title ||
-        value.variant || value.option || value.pattern || value.colour || value.color ||
-        value['Colour / Pattern Variants'] || value['Color / Pattern Variants'];
-
+        const direct = value.name || value.label || value.value || value.text || value.title || value.variant || value.option || value.pattern || value.colour || value.color || value['Colour / Pattern Variants'] || value['Color / Pattern Variants'];
         if (direct && typeof direct !== 'object')
             return normalizeText(direct);
         return '';
     }
-
-    function toVariantObjects(value) {
-        if (value === undefined || value === null || value === '')
+    function toVariantObjects(value, cnValue='') {
+        if ((value === undefined || value === null || value === '') && !cnValue)
             return [];
-
+        const enList = Array.isArray(value) || typeof value === 'object' ? null : splitList(value);
+        const cnList = splitList(cnValue);
         let rawItems = [];
-
-        if (Array.isArray(value)) {
+        if (enList)
+            rawItems = enList;
+        else if (Array.isArray(value))
             rawItems = value;
-        } else if (typeof value === 'object') {
-            // IMPORTANT FIX:
-            // Do not stringify a variants object, because that creates "[object Object]".
-            // Extract the real list from whichever structure the Apps Script returns.
-            const inner = value.variant || value.variants || value.options || value.option ||
-            value.pattern || value.patterns || value.colour || value.colours || value.color || value.colors;
-
-            if (inner !== undefined && inner !== null && inner !== value) {
-                return toVariantObjects(inner);
-            }
-
+        else if (typeof value === 'object' && value) {
+            const inner = value.variant || value.variants || value.options || value.option || value.pattern || value.patterns || value.colour || value.colours || value.color || value.colors;
+            if (inner !== undefined && inner !== null && inner !== value)
+                return toVariantObjects(inner, cnValue);
             rawItems = Object.values(value);
-        } else {
-            rawItems = splitList(value);
         }
-
-        const seen = new Set();
-        const result = [];
-
-        rawItems.forEach(item => {
+        const seen = new Set(),
+            result = [];
+        rawItems.forEach((item, idx) => {
             if (Array.isArray(item)) {
                 toVariantObjects(item).forEach(v => {
-                    const key = v.name.toLowerCase();
-                    if (!seen.has(key)) {
-                        seen.add(key);
+                    const k = v.name.toLowerCase();
+                    if (!seen.has(k)) {
+                        seen.add(k);
                         result.push(v);
                     }
                 });
                 return;
             }
-
             if (typeof item === 'object' && item !== null && !(item.name || item.label || item.value || item.variant || item.pattern || item.colour || item.color)) {
                 toVariantObjects(item).forEach(v => {
-                    const key = v.name.toLowerCase();
-                    if (!seen.has(key)) {
-                        seen.add(key);
+                    const k = v.name.toLowerCase();
+                    if (!seen.has(k)) {
+                        seen.add(k);
                         result.push(v);
                     }
                 });
                 return;
             }
-
             const name = variantNameFromAny(item);
             if (!name)
                 return;
@@ -2518,14 +2931,18 @@
             if (!seen.has(key)) {
                 seen.add(key);
                 result.push({
-                    name
+                    name,
+                    nameCn: cnList[idx] || autoZh(name)
                 });
             }
         });
-
+        if (!result.length && cnList.length)
+            cnList.forEach(cn => result.push({
+                name: cn,
+                nameCn: cn
+            }));
         return result;
     }
-
     function settingsArrayToObject(rows) {
         if (!Array.isArray(rows))
             return rows || {};
@@ -2540,75 +2957,61 @@
         });
         return obj;
     }
-
     function normalizeProduct(row, index) {
         const catRaw = pick(row, ['cat', 'category', 'Category', 'Product Category', 'Product category'], 'uncategorized');
         const cat = slugify(catRaw);
-
-        // IMPORTANT: only ONE variant source. This uses exact text from your Sheet column.
-        // Preferred column name: Colour / Pattern Variants.
-        // If the backend still returns an old object like variants.pattern / variants.color,
-        // toVariantObjects() extracts the object.name values instead of printing [object Object].
-        let variantValue = pick(row, [
-        'Colour / Pattern Variants',
-        'Color / Pattern Variants',
-        'Colour/Pattern Variants',
-        'Color/Pattern Variants',
-        'Colour Pattern Variants',
-        'Color Pattern Variants',
-        'Variant',
-        'variant'
-        ], '');
-
+        let variantValue = pick(row, ['Colour / Pattern Variants', 'Color / Pattern Variants', 'Colour/Pattern Variants', 'Color/Pattern Variants', 'Colour Pattern Variants', 'Color Pattern Variants', 'Variant', 'variant'], '');
+        const variantCnValue = pick(row, ['Colour / Pattern Variants CN', 'Color / Pattern Variants CN', 'Variant CN', 'variantCn', 'variantCN'], '');
         if (!variantValue && row.variants)
             variantValue = row.variants;
         if (!variantValue && row.Variants)
             variantValue = row.Variants;
-
         return {
             id: normalizeText(pick(row, ['id', 'ID', 'sku', 'SKU'], `p-${index + 1}`)),
             cat,
             catLabel: normalizeText(pick(row, ['catLabel', 'categoryLabel', 'category', 'Category', 'Product Category'], catRaw)),
+            catLabelCn: normalizeText(pick(row, ['catLabelCn', 'Category CN', 'Product Category CN', 'categoryCn'], '')),
             name: normalizeText(pick(row, ['name', 'Name', 'product', 'Product', 'Product Name', 'Item Name'], `Product ${index + 1}`)),
+            nameCn: normalizeText(pick(row, ['nameCn', 'Product Name CN', 'Name CN', 'Item Name CN'], '')),
             sub: normalizeText(pick(row, ['sub', 'subtitle', 'Subtitle', 'shortDescription', 'Short Description'], '')),
+            subCn: normalizeText(pick(row, ['subCn', 'Subtitle CN', 'Short Description CN'], '')),
             desc: normalizeText(pick(row, ['desc', 'description', 'Description', 'Product Description'], '')),
+            descCn: normalizeText(pick(row, ['descCn', 'Description CN', 'Short Description CN', 'Product Description CN'], '')),
             type: slugify(pick(row, ['type', 'Type', 'cat', 'category', 'Category'], 'item')),
             badge: normalizeText(pick(row, ['badge', 'Badge'], '')),
             badgeText: normalizeText(pick(row, ['badgeText', 'Badge Text', 'badge', 'Badge'], '')),
+            badgeTextCn: normalizeText(pick(row, ['badgeTextCn', 'Badge Text CN', 'Badge CN'], '')),
             imageUrl: normalizeText(pick(row, ['imageUrl', 'Image URL', 'image', 'Image', 'photo', 'Photo', 'Photo URL'], '')),
             bgGrad: normalizeText(pick(row, ['bgGrad', 'Background', 'background'], '')),
             artAccent: normalizeText(pick(row, ['artAccent', 'Accent', 'accent'], '#C9963A')),
             stockNote: normalizeText(pick(row, ['stockNote', 'stock', 'Stock'], '')),
             variants: {
-                options: toVariantObjects(variantValue)
+                options: toVariantObjects(variantValue, variantCnValue)
             }
         };
     }
-
     function normalizePayload(payload) {
-        let productRows = [];
-        let settingRows = null;
-
-        if (Array.isArray(payload)) {
+        let productRows = [],
+            settingRows = null;
+        if (Array.isArray(payload))
             productRows = payload;
-        } else if (payload && typeof payload === 'object') {
+        else if (payload && typeof payload === 'object') {
             productRows = payload.products || payload.Products || payload.items || payload.Items || payload.data || [];
             settingRows = payload.settings || payload.Settings || payload.setting || payload.Setting || null;
-            if (payload.testimonials)
-                applyTestimonials(payload.testimonials);
-            if (payload.faq)
-                applyFaq(payload.faq);
+            lastTestimonialItems = payload.testimonials || payload.Testimonials || payload.reviews || payload.Reviews || [];
+            lastFaqItems = payload.faq || payload.FAQ || payload.faqs || payload.Faqs || [];
+            if (lastTestimonialItems.length)
+                applyTestimonials(lastTestimonialItems);
+            if (lastFaqItems.length)
+                applyFaq(lastFaqItems);
         }
-
         const parsedSettings = settingsArrayToObject(settingRows);
         if (parsedSettings && Object.keys(parsedSettings).length)
             applySettings(parsedSettings);
-
         if (!Array.isArray(productRows))
             productRows = [];
         return productRows.map(normalizeProduct).filter(p => p.name);
     }
-
     function initSelection() {
         sel = {};
         products.forEach(p => {
@@ -2618,7 +3021,6 @@
             };
         });
     }
-
     async function fetchFromSheet() {
         showLoading();
         try {
@@ -2629,13 +3031,14 @@
             if (!res.ok)
                 throw new Error(`Sheet returned ${res.status}`);
             const data = await res.json();
-            console.log('Dharma House Sheet API response:', data);
+            console.log('Tashi Delek Sheet API response:', data);
             const normalized = normalizePayload(data);
             products = normalized.length ? normalized : sampleProducts.map(normalizeProduct);
             initSelection();
             buildFilterBar();
             renderGrid();
             initWaLinks();
+            applyStaticLanguage();
         } catch (err) {
             console.warn('Sheet load failed. Using sample products.', err);
             products = sampleProducts.map(normalizeProduct);
@@ -2643,16 +3046,15 @@
             buildFilterBar();
             renderGrid();
             initWaLinks();
-            showToast('Sheet not connected - showing sample data');
+            applyStaticLanguage();
+            showToast(t('toastSample'));
         }
     }
-
     function buildFilterBar() {
         const bar = document.getElementById('filterBar');
-        const cats = [...new Map(products.map(p => [p.cat, p.catLabel])).entries()];
+        const cats = [...new Map(products.map(p => [p.cat, displayProduct(p, 'catLabel')])).entries()];
         const allCount = products.length;
-        bar.innerHTML = `<button class="filter-pill ${currentFilter === 'all' ? 'active' : ''}" onclick="applyFilter('all')">All Pieces <span class="pill-count">${allCount}</span></button>` +
-        cats.map(([cat, label]) => {
+        bar.innerHTML = `<button class="filter-pill ${currentFilter === 'all' ? 'active' : ''}" onclick="applyFilter('all')">${escapeHtml(t('allPieces'))} <span class="pill-count">${allCount}</span></button>` + cats.map(([cat, label]) => {
             const count = products.filter(p => p.cat === cat).length;
             return `<button class="filter-pill ${currentFilter === cat ? 'active' : ''}" onclick="applyFilter('${escapeHtml(cat)}')">${escapeHtml(label)} <span class="pill-count">${count}</span></button>`;
         }).join('');
@@ -2668,9 +3070,13 @@
     function renderGrid() {
         const grid = document.getElementById('grid');
         const list = visibleProducts();
-        document.getElementById('count').textContent = list.length;
+        const shopTitle = document.querySelector('.shop-header h2');
+        if (shopTitle)
+            shopTitle.innerHTML = `${escapeHtml(t('collection'))} - <span id="count">${list.length}</span> ${escapeHtml(t('pieces'))}`;
+        else if (document.getElementById('count'))
+            document.getElementById('count').textContent = list.length;
         if (!list.length) {
-            grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:4rem;color:var(--ash);font-style:italic">No items in this category yet.</div>`;
+            grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:4rem;color:var(--ash);font-style:italic">${escapeHtml(t('noItems'))}</div>`;
             return;
         }
         grid.innerHTML = list.map(renderCard).join('');
@@ -2680,31 +3086,17 @@
             variant: ''
         };
         const variantItems = p.variants.options || [];
-        return `<article class="card">
-            <div class="card-image" onclick="openModal('${escapeHtml(p.id)}')">
-              ${p.badgeText ? `<div class="card-badge badge-${escapeHtml(p.badge || 'gold')}">${escapeHtml(p.badgeText)}</div>` : ''}
-              <div class="card-canvas" id="art-${safeId(p.id)}">${renderArt(p, s.variant)}</div>
-              <div class="card-overlay"><button class="view-btn" type="button">View Details</button></div>
-            </div>
-            <div class="card-body">
-              <div class="card-category">${escapeHtml(p.catLabel)}</div>
-              <div class="card-name">${escapeHtml(p.name)}</div>
-              <div class="card-subtitle">${escapeHtml(p.sub)}</div>
-              ${variantItems.length ? renderVariantBlock(p) : ''}
-              <div class="price-row"><span class="enquire-label">Enquire for price</span><button class="wa-card-btn" type="button" onclick="addToCart(event,'${escapeHtml(p.id)}')">🛍 Add</button></div>
-            </div>
-          </article>`;
+        return `<article class="card"><div class="card-image" onclick="openModal('${escapeHtml(p.id)}')">${p.badgeText ? `<div class="card-badge badge-${escapeHtml(p.badge || 'gold')}">${escapeHtml(localText(p.badgeText, p.badgeTextCn))}</div>` : ''}<div class="card-canvas" id="art-${safeId(p.id)}">${renderArt(p, s.variant)}</div><div class="card-overlay"><button class="view-btn" type="button">${escapeHtml(t('viewDetails'))}</button></div></div><div class="card-body"><div class="card-category">${escapeHtml(displayProduct(p, 'catLabel'))}</div><div class="card-name">${escapeHtml(displayProduct(p, 'name'))}</div><div class="card-subtitle">${escapeHtml(displayProduct(p, 'sub'))}</div>${variantItems.length ? renderVariantBlock(p) : ''}<div class="price-row"><span class="enquire-label">${escapeHtml(t('enquireForPrice'))}</span><button class="wa-card-btn" type="button" onclick="addToCart(event,'${escapeHtml(p.id)}')">${escapeHtml(t('add'))}</button></div></div></article>`;
     }
     function renderVariantBlock(p) {
         const s = sel[p.id] || {};
         const items = p.variants.options || [];
-        const buttons = items.map(item => `<button class="pattern-pill ${s.variant === item.name ? 'active' : ''}" title="${escapeHtml(item.name)}" onclick="selectVariant(event,'${escapeHtml(p.id)}','${escapeHtml(item.name)}')">${escapeHtml(item.name)}</button>`).join('');
-        return `<div class="variant-block"><div class="var-label">Variant</div><div class="pattern-swatches">${buttons}</div></div>`;
+        const buttons = items.map(item => `<button class="pattern-pill ${s.variant === item.name ? 'active' : ''}" title="${escapeHtml(displayVariant(item))}" onclick="selectVariant(event,'${escapeHtml(p.id)}','${escapeHtml(item.name)}')">${escapeHtml(displayVariant(item))}</button>`).join('');
+        return `<div class="variant-block"><div class="var-label">${escapeHtml(t('variant'))}</div><div class="pattern-swatches">${buttons}</div></div>`;
     }
-
     function renderArt(p, variantName='') {
         if (p.imageUrl)
-            return renderProductImage(p.imageUrl, p.name);
+            return renderProductImage(p.imageUrl, displayProduct(p, 'name'));
         return getFallbackArt(p, variantName);
     }
     function renderProductImage(url, alt) {
@@ -2715,11 +3107,13 @@
         const type = slugify(p.type || p.cat || 'item');
         const accent = p.artAccent || '#C9963A';
         const bg = p.bgGrad || 'radial-gradient(ellipse,#2A2015 0%,#0D0A07 100%)';
-        const label = escapeHtml(variantName || p.name || 'Sacred Item');
+        const match = (p.variants && p.variants.options || []).find(v => v.name === variantName);
+        const label = escapeHtml(variantName ? displayVariant(match || {
+            name: variantName
+        }) : (displayProduct(p, 'name') || t('sacredItem')));
         const icon = type.includes('dzi') ? '🪬' : type.includes('mala') ? '📿' : type.includes('incense') ? '🪔' : type.includes('crystal') ? '🔮' : '☸';
-        return `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;background:${escapeHtml(bg)}"><div style="text-align:center;color:${escapeHtml(accent)}"><div style="font-size:4rem;line-height:1;margin-bottom:.8rem">${icon}</div><div style="font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;opacity:.75">${label}</div></div><div class="no-image-hint">Add image URL in Sheet</div></div>`;
+        return `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;background:${escapeHtml(bg)}"><div style="text-align:center;color:${escapeHtml(accent)}"><div style="font-size:4rem;line-height:1;margin-bottom:.8rem">${icon}</div><div style="font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;opacity:.75">${label}</div></div><div class="no-image-hint">${escapeHtml(t('addImage'))}</div></div>`;
     }
-
     function selectVariant(event, productId, name) {
         if (event)
             event.stopPropagation();
@@ -2728,7 +3122,6 @@
         sel[productId].variant = name;
         renderGrid();
     }
-
     function openModal(productId) {
         const p = products.find(x => String(x.id) === String(productId));
         if (!p)
@@ -2737,14 +3130,14 @@
             variant: ''
         };
         document.getElementById('modalArt').innerHTML = `<button class="modal-close" onclick="closeModal()">✕</button><div style="width:100%;height:100%;min-height:340px">${renderArt(p, s.variant)}</div>`;
-        document.getElementById('modalInfo').innerHTML = `<div class="modal-cat">${escapeHtml(p.catLabel)}</div><div class="modal-name">${escapeHtml(p.name)}</div><div class="modal-sub">${escapeHtml(p.sub)}</div><p class="modal-desc">${escapeHtml(p.desc)}</p>${(p.variants.options || []).length ? renderModalVariantBlock(p) : ''}<div class="modal-price-row"><span class="modal-enquire">Enquire for price</span></div><button class="modal-wa-btn" onclick="addToCart(null,'${escapeHtml(p.id)}'); closeModal(); openCart();">🛍 Add to Enquiry Bag</button><button class="modal-wa-btn" style="margin-top:.7rem;background:var(--gold-dim)" onclick="orderViaWa(null,'${escapeHtml(p.id)}',true)">💬 Enquire This Item</button><p class="modal-note">We confirm current price and availability through WhatsApp</p>`;
+        document.getElementById('modalInfo').innerHTML = `<div class="modal-cat">${escapeHtml(displayProduct(p, 'catLabel'))}</div><div class="modal-name">${escapeHtml(displayProduct(p, 'name'))}</div><div class="modal-sub">${escapeHtml(displayProduct(p, 'sub'))}</div><p class="modal-desc">${escapeHtml(displayProduct(p, 'desc'))}</p>${(p.variants.options || []).length ? renderModalVariantBlock(p) : ''}<div class="modal-price-row"><span class="modal-enquire">${escapeHtml(t('enquireForPrice'))}</span></div><button class="modal-wa-btn" onclick="addToCart(null,'${escapeHtml(p.id)}'); closeModal(); openCart();">${escapeHtml(t('addToBag'))}</button><button class="modal-wa-btn" style="margin-top:.7rem;background:var(--gold-dim)" onclick="orderViaWa(null,'${escapeHtml(p.id)}',true)">${escapeHtml(t('enquireThisItem'))}</button><p class="modal-note">${escapeHtml(t('modalNote'))}</p>`;
         document.getElementById('modalBg').classList.add('open');
     }
     function renderModalVariantBlock(p) {
         const items = p.variants.options || [];
         const s = sel[p.id] || {};
-        const buttons = items.map(item => `<button class="pattern-pill ${s.variant === item.name ? 'active' : ''}" onclick="mSelectV('${escapeHtml(p.id)}','${escapeHtml(item.name)}')">${escapeHtml(item.name)}</button>`).join('');
-        return `<div class="variant-block"><div class="var-label">Variant</div><div class="pattern-swatches" id="m-vs">${buttons}</div></div>`;
+        const buttons = items.map(item => `<button class="pattern-pill ${s.variant === item.name ? 'active' : ''}" onclick="mSelectV('${escapeHtml(p.id)}','${escapeHtml(item.name)}')">${escapeHtml(displayVariant(item))}</button>`).join('');
+        return `<div class="variant-block"><div class="var-label">${escapeHtml(t('variant'))}</div><div class="pattern-swatches" id="m-vs">${buttons}</div></div>`;
     }
     function mSelectV(productId, name) {
         if (!sel[productId])
@@ -2760,7 +3153,6 @@
         if (e.target === document.getElementById('modalBg'))
             closeModal();
     }
-
     function cartKey(item) {
         return `${item.id}|${item.variant}`;
     }
@@ -2774,15 +3166,19 @@
         const item = {
             id: p.id,
             name: p.name,
+            nameCn: p.nameCn,
             catLabel: p.catLabel,
+            catLabelCn: p.catLabelCn,
             sub: p.sub,
+            subCn: p.subCn,
             imageUrl: p.imageUrl,
-            variant: s.variant || ''
+            variant: s.variant || '',
+            variantCn: (p.variants.options || []).find(v => v.name === (s.variant || ''))?.nameCn || ''
         };
         if (!cart.some(x => cartKey(x) === cartKey(item)))
             cart.push(item);
         updateCartUI();
-        showToast('Added to enquiry bag');
+        showToast(t('toastAdded'));
     }
     function removeCartItem(index) {
         cart.splice(index, 1);
@@ -2798,13 +3194,13 @@
         const body = document.getElementById('cartBody');
         const btn = document.getElementById('cartWaBtn');
         const line = document.getElementById('cartCountLine');
-        line.textContent = `${cart.length} item${cart.length === 1 ? '' : 's'} in your enquiry bag`;
+        line.textContent = `${cart.length} ${cart.length === 1 ? t('cartLineSingular') : t('cartLinePlural')}`;
         btn.disabled = cart.length === 0;
         if (!cart.length) {
-            body.innerHTML = `<div class="cart-empty"><div class="cart-empty-icon">🪬</div><p>Your bag is empty</p><p style="margin-top:.5rem;font-style:italic;font-size:.8rem;color:var(--ash)">Add items to enquire about multiple pieces at once</p></div>`;
+            body.innerHTML = `<div class="cart-empty"><div class="cart-empty-icon">🪬</div><p>${escapeHtml(t('cartEmpty'))}</p><p style="margin-top:.5rem;font-style:italic;font-size:.8rem;color:var(--ash)">${escapeHtml(t('cartEmptyHint'))}</p></div>`;
             return;
         }
-        body.innerHTML = cart.map((item, i) => `<div class="cart-item"><div class="cart-item-thumb">${item.imageUrl ? `<img src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(item.name)}">` : '🪬'}</div><div class="cart-item-info"><div class="cart-item-name">${escapeHtml(item.name)}</div><div class="cart-item-meta">${escapeHtml(item.catLabel)}${item.variant ? `<br>Variant: ${escapeHtml(item.variant)}` : ''}</div></div><button class="cart-item-remove" onclick="removeCartItem(${i})">✕</button></div>`).join('');
+        body.innerHTML = cart.map((item, i) => `<div class="cart-item"><div class="cart-item-thumb">${item.imageUrl ? `<img src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(localText(item.name, item.nameCn))}">` : '🪬'}</div><div class="cart-item-info"><div class="cart-item-name">${escapeHtml(localText(item.name, item.nameCn))}</div><div class="cart-item-meta">${escapeHtml(localText(item.catLabel, item.catLabelCn))}${item.variant ? `<br>${escapeHtml(t('variant'))}: ${escapeHtml(localText(item.variant, item.variantCn))}` : ''}</div></div><button class="cart-item-remove" aria-label="${escapeHtml(t('remove'))}" onclick="removeCartItem(${i})">✕</button></div>`).join('');
     }
     function openCart() {
         document.getElementById('cartOverlay').classList.add('open');
@@ -2816,7 +3212,6 @@
         if (e.target === document.getElementById('cartOverlay'))
             closeCart();
     }
-
     function cleanWhatsappNumber(value) {
         return normalizeText(value || FALLBACK_WHATSAPP).replace(/[^0-9]/g, '');
     }
@@ -2825,32 +3220,24 @@
         return `https://wa.me/${number}${message ? `?text=${encodeURIComponent(message)}` : ''}`;
     }
     function initWaLinks() {
-        const greeting = getSettingValue(['defaultGreeting', 'whatsappGreeting', 'greeting'], 'Hello, I would like to enquire about your products.');
+        const greeting = getSettingValue(['defaultGreeting', 'whatsappGreeting', 'greeting'], currentLang === 'zh' ? '您好，我想咨询您的产品。' : 'Hello, I would like to enquire about your products.');
         const base = waLink(greeting);
-
         ['waHeaderBtn', 'waFloat', 'waContactLink'].forEach(id => {
             const el = document.getElementById(id);
             if (el)
                 el.href = base;
         });
-
         const display = document.getElementById('waDisplayNumber');
-        if (display) {
-            // Show exactly what your Sheet says in WhatsApp Display.
-            // If blank, show WhatsApp Number exactly. No forced + sign.
-            display.textContent = getSettingValue(
-            ['whatsappDisplay', 'whatsappNumber', 'whatsapp', 'phoneNumber', 'phone', 'contactNumber'],
-            FALLBACK_WHATSAPP
-            );
-        }
-
+        if (display)
+            display.textContent = getSettingValue(['whatsappDisplay', 'whatsappNumber', 'whatsapp', 'phoneNumber', 'phone', 'contactNumber'], FALLBACK_WHATSAPP);
         const email = document.getElementById('emailDisplay');
         if (email)
             email.textContent = getSettingValue(['email', 'emailAddress', 'contactEmail', 'businessEmail'], 'hello@dharmahouse.com');
     }
     function selectedProductMessage(p) {
         const s = sel[p.id] || {};
-        return `Hi, I want to enquire about this item:\n\nProduct: ${p.name}\nCategory: ${p.catLabel}${s.variant ? `\nVariant: ${s.variant}` : ''}\n\nPlease confirm current price and availability. Thank you.`;
+        const match = (p.variants.options || []).find(v => v.name === s.variant);
+        return `${t('msgSingleTitle')}\n\n${t('msgProduct')}: ${displayProduct(p, 'name')}\n${t('msgCategory')}: ${displayProduct(p, 'catLabel')}${s.variant ? `\n${t('msgVariant')}: ${displayVariant(match || {name: s.variant})}` : ''}\n\n${t('msgConfirm')}`;
     }
     function orderViaWa(event, productId, fromModal=false) {
         if (event)
@@ -2865,15 +3252,15 @@
     function sendCartViaWa() {
         if (!cart.length)
             return;
-        let msg = 'Hi, I want to enquire about these items:\n\n';
+        let msg = `${t('msgCartTitle')}\n\n`;
         cart.forEach((item, i) => {
-            msg += `${i + 1}. ${item.name}\n`;
-            msg += `Category: ${item.catLabel}\n`;
+            msg += `${i + 1}. ${localText(item.name, item.nameCn)}\n`;
+            msg += `${t('msgCategory')}: ${localText(item.catLabel, item.catLabelCn)}\n`;
             if (item.variant)
-                msg += `Variant: ${item.variant}\n`;
+                msg += `${t('msgVariant')}: ${localText(item.variant, item.variantCn)}\n`;
             msg += '\n';
         });
-        msg += 'Please confirm current price, availability and payment details. Thank you.';
+        msg += t('msgCartConfirm');
         window.open(waLink(msg), '_blank');
     }
     function submitContactForm() {
@@ -2883,23 +3270,27 @@
         const interest = document.getElementById('cf-interest').value;
         const message = document.getElementById('cf-message').value.trim();
         if (!name) {
-            showToast('Please enter your name');
+            showToast(t('toastName'));
             return;
         }
         if (!message) {
-            showToast('Please write a message');
+            showToast(t('toastMessage'));
             return;
         }
-        const msg = `Hello Dharma House! 🙏\n\nNew enquiry from website\n\nName: ${name}\n${phone ? `Phone: ${phone}\n` : ''}${email ? `Email: ${email}\n` : ''}${interest ? `Interested in: ${interest}\n` : ''}\nMessage:\n${message}\n\nThank you!`;
+        const msg = `${t('msgContactHello')}\n\n${t('msgNewEnquiry')}\n\n${t('msgName')}: ${name}\n${phone ? `${t('msgPhone')}: ${phone}\n` : ''}${email ? `${t('msgEmail')}: ${email}\n` : ''}${interest ? `${t('msgInterest')}: ${interest}\n` : ''}\n${t('msgMessage')}:\n${message}\n\n${t('msgThanks')}`;
         window.open(waLink(msg), '_blank');
     }
-
     function getSettingValue(keys, fallback='') {
         for (const key of keys) {
             if (settings[key] !== undefined && settings[key] !== null && String(settings[key]).trim() !== '')
                 return settings[key];
         }
         return fallback;
+    }
+    function getSettingLang(enKeys, cnKeys=[], fallback='') {
+        const en = getSettingValue(enKeys, fallback);
+        const cn = cnKeys.length ? getSettingValue(cnKeys, '') : '';
+        return localText(en, cn);
     }
     function setTextById(id, value) {
         const el = document.getElementById(id);
@@ -2923,7 +3314,6 @@
             }
         }
     }
-
     function applyTextToAll(selector, value) {
         if (value === undefined || value === null || String(value).trim() === '')
             return;
@@ -2931,191 +3321,269 @@
             el.textContent = value;
         });
     }
-
     function applySettings(newSettings) {
         if (!newSettings || typeof newSettings !== 'object')
             return;
-
         const mapped = {
             ...newSettings
         };
-
-        // Keys returned by your Apps Script are camelCase.
-        // Example: "WhatsApp Number" => whatsappNumber, "Email Address" => emailAddress.
         aliasSetting(mapped, 'shopName', ['shop', 'storeName', 'companyName', 'businessName', 'brandName', 'siteName']);
+        aliasSetting(mapped, 'shopNameCn', ['shopNameCN', 'shopCn', 'businessNameCn', 'brandNameCn', 'siteNameCn']);
         aliasSetting(mapped, 'brandSub', ['tagline', 'logoSubtitle', 'logoSub', 'subtitle', 'slogan']);
+        aliasSetting(mapped, 'brandSubCn', ['taglineCn', 'taglineCN', 'logoSubtitleCn', 'subtitleCn', 'sloganCn']);
         aliasSetting(mapped, 'whatsapp', ['whatsappNumber', 'whatsAppNumber', 'whatsappNo', 'phoneNumber', 'phone', 'contactNumber']);
         aliasSetting(mapped, 'email', ['emailAddress', 'contactEmail', 'businessEmail']);
         aliasSetting(mapped, 'location', ['basedIn', 'address', 'businessLocation']);
+        aliasSetting(mapped, 'locationCn', ['locationCN', 'basedInCn', 'addressCn', 'businessLocationCn']);
         aliasSetting(mapped, 'responseTime', ['orderHours', 'replyTime', 'businessHours']);
-
-        // Hero fields from your Settings tab.
-        if (!mapped.heroTitle && (mapped.heroTitleLine1 || mapped.heroTitleLine2)) {
+        aliasSetting(mapped, 'responseTimeCn', ['orderHoursCn', 'replyTimeCn', 'businessHoursCn']);
+        if (!mapped.heroTitle && (mapped.heroTitleLine1 || mapped.heroTitleLine2))
             mapped.heroTitle = `${mapped.heroTitleLine1 || ''}|${mapped.heroTitleLine2 || ''}`;
-        }
+        if (!mapped.heroTitleCn && (mapped.heroTitleLine1Cn || mapped.heroTitleLine2Cn))
+            mapped.heroTitleCn = `${mapped.heroTitleLine1Cn || ''}|${mapped.heroTitleLine2Cn || ''}`;
         aliasSetting(mapped, 'heroText', ['heroSubtitle', 'heroDescription', 'heroParagraph']);
-
-        // About fields from your Settings tab.
+        aliasSetting(mapped, 'heroTextCn', ['heroSubtitleCn', 'heroDescriptionCn', 'heroParagraphCn']);
         aliasSetting(mapped, 'aboutBadgeNumber', ['yearsInBusiness', 'yearsSourcing']);
         aliasSetting(mapped, 'aboutText1', ['aboutParagraph1', 'aboutDescription1']);
+        aliasSetting(mapped, 'aboutText1Cn', ['aboutParagraph1Cn', 'aboutDescription1Cn']);
         aliasSetting(mapped, 'aboutText2', ['aboutParagraph2', 'aboutDescription2']);
+        aliasSetting(mapped, 'aboutText2Cn', ['aboutParagraph2Cn', 'aboutDescription2Cn']);
         aliasSetting(mapped, 'aboutText3', ['aboutParagraph3', 'aboutDescription3']);
-
-        // Contact text fallback.
+        aliasSetting(mapped, 'aboutText3Cn', ['aboutParagraph3Cn', 'aboutDescription3Cn']);
         aliasSetting(mapped, 'contactText', ['contactDescription', 'contactParagraph']);
-
-        // Brand display.
-        if (mapped.shopName) {
+        aliasSetting(mapped, 'contactTextCn', ['contactDescriptionCn', 'contactParagraphCn']);
+        if (!mapped.shopName || mapped.shopName === 'Dharma House')
+            mapped.shopName = 'Tashi Delek Collection';
+        if (!mapped.shopNameCn)
+            mapped.shopNameCn = 'Tashi Delek Collection';
+        if (!mapped.brandSub || mapped.brandSub === 'Sacred Beads · Crystals · Mala')
+            mapped.brandSub = 'Dzi Beads · Tibetan Incense · Buddhist Mala';
+        if (!mapped.brandSubCn)
+            mapped.brandSubCn = '天珠 · 藏香 · 佛珠';
+        if (!mapped.heroTitleCn)
+            mapped.heroTitleCn = '如意吉祥|藏传珍宝佛具流通处';
+        if (!mapped.heroTextCn)
+            mapped.heroTextCn = '精选天珠、藏香、佛珠与藏传佛教供养佛具，以恭敬心整理呈现，方便您咨询结缘。';
+        if (!mapped.contactTextCn)
+            mapped.contactTextCn = '若您想了解天珠、藏香、佛珠或其他供养佛具，欢迎通过 WhatsApp 与我们联系。我们会为您整理咨询内容，并亲自回复价格、库存与适合选择。';
+        if (isPlaceholderText(mapped.aboutText1))
+            mapped.aboutText1 = DEFAULT_ABOUT_EN[0];
+        if (isPlaceholderText(mapped.aboutText2))
+            mapped.aboutText2 = DEFAULT_ABOUT_EN[1];
+        if (isPlaceholderText(mapped.aboutText3))
+            mapped.aboutText3 = DEFAULT_ABOUT_EN[2];
+        if (!mapped.aboutText1Cn)
+            mapped.aboutText1Cn = DEFAULT_ABOUT_CN[0];
+        if (!mapped.aboutText2Cn)
+            mapped.aboutText2Cn = DEFAULT_ABOUT_CN[1];
+        if (!mapped.aboutText3Cn)
+            mapped.aboutText3Cn = DEFAULT_ABOUT_CN[2];
+        if (mapped.shopName)
             mapped.brandName = String(mapped.shopName).includes('☸') ? String(mapped.shopName) : '☸ ' + mapped.shopName;
-        } else if (mapped.brandName && !String(mapped.brandName).includes('☸')) {
-            mapped.brandName = '☸ ' + mapped.brandName;
-        }
-
-        // Important: keep WhatsApp Display exact from Sheet.
-        // Do not auto-format into +60 unless your Sheet includes +60.
-        if (!mapped.whatsappDisplay && mapped.whatsapp) {
+        if (mapped.shopNameCn)
+            mapped.brandNameCn = String(mapped.shopNameCn).includes('☸') ? String(mapped.shopNameCn) : '☸ ' + mapped.shopNameCn;
+        if (!mapped.whatsappDisplay && mapped.whatsapp)
             mapped.whatsappDisplay = String(mapped.whatsapp).trim();
-        }
-
         settings = {
             ...settings,
             ...mapped
         };
         console.log('Applied website settings:', settings);
-
-        // Browser/SEO settings.
-        if (settings.websiteTitle)
-            document.title = settings.websiteTitle;
+        const siteTitle = getSettingLang(['websiteTitle'], ['websiteTitleCn'], settings.websiteTitle || 'Tashi Delek Collection');
+        if (siteTitle)
+            document.title = siteTitle;
         const metaDesc = document.querySelector('meta[name="description"]');
-        if (metaDesc && settings.metaDescription)
-            metaDesc.setAttribute('content', settings.metaDescription);
-
-        // Header + footer brand.
-        setTextById('brandLogo', getSettingValue(['brandName'], '☸ Dharma House'));
-        setTextById('brandSub', getSettingValue(['brandSub', 'tagline'], 'Sacred Beads · Crystals · Mala'));
-        applyTextToAll('.footer-brand .logo', getSettingValue(['brandName'], '☸ Dharma House'));
-        applyTextToAll('.footer-brand .logo-sub', getSettingValue(['brandSub', 'tagline'], 'Sacred Beads · Crystals · Mala'));
-
-        // Hero section.
-        setTextById('heroEyebrow', getSettingValue(['heroEyebrow']));
-        setHtmlById('heroTitle', getSettingValue(['heroTitle']));
-        setTextById('heroText', getSettingValue(['heroText', 'heroSubtitle']));
-
-        // Hero buttons.
+        const metaText = getSettingLang(['metaDescription'], ['metaDescriptionCn']);
+        if (metaDesc && metaText)
+            metaDesc.setAttribute('content', metaText);
+        setTextById('brandLogo', getSettingLang(['brandName'], ['brandNameCn'], '☸ Tashi Delek Collection'));
+        setTextById('brandSub', getSettingLang(['brandSub', 'tagline'], ['brandSubCn', 'taglineCn'], currentLang === 'zh' ? '天珠 · 藏香 · 佛珠' : 'Dzi Beads · Tibetan Incense · Buddhist Mala'));
+        applyTextToAll('.footer-brand .logo', getSettingLang(['brandName'], ['brandNameCn'], '☸ Tashi Delek Collection'));
+        applyTextToAll('.footer-brand .logo-sub', getSettingLang(['brandSub', 'tagline'], ['brandSubCn', 'taglineCn'], currentLang === 'zh' ? '天珠 · 藏香 · 佛珠' : 'Dzi Beads · Tibetan Incense · Buddhist Mala'));
+        const heroEyebrowEl = document.getElementById('heroEyebrow');
+        if (heroEyebrowEl)
+            heroEyebrowEl.style.display = 'none';
+        setHtmlById('heroTitle', getSettingLang(['heroTitle'], ['heroTitleCn'], currentLang === 'zh' ? '如意吉祥|藏传珍宝佛具流通处' : 'Sacred|Tibetan Treasures'));
+        setTextById('heroText', getSettingLang(['heroText', 'heroSubtitle'], ['heroTextCn', 'heroSubtitleCn'], currentLang === 'zh' ? '精选天珠、藏香、佛珠与藏传佛教供养佛具，以恭敬心整理呈现，方便您咨询结缘。' : 'Dzi beads, Tibetan incense, mala and sacred Buddhist objects selected with care for practice, altar and collection.'));
         const heroButtons = document.querySelectorAll('.hero-ctas a');
-        const heroButton1 = getSettingValue(['heroButton1', 'browseButton', 'primaryCta']);
-        const heroButton2 = getSettingValue(['heroButton2', 'howButton', 'secondaryCta']);
-        if (heroButtons[0] && heroButton1)
+        const heroButton1 = getSettingLang(['heroButton1', 'browseButton', 'primaryCta'], ['heroButton1Cn', 'browseButtonCn', 'primaryCtaCn'], currentLang === 'zh' ? '浏览产品' : 'Browse Collection');
+        const heroButton2 = getSettingLang(['heroButton2', 'howButton', 'secondaryCta'], ['heroButton2Cn', 'howButtonCn', 'secondaryCtaCn'], t('howTitle'));
+        if (heroButtons[0])
             heroButtons[0].textContent = heroButton1;
-        if (heroButtons[1] && heroButton2)
+        if (heroButtons[1])
             heroButtons[1].textContent = heroButton2;
-
-        // Trust strip badges.
         for (let i = 1; i <= 5; i++) {
-            const badgeText = getSettingValue([`badge${i}`, `trust${i}`]);
+            const badgeText = getSettingLang([`badge${i}`, `trust${i}`], [`badge${i}Cn`, `trust${i}Cn`]);
             if (badgeText) {
                 const el = document.querySelector(`.trust-strip .trust-item:nth-child(${i}) .trust-text`);
                 if (el)
                     el.textContent = badgeText;
             }
         }
-
-        // How section.
-        setTextById('howEyebrow', getSettingValue(['howEyebrow']));
-        setTextById('howTitle', getSettingValue(['howTitle']));
-
-        // About section.
-        setTextById('aboutEyebrow', getSettingValue(['aboutEyebrow']));
-        setHtmlById('aboutTitle', getSettingValue(['aboutTitle']));
+        setTextById('howEyebrow', getSettingLang(['howEyebrow'], ['howEyebrowCn'], t('howEyebrow')));
+        setTextById('howTitle', getSettingLang(['howTitle'], ['howTitleCn'], t('howTitle')));
+        setTextById('aboutEyebrow', getSettingLang(['aboutEyebrow'], ['aboutEyebrowCn'], currentLang === 'zh' ? '我们的故事' : 'Our Story'));
+        setHtmlById('aboutTitle', getSettingLang(['aboutTitle'], ['aboutTitleCn'], currentLang === 'zh' ? '不只是收藏|更是一条有意义的道路' : 'More Than a Collection|A Path of Meaning'));
         setTextById('aboutBadgeNumber', getSettingValue(['aboutBadgeNumber', 'yearsInBusiness', 'yearsSourcing']));
-        setTextById('aboutBadgeText', getSettingValue(['aboutBadgeText']));
-
+        setTextById('aboutBadgeText', getSettingLang(['aboutBadgeText'], ['aboutBadgeTextCn'], currentLang === 'zh' ? '年寻访经验' : 'Years Sourcing'));
         const aboutPs = document.querySelectorAll('#about .about-text > p');
-        const aboutKeys = [
-        ['aboutParagraph1', 'aboutText1', 'aboutText'],
-        ['aboutParagraph2', 'aboutText2'],
-        ['aboutParagraph3', 'aboutText3']
-        ];
-        aboutKeys.forEach((keys, idx) => {
-            const value = getSettingValue(keys);
+        [[['aboutParagraph1', 'aboutText1', 'aboutText'], ['aboutParagraph1Cn', 'aboutText1Cn']], [['aboutParagraph2', 'aboutText2'], ['aboutParagraph2Cn', 'aboutText2Cn']], [['aboutParagraph3', 'aboutText3'], ['aboutParagraph3Cn', 'aboutText3Cn']]].forEach((pair, idx) => {
+            const value = getSettingLang(pair[0], pair[1], DEFAULT_ABOUT_EN[idx]);
             if (aboutPs[idx] && value)
-                aboutPs[idx].textContent = value;
+                aboutPs[idx].textContent = currentLang === 'zh' ? (getSettingValue(pair[1], DEFAULT_ABOUT_CN[idx]) || DEFAULT_ABOUT_CN[idx]) : value;
         });
-
-        // Reviews + FAQ headings.
-        setTextById('reviewsEyebrow', getSettingValue(['reviewsEyebrow', 'testimonialEyebrow']));
-        setTextById('reviewsTitle', getSettingValue(['reviewsTitle', 'testimonialTitle']));
-        setTextById('faqEyebrow', getSettingValue(['faqEyebrow']));
-        setTextById('faqTitle', getSettingValue(['faqTitle']));
-
-        // Contact section.
-        setTextById('contactEyebrow', getSettingValue(['contactEyebrow']));
-        setTextById('contactTitle', getSettingValue(['contactTitle']));
-        setTextById('contactText', getSettingValue(['contactText']));
+        setTextById('reviewsEyebrow', getSettingLang(['reviewsEyebrow', 'testimonialEyebrow'], ['reviewsEyebrowCn', 'testimonialEyebrowCn'], t('reviewsEyebrow')));
+        setTextById('reviewsTitle', getSettingLang(['reviewsTitle', 'testimonialTitle'], ['reviewsTitleCn', 'testimonialTitleCn'], t('reviewsTitle')));
+        setTextById('faqEyebrow', getSettingLang(['faqEyebrow'], ['faqEyebrowCn'], t('faqEyebrow')));
+        setTextById('faqTitle', getSettingLang(['faqTitle'], ['faqTitleCn'], t('faqTitle')));
+        setTextById('contactEyebrow', getSettingLang(['contactEyebrow'], ['contactEyebrowCn'], t('contactEyebrow')));
+        setTextById('contactTitle', getSettingLang(['contactTitle'], ['contactTitleCn'], t('contactTitle')));
+        setTextById('contactText', getSettingLang(['contactText'], ['contactTextCn'], t('contactText')));
         setTextById('emailDisplay', getSettingValue(['email', 'emailAddress'], 'hello@dharmahouse.com'));
-        setTextById('locationDisplay', getSettingValue(['location', 'basedIn', 'address'], 'Kuala Lumpur, Malaysia'));
-        setTextById('responseTimeDisplay', getSettingValue(['responseTime', 'orderHours', 'replyTime'], 'Usually within 2-4 hours'));
-
-        // Footer email link.
+        setTextById('locationDisplay', getSettingLang(['location', 'basedIn', 'address'], ['locationCn', 'basedInCn', 'addressCn'], 'Kuala Lumpur, Malaysia'));
+        setTextById('responseTimeDisplay', getSettingLang(['responseTime', 'orderHours', 'replyTime'], ['responseTimeCn', 'orderHoursCn', 'replyTimeCn'], currentLang === 'zh' ? '通常 2–4 小时内回复' : 'Usually within 2-4 hours'));
         document.querySelectorAll('a[href^="mailto:"]').forEach(a => {
             const email = getSettingValue(['email', 'emailAddress'], 'hello@dharmahouse.com');
             a.href = 'mailto:' + email;
         });
-
-        // Social links.
-        const instagramUrl = getSettingValue(['instagramUrl']);
-        const facebookUrl = getSettingValue(['facebookUrl']);
-        if (instagramUrl) {
-            document.querySelectorAll('.footer-col a').forEach(a => {
-                if (a.textContent.trim().toLowerCase() === 'instagram') {
-                    a.href = instagramUrl;
-                    a.target = '_blank';
-                    a.rel = 'noopener';
-                }
-            });
-        }
-        if (facebookUrl) {
-            document.querySelectorAll('.footer-col a').forEach(a => {
-                if (a.textContent.trim().toLowerCase() === 'facebook') {
-                    a.href = facebookUrl;
-                    a.target = '_blank';
-                    a.rel = 'noopener';
-                }
-            });
-        }
-
-        // WhatsApp links + displayed number.
         initWaLinks();
     }
-
-    function formatWhatsappDisplay(value) {
-        // Keep the visible number exactly as provided by Settings where possible.
-        const raw = normalizeText(value);
-        return raw || FALLBACK_WHATSAPP;
-    }
-
     function applyTestimonials(items) {
         if (!Array.isArray(items) || !items.length)
             return;
+        lastTestimonialItems = items;
         const grid = document.getElementById('reviewsGrid');
-        grid.innerHTML = items.map(t => `<div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"${escapeHtml(t.text || t.review || '')}"</p><div class="review-author"><div class="review-avatar">${escapeHtml(t.icon || '🙏')}</div><div><div class="review-name">${escapeHtml(t.name || 'Customer')}</div><div class="review-location">${escapeHtml(t.location || '')}</div></div></div>${t.product ? `<div class="review-product-tag">${escapeHtml(t.product)}</div>` : ''}</div>`).join('');
+        grid.innerHTML = items.map(tst => `<div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"${escapeHtml(localText(tst.text || tst.review || '', tst.textCn || tst.reviewCn || tst.reviewCN || ''))}"</p><div class="review-author"><div class="review-avatar">${escapeHtml(tst.icon || '🙏')}</div><div><div class="review-name">${escapeHtml(tst.name || 'Customer')}</div><div class="review-location">${escapeHtml(localText(tst.location || '', tst.locationCn || tst.locationCN || ''))}</div></div></div>${tst.product ? `<div class="review-product-tag">${escapeHtml(localText(tst.product, tst.productCn || tst.productCN || ''))}</div>` : ''}</div>`).join('');
     }
     function applyFaq(items) {
         if (!Array.isArray(items) || !items.length)
             return;
+        lastFaqItems = items;
         const list = document.getElementById('faqList');
-        list.innerHTML = items.map(f => `<div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">${escapeHtml(f.question || '')} <span class="faq-icon">+</span></button><div class="faq-a"><p>${escapeHtml(f.answer || '')}</p></div></div>`).join('');
+        list.innerHTML = items.map(f => `<div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">${escapeHtml(localText(f.question || '', f.questionCn || f.questionCN || ''))} <span class="faq-icon">+</span></button><div class="faq-a"><p>${escapeHtml(localText(f.answer || '', f.answerCn || f.answerCN || ''))}</p></div></div>`).join('');
+    }
+    function applyStaticLanguage() {
+        document.documentElement.lang = currentLang === 'zh' ? 'zh-Hans' : 'en';
+        const heroEyebrowEl = document.getElementById('heroEyebrow');
+        if (heroEyebrowEl)
+            heroEyebrowEl.style.display = 'none';
+        document.body.classList.toggle('lang-zh', currentLang === 'zh');
+        updateLangButtons();
+        const navs = document.querySelectorAll('header nav a');
+        [t('navShop'), t('navHow'), t('navAbout'), t('navReviews'), t('navFaq'), t('navContact')].forEach((txt, i) => {
+            if (navs[i])
+                navs[i].textContent = txt;
+        });
+        const m = document.querySelectorAll('#mobileNav a');
+        [t('navShop'), t('navHow'), t('navAboutUs'), t('navReviews'), t('navFaq'), t('navContact'), t('enquiryBag')].forEach((txt, i) => {
+            if (m[i])
+                m[i].textContent = txt;
+        });
+        const bagBtn = document.querySelector('.bag-wrap .wa-header-btn');
+        if (bagBtn)
+            bagBtn.textContent = t('enquiryBag');
+        const waBtn = document.getElementById('waHeaderBtn');
+        if (waBtn)
+            waBtn.textContent = t('whatsapp');
+        document.querySelector('.wa-float-label') && (document.querySelector('.wa-float-label').textContent = t('floatLabel'));
+        setTextById('howEyebrow', t('howEyebrow'));
+        setTextById('howTitle', t('howTitle'));
+        document.querySelectorAll('#how .step-title').forEach((el, i) => el.textContent = [t('step1Title'), t('step2Title'), t('step3Title'), t('step4Title')][i] || el.textContent);
+        document.querySelectorAll('#how .step-desc').forEach((el, i) => el.textContent = [t('step1Desc'), t('step2Desc'), t('step3Desc'), t('step4Desc')][i] || el.textContent);
+        setTextById('reviewsEyebrow', t('reviewsEyebrow'));
+        setTextById('reviewsTitle', t('reviewsTitle'));
+        setTextById('faqEyebrow', t('faqEyebrow'));
+        setTextById('faqTitle', t('faqTitle'));
+        setTextById('contactEyebrow', t('contactEyebrow'));
+        setTextById('contactTitle', t('contactTitle'));
+        setTextById('contactText', t('contactText'));
+        document.querySelectorAll('.contact-channels .channel-label').forEach((el, i) => el.textContent = [t('waFastest'), t('email'), t('responseTime'), t('basedIn')][i] || el.textContent);
+        const labels = document.querySelectorAll('.form-label');
+        [t('formName'), t('formPhone'), t('formEmail'), t('formInterest'), t('formMessage')].forEach((txt, i) => {
+            if (labels[i])
+                labels[i].textContent = txt;
+        });
+        const setPH = (id, txt) => {
+            const el = document.getElementById(id);
+            if (el)
+                el.placeholder = txt;
+        };
+        setPH('cf-name', t('formNamePH'));
+        setPH('cf-phone', t('formPhonePH'));
+        setPH('cf-email', t('formEmailPH'));
+        setPH('cf-message', t('formMessagePH'));
+        const opts = document.querySelectorAll('#cf-interest option');
+        [t('formSelect'), t('formDzi'), t('formIncense'), t('formCrystals'), t('formMala'), t('formCustom'), t('formGeneral')].forEach((txt, i) => {
+            if (opts[i])
+                opts[i].textContent = txt;
+        });
+        const submit = document.querySelector('.form-submit');
+        if (submit)
+            submit.textContent = t('formSubmit');
+        const note = document.querySelector('.form-note');
+        if (note)
+            note.textContent = t('formNote');
+        const footerP = document.querySelector('.footer-brand p');
+        if (footerP)
+            footerP.textContent = t('footerBrand');
+        const footerH = document.querySelectorAll('.footer-col h4');
+        [t('footerShop'), t('footerInfo'), t('footerContact')].forEach((txt, i) => {
+            if (footerH[i])
+                footerH[i].textContent = txt;
+        });
+        const footerLinks = document.querySelectorAll('.footer-col a');
+        const texts = [t('formDzi'), t('formIncense'), t('formCrystals'), t('formMala'), t('footerAbout'), t('howTitle'), t('faqTitle'), t('navReviews'), t('footerWhatsapp'), t('email'), 'Instagram', 'Facebook'];
+        texts.forEach((txt, i) => {
+            if (footerLinks[i])
+                footerLinks[i].textContent = txt;
+        });
+        const bottom = document.querySelectorAll('.footer-bottom p');
+        if (bottom[0])
+            bottom[0].textContent = t('footerRights');
+        if (bottom[1])
+            bottom[1].textContent = t('footerAvailability');
+        const cartTitle = document.querySelector('.cart-title');
+        if (cartTitle)
+            cartTitle.textContent = t('cartTitle');
+        const cartBtn = document.getElementById('cartWaBtn');
+        if (cartBtn)
+            cartBtn.textContent = t('cartSend');
+        const cartNote = document.querySelector('.cart-note');
+        if (cartNote)
+            cartNote.textContent = t('cartNote');
+        applySettings(settings);
+        buildFilterBar();
+        renderGrid();
+        renderCart();
+        if (lastTestimonialItems.length)
+            applyTestimonials(lastTestimonialItems);
+        if (lastFaqItems.length)
+            applyFaq(lastFaqItems);
+        initWaLinks();
+    }
+    function setLanguage(lang) {
+        currentLang = lang === 'zh' ? 'zh' : 'en';
+        localStorage.setItem('td_lang', currentLang);
+        applyStaticLanguage();
+    }
+    function updateLangButtons() {
+        const en = document.getElementById('langEn');
+        const zh = document.getElementById('langZh');
+        if (en)
+            en.classList.toggle('active', currentLang === 'en');
+        if (zh)
+            zh.classList.toggle('active', currentLang === 'zh');
     }
     function showLoading() {
-        document.getElementById('grid').innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:4rem;color:var(--gold);opacity:.6"><div style="font-size:2rem;margin-bottom:1rem;animation:spin 2s linear infinite;display:inline-block">☸</div><div style="font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.3em;text-transform:uppercase">Loading Collection...</div></div>`;
+        document.getElementById('grid').innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:4rem;color:var(--gold);opacity:.6"><div style="font-size:2rem;margin-bottom:1rem;animation:spin 2s linear infinite;display:inline-block">☸</div><div style="font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.3em;text-transform:uppercase">${escapeHtml(t('loading'))}</div></div>`;
     }
     function showToast(msg) {
-        const t = document.getElementById('toast');
-        if (!t)
+        const toast = document.getElementById('toast');
+        if (!toast)
             return;
-        t.textContent = msg;
-        t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 2800);
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2800);
     }
     function toggleFaq(btn) {
         const item = btn.parentElement;
