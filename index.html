@@ -2376,42 +2376,60 @@
     <div class="toast" id="toast"></div>
 
     <script>
-    /* TASHI DELEK COLLECTION — stable EN/CN frontend */
-    const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbzzTInJ3B5h0SMzddVn8Z2Midni90HLPgAn0_AI6uPspsxY0IT9Q9QuYJbSgLjAp7nd/exec';
+    /* ============================================================
+       TASHI DELEK COLLECTION — FRONTEND JS WITH EN / 中文 TOGGLE
+       - Replace SHEET_API_URL with your correct Apps Script Web App URL.
+       - English comes from your existing Sheet fields.
+       - Chinese uses CN fields if present, otherwise built-in translations for website UI.
+       - Product CN columns supported: Product Name CN, Subtitle CN, Short Description CN,
+         Category CN, Colour / Pattern Variants CN.
+       - Settings CN rows supported: Shop Name CN, Tagline CN, Hero Title Line 1 CN,
+         Hero Title Line 2 CN, Hero Subtitle CN, About Paragraph 1 CN, etc.
+    ============================================================ */
+    const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbwQqrKhwdJ087E3naz3CcWZD_Ru8bN6cRAvZ9kVGJ4nXsWExo4LJvbNb2YCDgdWNodh/exec'; // replace with your Apps Script Web App URL
     const FALLBACK_WHATSAPP = '60165023699';
-    let products = [],
-        settings = {},
-        faqItems = [],
-        testimonials = [],
-        cart = [],
-        sel = {},
-        currentFilter = 'all';
+
+    let products = [];
+    let sel = {};
+    let cart = [];
+    let currentFilter = 'all';
     let currentLang = localStorage.getItem('td_lang') || 'en';
+    let settings = {
+        brandName: '☸ Tashi Delek Collection',
+        brandSub: 'Dzi Beads · Tibetan Incense · Buddhist Mala',
+        whatsapp: FALLBACK_WHATSAPP,
+        email: 'hello@dharmahouse.com',
+        location: 'Kuala Lumpur, Malaysia'
+    };
+
     const UI = {
         en: {
             navShop: 'Shop',
             navHow: 'How to Order',
             navAbout: 'About',
-            navAboutUs: 'About Us',
             navReviews: 'Reviews',
             navFaq: 'FAQ',
             navContact: 'Contact',
+            navAboutUs: 'About Us',
             enquiryBag: '🛍 Enquiry Bag',
             whatsapp: '💬 WhatsApp',
-            floatLabel: 'Order on WhatsApp',
             allPieces: 'All Pieces',
             collection: 'Collection',
             pieces: 'pieces',
-            noItems: 'No products found.',
-            loading: 'Loading collection',
+            noItems: 'No items in this category yet.',
             viewDetails: 'View Details',
             variant: 'Variant',
             enquireForPrice: 'Enquire for price',
             add: '🛍 Add',
+            addToBag: '🛍 Add to Enquiry Bag',
+            enquireThisItem: '💬 Enquire This Item',
+            modalNote: 'We confirm current price and availability through WhatsApp',
+            addImage: 'Add image URL in Sheet',
+            sacredItem: 'Sacred Item',
             howEyebrow: 'Simple · Fast · Personal',
             howTitle: 'How to Order',
             step1Title: 'Browse & Choose',
-            step1Desc: 'Explore the collection. Select the available variant where applicable.',
+            step1Desc: 'Explore the collection. Select pattern, colour and size where available.',
             step2Title: 'Add to Bag',
             step2Desc: 'Add one or multiple items to the enquiry bag without showing prices publicly.',
             step3Title: 'WhatsApp Us',
@@ -2430,14 +2448,12 @@
             responseTime: 'Response Time',
             basedIn: 'Based In',
             formName: 'Your Name',
-            formPhone: 'WhatsApp / Phone',
-            formEmail: 'Email Address',
-            formInterest: "I'm Interested In",
-            formMessage: 'Message',
             formNamePH: 'Full name',
+            formPhone: 'WhatsApp / Phone',
             formPhonePH: '+60 12 345 6789',
+            formEmail: 'Email Address',
             formEmailPH: 'your@email.com',
-            formMessagePH: "Tell us what you're looking for, or ask any question...",
+            formInterest: "I'm Interested In",
             formSelect: 'Select a category...',
             formDzi: 'Dzi Beads',
             formIncense: 'Incense',
@@ -2445,6 +2461,8 @@
             formMala: 'Buddhist Mala',
             formCustom: 'Custom Order / Wholesale',
             formGeneral: 'General Enquiry',
+            formMessage: 'Message',
+            formMessagePH: "Tell us what you're looking for, or ask any question...",
             formSubmit: '💬 Send via WhatsApp',
             formNote: 'Your message will open in WhatsApp for you to send directly.',
             footerBrand: 'Authentic Tibetan treasures, incense and practice objects, managed through Google Sheet and ordered by WhatsApp enquiry.',
@@ -2453,131 +2471,235 @@
             footerContact: 'Contact',
             footerAbout: 'About Us',
             footerWhatsapp: 'WhatsApp Us',
-            footerRights: '© 2026 Tashi Delek Collection · All rights reserved',
+            footerRights: '© 2026 Dharma House · All rights reserved',
             footerAvailability: 'Enquire for current price and availability',
+            floatLabel: 'Order on WhatsApp',
             cartTitle: '🛍 Enquiry Bag',
+            cartLineSingular: 'item in your enquiry bag',
+            cartLinePlural: 'items in your enquiry bag',
+            cartEmpty: 'Your bag is empty',
+            cartEmptyHint: 'Add items to enquire about multiple pieces at once',
             cartSend: '💬 Send Enquiry via WhatsApp',
             cartNote: 'Prices are confirmed personally through WhatsApp.',
-            cartEmpty: 'Your bag is empty',
-            cartEmptySub: 'Add items to enquire about multiple pieces at once',
-            cartItems: 'items in your enquiry bag',
-            modalEnquire: 'Enquire for price',
-            modalNote: 'Prices and availability are confirmed by WhatsApp.',
+            remove: 'Remove',
             toastAdded: 'Added to enquiry bag',
-            toastSample: 'Sheet not connected — showing sample data',
-            addImage: 'Add Image URL in Sheet'
+            toastName: 'Please enter your name',
+            toastMessage: 'Please write a message',
+            toastSample: 'Sheet not connected - showing sample data',
+            loading: 'Loading Collection...',
+            msgSingleTitle: 'Hi, I want to enquire about this item:',
+            msgProduct: 'Product',
+            msgCategory: 'Category',
+            msgVariant: 'Variant',
+            msgConfirm: 'Please confirm current price and availability. Thank you.',
+            msgCartTitle: 'Hi, I want to enquire about these items:',
+            msgCartConfirm: 'Please confirm current price, availability and payment details. Thank you.',
+            msgContactHello: 'Hello Tashi Delek! 🙏',
+            msgNewEnquiry: 'New enquiry from website',
+            msgName: 'Name',
+            msgPhone: 'Phone',
+            msgEmail: 'Email',
+            msgInterest: 'Interested in',
+            msgMessage: 'Message',
+            msgThanks: 'Thank you!'
         },
         zh: {
-            navShop: '商品',
-            navHow: '如何下单',
-            navAbout: '关于',
-            navAboutUs: '关于我们',
+            navShop: '产品',
+            navHow: '如何订购',
+            navAbout: '关于我们',
             navReviews: '客户评价',
             navFaq: '常见问题',
             navContact: '联系我们',
-            enquiryBag: '🛍 询价袋',
+            navAboutUs: '关于我们',
+            enquiryBag: '🛍 咨询清单',
             whatsapp: '💬 WhatsApp',
-            floatLabel: 'WhatsApp 咨询',
-            allPieces: '全部商品',
+            allPieces: '全部产品',
             collection: '产品系列',
             pieces: '件产品',
-            noItems: '暂无商品。',
-            loading: '正在载入商品',
+            noItems: '此分类暂时没有产品。',
             viewDetails: '查看详情',
             variant: '款式',
-            enquireForPrice: '询价获取价格',
+            enquireForPrice: '咨询价格',
             add: '🛍 加入',
-            howEyebrow: '简单 · 快速 · 亲自回复',
-            howTitle: '如何下单',
-            step1Title: '浏览选择',
-            step1Desc: '浏览产品系列，并在有选项时选择合适的款式。',
-            step2Title: '加入询价袋',
-            step2Desc: '可把一件或多件商品加入询价袋，网站不公开显示价格。',
+            addToBag: '🛍 加入咨询清单',
+            enquireThisItem: '💬 咨询此产品',
+            modalNote: '我们会通过 WhatsApp 确认最新价格与库存。',
+            addImage: '请在表格加入图片链接',
+            sacredItem: '圣物',
+            howEyebrow: '简单 · 快速 · 个人化',
+            howTitle: '如何订购',
+            step1Title: '浏览与选择',
+            step1Desc: '浏览产品系列，并在有提供时选择款式、颜色或尺寸。',
+            step2Title: '加入清单',
+            step2Desc: '可把一个或多个感兴趣的产品加入咨询清单，价格不会公开显示。',
             step3Title: 'WhatsApp 咨询',
-            step3Desc: '一次过发送所有感兴趣的商品，我们会回复库存与价格。',
+            step3Desc: '把所有感兴趣的产品一次过发送到 WhatsApp，我们会回复库存与价格。',
             step4Title: '确认与寄送',
             step4Desc: '确认付款后，我们会妥善包装并安排寄送。',
-            reviewsEyebrow: '客户反馈',
+            reviewsEyebrow: '客户怎么说',
             reviewsTitle: '深受收藏者信赖',
             faqEyebrow: '常见问题',
             faqTitle: '常见问题',
-            contactEyebrow: '联系我们',
-            contactTitle: '欢迎咨询',
+            contactEyebrow: '联系咨询',
+            contactTitle: '联系我们',
             contactText: '若您想了解天珠、藏香、佛珠或其他供养佛具，欢迎通过 WhatsApp 与我们联系。我们会为您整理咨询内容，并亲自回复价格、库存与适合选择。',
             waFastest: 'WhatsApp 最快回复',
             email: '电邮',
             responseTime: '回复时间',
             basedIn: '所在地',
             formName: '您的姓名',
-            formPhone: 'WhatsApp / 电话',
-            formEmail: '电邮地址',
-            formInterest: '感兴趣项目',
-            formMessage: '留言',
             formNamePH: '姓名',
+            formPhone: 'WhatsApp / 电话',
             formPhonePH: '+60 12 345 6789',
+            formEmail: '电邮地址',
             formEmailPH: 'your@email.com',
-            formMessagePH: '请告诉我们您想寻找的物品，或留下问题……',
+            formInterest: '我感兴趣的是',
             formSelect: '请选择分类...',
             formDzi: '天珠',
-            formIncense: '藏香',
+            formIncense: '供香 / 藏香',
             formCrystals: '水晶',
-            formMala: '佛珠',
+            formMala: '佛珠 / 念珠',
             formCustom: '定制 / 批发',
             formGeneral: '一般咨询',
+            formMessage: '留言',
+            formMessagePH: '请告诉我们您想寻找的产品，或写下您的问题...',
             formSubmit: '💬 通过 WhatsApp 发送',
-            formNote: '点击后会打开 WhatsApp，并带入您的咨询内容。',
-            footerBrand: '精选藏传珍宝、藏香与修持佛具，由 Google Sheet 管理，并通过 WhatsApp 咨询结缘。',
-            footerShop: '商品',
+            formNote: '您的信息会在 WhatsApp 打开，由您确认发送。',
+            footerBrand: '正信藏传佛教圣物、天珠、藏香与佛珠，可通过 Google Sheet 管理，并以 WhatsApp 进行咨询结缘。',
+            footerShop: '产品',
             footerInfo: '资讯',
             footerContact: '联系',
             footerAbout: '关于我们',
             footerWhatsapp: 'WhatsApp 咨询',
             footerRights: '© 2026 Tashi Delek Collection · 版权所有',
-            footerAvailability: '请咨询当前价格与库存',
-            cartTitle: '🛍 询价袋',
-            cartSend: '💬 通过 WhatsApp 发送询价',
-            cartNote: '价格与库存将通过 WhatsApp 亲自确认。',
-            cartEmpty: '询价袋是空的',
-            cartEmptySub: '加入商品后，可一次咨询多件。',
-            cartItems: '件商品在询价袋',
-            modalEnquire: '询价获取价格',
-            modalNote: '价格与库存将通过 WhatsApp 确认。',
-            toastAdded: '已加入询价袋',
-            toastSample: '未连接表格 — 显示示范商品',
-            addImage: '请在表格加入图片链接'
+            footerAvailability: '请咨询最新价格与库存',
+            floatLabel: 'WhatsApp 订购',
+            cartTitle: '🛍 咨询清单',
+            cartLineSingular: '件产品在咨询清单中',
+            cartLinePlural: '件产品在咨询清单中',
+            cartEmpty: '咨询清单为空',
+            cartEmptyHint: '加入多个产品后，可一次过发送咨询。',
+            cartSend: '💬 通过 WhatsApp 发送咨询',
+            cartNote: '价格会通过 WhatsApp 私下确认。',
+            remove: '移除',
+            toastAdded: '已加入咨询清单',
+            toastName: '请输入您的姓名',
+            toastMessage: '请填写留言内容',
+            toastSample: '未连接表格，正在显示示范产品',
+            loading: '正在加载产品...',
+            msgSingleTitle: '您好，我想咨询以下产品：',
+            msgProduct: '产品',
+            msgCategory: '分类',
+            msgVariant: '款式',
+            msgConfirm: '请确认最新价格与库存，谢谢。',
+            msgCartTitle: '您好，我想咨询以下产品：',
+            msgCartConfirm: '请确认最新价格、库存与付款方式，谢谢。',
+            msgContactHello: '您好，Tashi Delek！🙏',
+            msgNewEnquiry: '网站新咨询',
+            msgName: '姓名',
+            msgPhone: '电话',
+            msgEmail: '电邮',
+            msgInterest: '感兴趣项目',
+            msgMessage: '留言',
+            msgThanks: '谢谢！'
         }
     };
-    const TRUST = {
-        en: ['100% Authentic Sourcing', 'Monastery Consecrated', 'Worldwide Shipping', 'Order via WhatsApp', 'Certificate of Authenticity'],
-        zh: ['正品来源', '寺院加持圣物', '全球寄送', 'WhatsApp 咨询', '附真实说明']
+
+    const ZH_TERMS = {
+        'Dharma House': 'Tashi Delek Collection',
+        'Tashi Delek Collection': 'Tashi Delek Collection',
+        'Sacred Beads · Crystals · Mala': '天珠 · 藏香 · 佛珠',
+        'Tibetan Buddhism Collection Shop· Sacred Beads · Crystals · Mala': '藏传佛教珍藏店 · 天珠 · 藏香 · 佛珠',
+        'Dzi Bead': '天珠',
+        'Dzi Beads': '天珠',
+        'Crystal': '水晶',
+        'Crystals': '水晶',
+        'Buddhist Mala': '佛珠',
+        'Mala': '佛珠',
+        'Incense': '供香',
+        'Bracelet': '手串',
+        'Pendant': '吊坠',
+        'Accessory': '配件',
+        'Singing Bowl': '颂钵',
+        'Thangka': '唐卡',
+        'Nine-Eyed Dzi': '九眼天珠',
+        '9 Eyes': '九眼',
+        '3 Eyes': '三眼',
+        '1 Eye': '一眼',
+        '2 Eyed Dzi': '二眼天珠',
+        '2 Eyed': '二眼',
+        'Tiger': '虎纹',
+        'Dragon': '龙纹',
+        'Lotus': '莲花',
+        'Wheel': '法轮',
+        'Natural Brown': '天然棕',
+        'Dark Brown': '深棕',
+        'Small': '小',
+        'Medium': '中',
+        'Large': '大',
+        'Sandalwood': '檀香',
+        'Juniper': '杜松',
+        'Medicine Buddha': '药师佛',
+        'Tibetan Incense': '藏香',
+        'Amethyst Cluster': '紫水晶簇',
+        'Bodhi Seed Mala': '菩提子佛珠',
+        'Agate Dzi': '玛瑙天珠',
+        'Harmony Dzi': '和合天珠',
+        'Traditional Offering Incense': '传统供香',
+        '108 Beads': '108颗',
+        'Natural Crystal': '天然水晶',
+        'Rare': '稀有',
+        'Selected': '精选',
+        'Popular': '热门',
+        'New': '新品',
+        'Gold': '精选',
+        'Sale': '优惠',
+        'Authentic · Consecrated · Rare': '',
+        'Sacred': '如意吉祥',
+        'Tibetan Treasures': '藏传珍宝佛具流通处',
+        'Dzi beads of ancient power, healing crystals of the earth...': '古老能量的天珠、来自大地的疗愈水晶……',
+        'Browse Collection': '浏览产品',
+        'How to Order': '如何订购',
+        'Authentic Sourcing': '正品来源',
+        'Consecrated Items': '加持圣物',
+        'Malaysia & Worldwide': '马来西亚与全球寄送',
+        'Enquire via WhatsApp': 'WhatsApp 咨询',
+        'Selected Pieces': '精选珍品',
+        'More Than a Shop - A Sacred Practice': '不只是一家商店 — 更是一份修持心意',
+        'More Than a Collection — A Path of Meaning': '不只是收藏 — 更是一条有意义的道路',
+        'Our Story': '我们的故事',
+        'Years Sourcing': '年寻访经验',
+        'Tashi Delek Collection began from a sincere respect for Tibetan Buddhism...': '扎西德勒珍藏源自我们对藏传佛教与圣物的真诚尊重……',
+        'Every item in our collection is chosen with care. We look closely at the pattern,': '每一件藏品都经过细心挑选，我们重视其纹饰、材质、状态与整体感觉。',
+        'When you order from Tashi Delek Collection, you are not just buying an': '当您从扎西德勒珍藏订购时，您选择的不只是一件物品，而是一份具有意义的祝福与提醒。'
+        ,
+        'Why are prices not shown?': '为什么不公开显示价格？'
+        ,
+        'Some sacred and collectible items vary by availability, grade and condition. Please add items to the enquiry bag and we will confirm the latest price by WhatsApp.': '部分圣物与收藏品会因品质、状态、来源与库存而有所不同。请将感兴趣的产品加入咨询清单，我们会通过 WhatsApp 为您确认最新价格。'
+        ,
+        'How does WhatsApp ordering work?': 'WhatsApp 如何下单？'
+        ,
+        'Select the items you are interested in, add them to the enquiry bag, then send the prepared WhatsApp message. We will reply with price, availability and details.': '请选择您感兴趣的产品并加入咨询清单，系统会准备好 WhatsApp 信息。发送后，我们会回复价格、库存与详情。'
+        ,
+        'Can I enquire about multiple items?': '可以一次咨询多个产品吗？'
+        ,
+        'Yes. The enquiry bag is designed for this. Add a few items and send all details in one WhatsApp message.': '可以。咨询清单就是为此设计的。您可以加入多件商品，再一次过通过 WhatsApp 发送给我们。'
+        ,
+        'Can products be updated from Google Sheet?': '产品可以从 Google Sheet 更新吗？'
+        ,
+        'Yes. Product names, categories, images, patterns, colours and sizes can be managed from your backend sheet.': '可以。产品名称、分类、图片、款式、说明与库存资料都可以从后台表格管理。'
+        ,
+        'Tashi Delek Collection began from a sincere respect for Tibetan Buddhism, sacred objects, and the quiet meaning they bring into daily life. What started as a personal journey of learning, collecting, and understanding dzi beads, mala, incense, and blessed items slowly became a way to share these meaningful pieces with others.': 'Tashi Delek Collection 源于对藏传佛教、圣物以及它们为日常生活带来的宁静意义的真诚敬意。最初，这只是个人学习、收藏与理解天珠、佛珠、藏香和加持圣物的旅程；慢慢地，它成为一种把这些有意义的物件分享给更多人的方式。'
+        ,
+        'Every item in our collection is chosen with care. We look closely at the pattern, material, condition, feel, and overall character of each piece before offering it to customers. For dzi beads especially, we understand that people are not only looking for beauty, but also symbolism, protection, blessing, and a personal connection.': '我们用心挑选每一件藏品。在呈现给客户之前，我们会仔细观察其纹饰、材质、状态、手感以及整体气质。尤其是天珠，我们明白人们寻找的不只是外在之美，也包括象征、护佑、祝福以及与自己内心相应的缘分。'
+        ,
+        'When you order from Tashi Delek Collection, you are not just buying an object. You are choosing something meaningful for your practice, altar, collection, protection, or daily reminder of peace and mindfulness. Each piece is handled with care and sent with sincere good wishes.': '当您从 Tashi Delek Collection 结缘一件物品时，您选择的不只是一件物件，而是一份可用于修持、供桌、收藏、护身，或在日常中提醒自己保持平静与正念的意义。每一件物品都会被用心处理，并带着真诚的祝愿寄出。'
+
     };
-    const ABOUT = {
-        en: ['Tashi Delek Collection began from a sincere respect for Tibetan Buddhism, sacred objects, and the quiet meaning they bring into daily life. What started as a personal journey of learning, collecting, and understanding dzi beads, mala, incense, and blessed items slowly became a way to share these meaningful pieces with others.', 'Every item in our collection is chosen with care. We look closely at the pattern, material, condition, feel, and overall character of each piece before offering it to customers. For dzi beads especially, we understand that people are not only looking for beauty, but also symbolism, protection, blessing, and a personal connection.', 'When you order from Tashi Delek Collection, you are not just buying an object. You are choosing something meaningful for your practice, altar, collection, protection, or daily reminder of peace and mindfulness. Each piece is handled with care and sent with sincere good wishes.'],
-        zh: ['Tashi Delek Collection 源于对藏传佛教、圣物以及它们为日常生活带来的宁静意义的真诚敬意。最初，这只是个人学习、收藏与理解天珠、佛珠、藏香和加持圣物的旅程；慢慢地，它成为一种把这些有意义的物件分享给更多人的方式。', '我们用心挑选每一件藏品。在呈现给客户之前，我们会仔细观察其纹饰、材质、状态、手感以及整体气质。尤其是天珠，我们明白人们寻找的不只是外在之美，也包括象征、护佑、祝福以及与个人相应的缘分。', '当您从 Tashi Delek Collection 结缘一件物品时，您选择的不只是一件物件，而是一份可用于修持、供桌、收藏、护身，或在日常中提醒自己保持平静与正念的意义。每一件物品都会被用心处理，并带着真诚的祝愿寄出。']
-    };
-    const DEFAULT_FAQ = [{
-        question: 'Why are prices not shown?',
-        answer: 'Some sacred and collectible items vary by availability, grade and condition. Please add items to the enquiry bag and we will confirm the latest price by WhatsApp.',
-        questionCn: '为什么没有显示价格？',
-        answerCn: '部分佛具、天珠与收藏品会因品相、等级、来源与现货情况而有所不同。您可以先把感兴趣的商品加入询价袋，我们会通过 WhatsApp 为您确认最新价格与库存。'
-    }, {
-        question: 'How does WhatsApp ordering work?',
-        answer: 'Select the items you are interested in, add them to the enquiry bag, then send the prepared WhatsApp message. We will reply with price, availability and details.',
-        questionCn: '如何通过 WhatsApp 下单？',
-        answerCn: '您可以先浏览商品，把感兴趣的款式加入询价袋，然后点击 WhatsApp 发送已整理好的咨询信息。我们会亲自回复价格、库存、实物细节与后续付款方式。'
-    }, {
-        question: 'Can I enquire about multiple items?',
-        answer: 'Yes. The enquiry bag is designed for this. Add a few items and send all details in one WhatsApp message.',
-        questionCn: '可以一次咨询多件商品吗？',
-        answerCn: '可以。询价袋就是为了方便您一次整理多件感兴趣的商品。您可以加入多个商品，然后通过一则 WhatsApp 信息发送给我们。'
-    }, {
-        question: 'Can products be updated from Google Sheet?',
-        answer: 'Yes. Product names, categories, images, patterns, colours and sizes can be managed from your backend sheet.',
-        questionCn: '商品内容可以从 Google Sheet 更新吗？',
-        answerCn: '可以。商品名称、分类、图片、款式、尺寸、说明与显示状态都可以从后台 Google Sheet 管理，网站会根据表格内容自动更新。'
-    }];
-    const sampleProducts = [{
-        id: '1',
+
+    const sampleProducts = [
+    {
+        id: 1,
         cat: 'dzi',
         catLabel: 'Dzi Bead',
         catLabelCn: '天珠',
@@ -2585,493 +2707,986 @@
         nameCn: '九眼天珠',
         sub: 'Agate Dzi',
         subCn: '玛瑙天珠',
-        desc: 'Auspicious dzi bead.',
-        descCn: '具吉祥寓意的天珠。',
+        desc: 'One of the most auspicious dzi patterns, traditionally associated with protection, clarity and merit.',
+        descCn: '最具吉祥寓意的天珠纹饰之一，传统上象征护佑、清明与福德。',
         type: 'dzi',
         badge: 'rare',
         badgeText: 'Rare',
         badgeTextCn: '稀有',
         imageUrl: '',
-        variants: {
-            variant: ['9 Eyes', '3 Eyes'],
-            variantCn: ['九眼', '三眼']
-        }
-    }, {
-        id: '2',
+        variant: '9 Eyes, 3 Eyes, 1 Eye',
+        variantCn: '九眼, 三眼, 一眼'
+    },
+    {
+        id: 2,
+        cat: 'dzi',
+        catLabel: 'Dzi Bead',
+        catLabelCn: '天珠',
+        name: '2 Eyed Dzi',
+        nameCn: '二眼天珠',
+        sub: 'Harmony Dzi',
+        subCn: '和合天珠',
+        desc: 'A meaningful dzi pattern often chosen for relationship harmony and balance.',
+        descCn: '二眼天珠常被视为和合、平衡与良缘的象征。',
+        type: 'dzi',
+        badge: 'gold',
+        badgeText: 'Selected',
+        badgeTextCn: '精选',
+        imageUrl: '',
+        variant: '2 Eyed',
+        variantCn: '二眼'
+    },
+    {
+        id: 3,
         cat: 'incense',
         catLabel: 'Incense',
-        catLabelCn: '藏香',
+        catLabelCn: '供香',
         name: 'Tibetan Incense',
         nameCn: '藏香',
         sub: 'Traditional Offering Incense',
         subCn: '传统供香',
-        desc: 'Aromatic incense for offering.',
-        descCn: '适合供养的传统香品。',
+        desc: 'Aromatic incense suitable for daily offering, meditation and space cleansing.',
+        descCn: '适合日常供养、禅修与净化空间的传统香品。',
         type: 'incense',
         badge: 'gold',
         badgeText: 'Popular',
         badgeTextCn: '热门',
         imageUrl: '',
-        variants: {
-            variant: ['Sandalwood', 'Juniper'],
-            variantCn: ['檀香', '杜松']
-        }
-    }];
-    function tx(k) {
-        return (UI[currentLang] && UI[currentLang][k]) || UI.en[k] || k
+        variant: 'Sandalwood, Juniper, Medicine Buddha',
+        variantCn: '檀香, 杜松, 药师佛'
+    },
+    {
+        id: 4,
+        cat: 'mala',
+        catLabel: 'Buddhist Mala',
+        catLabelCn: '佛珠',
+        name: 'Bodhi Seed Mala',
+        nameCn: '菩提子佛珠',
+        sub: '108 Beads',
+        subCn: '108颗',
+        desc: 'A hand-knotted mala for chanting, meditation and daily practice.',
+        descCn: '手工编结佛珠，适合持咒、禅修与日常修持。',
+        type: 'mala',
+        badge: '',
+        badgeText: '',
+        imageUrl: '',
+        variant: 'Natural Brown, Dark Brown',
+        variantCn: '天然棕, 深棕'
+    },
+    {
+        id: 5,
+        cat: 'crystal',
+        catLabel: 'Crystal',
+        catLabelCn: '水晶',
+        name: 'Amethyst Cluster',
+        nameCn: '紫水晶簇',
+        sub: 'Natural Crystal',
+        subCn: '天然水晶',
+        desc: 'A calming crystal often placed on an altar, desk or meditation area.',
+        descCn: '具有安定氛围的水晶，适合摆放在供桌、书桌或禅修空间。',
+        type: 'crystal',
+        badge: 'gold',
+        badgeText: 'New',
+        badgeTextCn: '新品',
+        imageUrl: '',
+        variant: 'Small, Medium, Large',
+        variantCn: '小, 中, 大'
     }
-    function clean(v) {
-        return v == null ? '' : String(v).trim()
+    ];
+
+
+
+    const DEFAULT_TRUST = {
+        en: ['100% Authentic Sourcing', 'Monastery Consecrated', 'Worldwide Shipping', 'Order via WhatsApp', 'Certificate of Authenticity'],
+        zh: ['正品来源保证', '寺院加持圣物', '全球寄送', 'WhatsApp 咨询结缘', '附真实说明']
+    };
+
+    const DEFAULT_FAQ_TRANSLATIONS = {
+        'Why are prices not shown?': '为什么没有显示价格？',
+        'Some sacred and collectible items vary by availability, grade and condition. Please add items to the enquiry bag and we will confirm the latest price by WhatsApp.': '部分佛具、天珠与收藏品会因品相、等级、来源与现货情况而有所不同。您可以先把感兴趣的商品加入咨询清单，我们会通过 WhatsApp 为您确认最新价格与库存。',
+        'How does WhatsApp ordering work?': '如何通过 WhatsApp 下单？',
+        'Select the items you are interested in, add them to the enquiry bag, then send the prepared WhatsApp message. We will reply with price, availability and details.': '您可以先浏览商品，把感兴趣的款式加入咨询清单，然后点击 WhatsApp 发送已整理好的咨询信息。我们会亲自回复价格、库存、实物细节与后续付款方式。',
+        'Can I enquire about multiple items?': '可以一次咨询多件商品吗？',
+        'Yes. The enquiry bag is designed for this. Add a few items and send all details in one WhatsApp message.': '可以。咨询清单就是为了方便您一次整理多件感兴趣的商品。您可以加入多个商品，然后通过一则 WhatsApp 信息发送给我们。',
+        'Can products be updated from Google Sheet?': '商品内容可以从 Google Sheet 更新吗？',
+        'Yes. Product names, categories, images, patterns, colours and sizes can be managed from your backend sheet.': '可以。商品名称、分类、图片、款式、尺寸、说明与显示状态都可以从后台 Google Sheet 管理，网站会根据表格内容自动更新。'
+    };
+
+    function translateKnownText(enValue, cnValue='') {
+        const en = normalizeText(enValue);
+        const cn = normalizeText(cnValue);
+        if (currentLang !== 'zh')
+            return en;
+        return cn || DEFAULT_FAQ_TRANSLATIONS[en] || ZH_TERMS[en] || en;
     }
-    function esc(v) {
-        return clean(v).replace(/[&<>'"]/g, c => ({
+
+    const DEFAULT_ABOUT_EN = [
+    'Tashi Delek Collection began from a sincere respect for Tibetan Buddhism, sacred objects, and the quiet meaning they bring into daily life. What started as a personal journey of learning, collecting, and understanding dzi beads, mala, incense, and blessed items slowly became a way to share these meaningful pieces with others.',
+    'Every item in our collection is chosen with care. We look closely at the pattern, material, condition, feel, and overall character of each piece before offering it to customers. For dzi beads especially, we understand that people are not only looking for beauty, but also symbolism, protection, blessing, and a personal connection.',
+    'When you order from Tashi Delek Collection, you are not just buying an object. You are choosing something meaningful for your practice, altar, collection, protection, or daily reminder of peace and mindfulness. Each piece is handled with care and sent with sincere good wishes.'
+    ];
+    const DEFAULT_ABOUT_CN = [
+    'Tashi Delek Collection 源于对藏传佛教、圣物以及它们为日常生活带来的宁静意义的真诚敬意。最初，这只是个人学习、收藏与理解天珠、佛珠、藏香和加持圣物的旅程；慢慢地，它成为一种把这些有意义的物件分享给更多人的方式。',
+    '我们用心挑选每一件藏品。在呈现给客户之前，我们会仔细观察其纹饰、材质、状态、手感以及整体气质。尤其是天珠，我们明白人们寻找的不只是外在之美，也包括象征、护佑、祝福以及与自己内心相应的缘分。',
+    '当您从 Tashi Delek Collection 结缘一件物品时，您选择的不只是一件物件，而是一份可用于修持、供桌、收藏、护身，或在日常中提醒自己保持平静与正念的意义。每一件物品都会被用心处理，并带着真诚的祝愿寄出。'
+    ];
+    function isPlaceholderText(value) {
+        const v = normalizeText(value).toLowerCase();
+        return !v || v.includes('...') || v.includes('your value') || v.includes('description / instructions');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        updateLangButtons();
+        applyStaticLanguage();
+        initWaLinks();
+        renderCart();
+        fetchFromSheet();
+    });
+
+    function t(key) {
+        return (UI[currentLang] && UI[currentLang][key]) || UI.en[key] || key;
+    }
+    function normalizeText(value, fallback='') {
+        if (value === undefined || value === null)
+            return fallback;
+        return String(value).trim();
+    }
+    function escapeHtml(value) {
+        return normalizeText(value).replace(/[&<>'"]/g, ch => ({
             '&': '&amp;',
             '<': '&lt;',
             '>': '&gt;',
             "'": '&#39;',
             '"': '&quot;'
-        }[c]))
+        }[ch]));
     }
-    function slug(v) {
-        return clean(v).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'item'
+    function slugify(value) {
+        return normalizeText(value).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'item';
     }
-    function split(v) {
-        if (Array.isArray(v))
-            return v.map(clean).filter(Boolean);
-        return clean(v).split(/[,|;]/).map(x => x.trim()).filter(Boolean)
+    function splitList(value) {
+        if (Array.isArray(value))
+            return value.map(x => normalizeText(x)).filter(Boolean);
+        return normalizeText(value).split(/[,|;]/).map(x => x.trim()).filter(Boolean);
     }
-    function loc(en, cn) {
-        return currentLang === 'zh' ? (clean(cn) || clean(en)) : clean(en)
+    function safeId(value) {
+        return normalizeText(value).replace(/[^a-zA-Z0-9_-]/g, '_');
     }
-    function pick(o, names, fb='') {
-        if (!o || typeof o !== 'object')
-            return fb;
-        for (const n of names) {
-            if (o[n] != null && clean(o[n]) !== '')
-                return o[n]
+    function autoZh(value) {
+        const v = normalizeText(value);
+        return ZH_TERMS[v] || v;
+    }
+    function localText(enValue, cnValue='') {
+        const en = normalizeText(enValue);
+        const cn = normalizeText(cnValue);
+        return currentLang === 'zh' ? (cn || autoZh(en)) : en;
+    }
+    function displayProduct(p, field) {
+        return localText(p[field], p[field + 'Cn']);
+    }
+    function displayVariant(item) {
+        return localText(item.name, item.nameCn);
+    }
+    function pick(row, names, fallback='') {
+        if (!row || typeof row !== 'object')
+            return fallback;
+        for (const name of names)
+            if (row[name] !== undefined && row[name] !== null && String(row[name]).trim() !== '')
+                return row[name];
+        const normalizedNames = names.map(n => String(n).toLowerCase().replace(/[^a-z0-9]/g, ''));
+        for (const key of Object.keys(row)) {
+            const cleanKey = String(key).toLowerCase().replace(/[^a-z0-9]/g, '');
+            if (normalizedNames.includes(cleanKey) && String(row[key]).trim() !== '')
+                return row[key];
         }
-        const targets = names.map(n => String(n).toLowerCase().replace(/[^a-z0-9]/g, ''));
-        for (const k of Object.keys(o)) {
-            if (targets.includes(String(k).toLowerCase().replace(/[^a-z0-9]/g, '')) && clean(o[k]) !== '')
-                return o[k]
+        return fallback;
+    }
+    function variantNameFromAny(value) {
+        if (value === undefined || value === null)
+            return '';
+        if (typeof value !== 'object')
+            return normalizeText(value);
+        const direct = value.name || value.label || value.value || value.text || value.title || value.variant || value.option || value.pattern || value.colour || value.color || value['Colour / Pattern Variants'] || value['Color / Pattern Variants'];
+        if (direct && typeof direct !== 'object')
+            return normalizeText(direct);
+        return '';
+    }
+    function toVariantObjects(value, cnValue='') {
+        if ((value === undefined || value === null || value === '') && !cnValue)
+            return [];
+        const enList = Array.isArray(value) || typeof value === 'object' ? null : splitList(value);
+        const cnList = splitList(cnValue);
+        let rawItems = [];
+        if (enList)
+            rawItems = enList;
+        else if (Array.isArray(value))
+            rawItems = value;
+        else if (typeof value === 'object' && value) {
+            const inner = value.variant || value.variants || value.options || value.option || value.pattern || value.patterns || value.colour || value.colours || value.color || value.colors;
+            if (inner !== undefined && inner !== null && inner !== value)
+                return toVariantObjects(inner, cnValue);
+            rawItems = Object.values(value);
         }
-        return fb
-    }
-    function setText(id, v) {
-        const e = document.getElementById(id);
-        if (e && clean(v))
-            e.textContent = v
-    }
-    function setHtml(id, v) {
-        const e = document.getElementById(id);
-        if (e && clean(v))
-            e.innerHTML = esc(v).replace(/\|/g, '<br>')
-    }
-    function getSet(en, cn, fb='') {
-        const keys = currentLang === 'zh' ? cn.concat(en) : en;
-        for (const k of keys) {
-            if (settings[k] != null && clean(settings[k]) !== '')
-                return settings[k]
-        }
-        return fb
-    }
-    function normVars(en, cn) {
-        if (en && typeof en === 'object' && !Array.isArray(en)) {
-            cn = en.variantCn || en.cn || cn;
-            en = en.variant || en.options || en.pattern || en.color || en.colour || []
-        }
-        const a = split(en),
-            b = split(cn);
-        return a.map((x, i) => ({
-            name: x,
-            nameCn: b[i] || ''
-        })).filter(x => x.name)
-    }
-    function normProduct(r, i) {
-        const cat = pick(r, ['cat', 'Category', 'category'], 'uncategorized');
-        const vars = pick(r, ['Colour / Pattern Variants', 'Color / Pattern Variants', 'variant', 'Variant', 'variants'], r.variants || '');
-        const varsCn = pick(r, ['Colour / Pattern Variants CN', 'Color / Pattern Variants CN', 'variantCn', 'Variant CN'], '');
-        return {
-            id: clean(pick(r, ['id', 'ID', 'sku'], `p-${i + 1}`)),
-            cat: slug(cat),
-            catLabel: clean(pick(r, ['catLabel', 'Category', 'category', 'Product Category'], cat)),
-            catLabelCn: clean(pick(r, ['catLabelCn', 'Category CN'], '')),
-            name: clean(pick(r, ['name', 'Name', 'Product Name'], `Product ${i + 1}`)),
-            nameCn: clean(pick(r, ['nameCn', 'Product Name CN', 'Name CN'], '')),
-            sub: clean(pick(r, ['sub', 'Subtitle', 'Short Description'], '')),
-            subCn: clean(pick(r, ['subCn', 'Subtitle CN'], '')),
-            desc: clean(pick(r, ['desc', 'Description', 'Short Description', 'Product Description'], '')),
-            descCn: clean(pick(r, ['descCn', 'Description CN', 'Short Description CN'], '')),
-            type: slug(pick(r, ['type', 'Type', 'cat', 'category'], 'item')),
-            badge: clean(pick(r, ['badge', 'Badge'], '')),
-            badgeText: clean(pick(r, ['badgeText', 'Badge Text'], '')),
-            badgeTextCn: clean(pick(r, ['badgeTextCn', 'Badge Text CN'], '')),
-            imageUrl: clean(pick(r, ['imageUrl', 'Image URL', 'image', 'Image'], '')),
-            variants: {
-                options: normVars(vars, varsCn)
+        const seen = new Set(),
+            result = [];
+        rawItems.forEach((item, idx) => {
+            if (Array.isArray(item)) {
+                toVariantObjects(item).forEach(v => {
+                    const k = v.name.toLowerCase();
+                    if (!seen.has(k)) {
+                        seen.add(k);
+                        result.push(v);
+                    }
+                });
+                return;
             }
-        }
+            if (typeof item === 'object' && item !== null && !(item.name || item.label || item.value || item.variant || item.pattern || item.colour || item.color)) {
+                toVariantObjects(item).forEach(v => {
+                    const k = v.name.toLowerCase();
+                    if (!seen.has(k)) {
+                        seen.add(k);
+                        result.push(v);
+                    }
+                });
+                return;
+            }
+            const name = variantNameFromAny(item);
+            if (!name)
+                return;
+            const key = name.toLowerCase();
+            if (!seen.has(key)) {
+                seen.add(key);
+                result.push({
+                    name,
+                    nameCn: cnList[idx] || autoZh(name)
+                });
+            }
+        });
+        if (!result.length && cnList.length)
+            cnList.forEach(cn => result.push({
+                name: cn,
+                nameCn: cn
+            }));
+        return result;
     }
-    function normalizeProducts(data) {
-        let rows = Array.isArray(data) ? data : (data && typeof data === 'object' ? (data.products || data.Products || data.items || data.data || []) : []);
-        return Array.isArray(rows) ? rows.map(normProduct).filter(p => p.name) : []
+    function settingsArrayToObject(rows) {
+        if (!Array.isArray(rows))
+            return rows || {};
+        const obj = {};
+        rows.forEach(row => {
+            if (!row || typeof row !== 'object')
+                return;
+            const key = normalizeText(pick(row, ['Key', 'key', 'Setting', 'setting', 'Name', 'name', 'Field', 'field']));
+            const value = pick(row, ['Value', 'value', 'Text', 'text', 'Content', 'content', 'Data', 'data'], '');
+            if (key)
+                obj[key] = value;
+        });
+        return obj;
     }
-    async function fetchFromSheet() {
-        showLoading();
-        try {
-            if (!SHEET_API_URL || SHEET_API_URL.includes('PASTE_YOUR'))
-                throw new Error('API URL not set');
-            const sep = SHEET_API_URL.includes('?') ? '&' : '?';
-            const res = await fetch(SHEET_API_URL + sep + 'action=all&v=' + Date.now(), {
-                cache: 'no-store'
-            });
-            if (!res.ok)
-                throw new Error('API ' + res.status);
-            const data = await res.json();
-            console.log('API data', data);
-            settings = data.settings || {};
-            products = normalizeProducts(data);
-            if (!products.length)
-                products = sampleProducts.map(normProduct);
-            faqItems = Array.isArray(data.faq) && data.faq.length ? data.faq : DEFAULT_FAQ;
-            testimonials = Array.isArray(data.testimonials) ? data.testimonials : [];
-            initSelection();
-            renderAll()
-        } catch (e) {
-            console.warn(e);
-            products = sampleProducts.map(normProduct);
-            faqItems = DEFAULT_FAQ;
-            testimonials = [];
-            initSelection();
-            renderAll();
-            showToast(tx('toastSample'))
+    function normalizeProduct(row, index) {
+        const catRaw = pick(row, ['cat', 'category', 'Category', 'Product Category', 'Product category'], 'uncategorized');
+        const cat = slugify(catRaw);
+        let variantValue = pick(row, ['Colour / Pattern Variants', 'Color / Pattern Variants', 'Colour/Pattern Variants', 'Color/Pattern Variants', 'Colour Pattern Variants', 'Color Pattern Variants', 'Variant', 'variant'], '');
+        const variantCnValue = pick(row, ['Colour / Pattern Variants CN', 'Color / Pattern Variants CN', 'Variant CN', 'variantCn', 'variantCN'], '');
+        if (!variantValue && row.variants)
+            variantValue = row.variants;
+        if (!variantValue && row.Variants)
+            variantValue = row.Variants;
+        return {
+            id: normalizeText(pick(row, ['id', 'ID', 'sku', 'SKU'], `p-${index + 1}`)),
+            cat,
+            catLabel: normalizeText(pick(row, ['catLabel', 'categoryLabel', 'category', 'Category', 'Product Category'], catRaw)),
+            catLabelCn: normalizeText(pick(row, ['catLabelCn', 'Category CN', 'Product Category CN', 'categoryCn'], '')),
+            name: normalizeText(pick(row, ['name', 'Name', 'product', 'Product', 'Product Name', 'Item Name'], `Product ${index + 1}`)),
+            nameCn: normalizeText(pick(row, ['nameCn', 'Product Name CN', 'Name CN', 'Item Name CN'], '')),
+            sub: normalizeText(pick(row, ['sub', 'subtitle', 'Subtitle', 'shortDescription', 'Short Description'], '')),
+            subCn: normalizeText(pick(row, ['subCn', 'Subtitle CN', 'Short Description CN'], '')),
+            desc: normalizeText(pick(row, ['desc', 'description', 'Description', 'Product Description'], '')),
+            descCn: normalizeText(pick(row, ['descCn', 'Description CN', 'Short Description CN', 'Product Description CN'], '')),
+            type: slugify(pick(row, ['type', 'Type', 'cat', 'category', 'Category'], 'item')),
+            badge: normalizeText(pick(row, ['badge', 'Badge'], '')),
+            badgeText: normalizeText(pick(row, ['badgeText', 'Badge Text', 'badge', 'Badge'], '')),
+            badgeTextCn: normalizeText(pick(row, ['badgeTextCn', 'Badge Text CN', 'Badge CN'], '')),
+            imageUrl: normalizeText(pick(row, ['imageUrl', 'Image URL', 'image', 'Image', 'photo', 'Photo', 'Photo URL'], '')),
+            bgGrad: normalizeText(pick(row, ['bgGrad', 'Background', 'background'], '')),
+            artAccent: normalizeText(pick(row, ['artAccent', 'Accent', 'accent'], '#C9963A')),
+            stockNote: normalizeText(pick(row, ['stockNote', 'stock', 'Stock'], '')),
+            variants: {
+                options: toVariantObjects(variantValue, variantCnValue)
+            }
+        };
+    }
+    function normalizePayload(payload) {
+        let productRows = [];
+        let settingRows = null;
+
+        if (Array.isArray(payload)) {
+            productRows = payload;
+        } else if (payload && typeof payload === 'object') {
+            productRows = payload.products || payload.Products || payload.items || payload.Items || payload.data || payload.Data || [];
+            if (productRows && !Array.isArray(productRows) && typeof productRows === 'object') {
+                productRows = Object.values(productRows);
+            }
+
+            settingRows = payload.settings || payload.Settings || payload.setting || payload.Setting || null;
+            lastTestimonialItems = payload.testimonials || payload.Testimonials || payload.reviews || payload.Reviews || [];
+            lastFaqItems = payload.faq || payload.FAQ || payload.faqs || payload.Faqs || [];
         }
+
+        const parsedSettings = settingsArrayToObject(settingRows);
+        if (parsedSettings && Object.keys(parsedSettings).length) {
+            applySettings(parsedSettings);
+        }
+
+        if (!Array.isArray(productRows))
+            productRows = [];
+
+        const normalizedProducts = productRows
+        .map((row, index) => normalizeProduct(row, index))
+        .filter(p => p && p.name);
+
+        if (lastTestimonialItems.length)
+            applyTestimonials(lastTestimonialItems);
+        if (lastFaqItems.length)
+            applyFaq(lastFaqItems);
+
+        return normalizedProducts;
     }
     function initSelection() {
         sel = {};
         products.forEach(p => {
+            const firstVariant = (p.variants.options || [])[0]?.name || '';
             sel[p.id] = {
-                variant: (p.variants.options[0] || {}).name || ''
-            }
-        })
+                variant: firstVariant
+            };
+        });
     }
-    function dprod(p, f) {
-        return loc(p[f], p[f + 'Cn'])
-    }
-    function dvar(v) {
-        return loc(v.name, v.nameCn)
-    }
-    function visible() {
-        return currentFilter === 'all' ? products : products.filter(p => p.cat === currentFilter)
+    async function fetchFromSheet() {
+        showLoading();
+
+        const missingApi =
+        !SHEET_API_URL ||
+        SHEET_API_URL.includes('PASTE_YOUR_CORRECT') ||
+        SHEET_API_URL.includes('YOUR_WEB_APP_URL');
+
+        if (missingApi) {
+            console.warn('Apps Script URL is missing. Showing sample products.');
+            products = sampleProducts.map((row, index) => normalizeProduct(row, index));
+            initSelection();
+            buildFilterBar();
+            renderGrid();
+            initWaLinks();
+            applyStaticLanguage();
+            showToast(t('toastSample'));
+            return;
+        }
+
+        try {
+            const separator = SHEET_API_URL.includes('?') ? '&' : '?';
+            const res = await fetch(SHEET_API_URL + separator + 'action=all&v=' + Date.now(), {
+                cache: 'no-store'
+            });
+
+            if (!res.ok)
+                throw new Error(`Sheet returned ${res.status}`);
+
+            const data = await res.json();
+            console.log('Tashi Delek Sheet API response:', data);
+
+            const normalized = normalizePayload(data);
+            products = normalized.length ? normalized : sampleProducts.map((row, index) => normalizeProduct(row, index));
+
+            initSelection();
+            buildFilterBar();
+            renderGrid();
+            initWaLinks();
+            applyStaticLanguage();
+        } catch (err) {
+            console.warn('Sheet load failed. Using sample products.', err);
+            products = sampleProducts.map((row, index) => normalizeProduct(row, index));
+            initSelection();
+            buildFilterBar();
+            renderGrid();
+            initWaLinks();
+            applyStaticLanguage();
+            showToast(t('toastSample'));
+        }
     }
     function buildFilterBar() {
-        const b = document.getElementById('filterBar');
-        if (!b)
-            return;
-        const cats = [...new Map(products.map(p => [p.cat, dprod(p, 'catLabel') || p.cat])).entries()];
-        b.innerHTML = `<button class="filter-pill ${currentFilter === 'all' ? 'active' : ''}" onclick="applyFilter('all')">${esc(tx('allPieces'))} <span class="pill-count">${products.length}</span></button>` + cats.map(([c, l]) => `<button class="filter-pill ${currentFilter === c ? 'active' : ''}" onclick="applyFilter('${esc(c)}')">${esc(l)} <span class="pill-count">${products.filter(p => p.cat === c).length}</span></button>`).join('')
+        const bar = document.getElementById('filterBar');
+        const cats = [...new Map(products.map(p => [p.cat, displayProduct(p, 'catLabel')])).entries()];
+        const allCount = products.length;
+        bar.innerHTML = `<button class="filter-pill ${currentFilter === 'all' ? 'active' : ''}" onclick="applyFilter('all')">${escapeHtml(t('allPieces'))} <span class="pill-count">${allCount}</span></button>` + cats.map(([cat, label]) => {
+            const count = products.filter(p => p.cat === cat).length;
+            return `<button class="filter-pill ${currentFilter === cat ? 'active' : ''}" onclick="applyFilter('${escapeHtml(cat)}')">${escapeHtml(label)} <span class="pill-count">${count}</span></button>`;
+        }).join('');
     }
-    function applyFilter(c) {
-        currentFilter = c || 'all';
+    function applyFilter(cat) {
+        currentFilter = cat || 'all';
         buildFilterBar();
-        renderProducts()
+        renderGrid();
     }
-    function renderProducts() {
-        const g = document.getElementById('grid');
-        if (!g)
-            return;
-        const list = visible();
-        const h = document.querySelector('.shop-header h2');
-        if (h)
-            h.innerHTML = `${esc(tx('collection'))} - <span id="count">${list.length}</span> ${esc(tx('pieces'))}`;
+    function visibleProducts() {
+        return currentFilter === 'all' ? products : products.filter(p => p.cat === currentFilter);
+    }
+    function renderGrid() {
+        const grid = document.getElementById('grid');
+        const list = visibleProducts();
+        const shopTitle = document.querySelector('.shop-header h2');
+        if (shopTitle)
+            shopTitle.innerHTML = `${escapeHtml(t('collection'))} - <span id="count">${list.length}</span> ${escapeHtml(t('pieces'))}`;
+        else if (document.getElementById('count'))
+            document.getElementById('count').textContent = list.length;
         if (!list.length) {
-            g.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:4rem;color:var(--ash)">${esc(tx('noItems'))}</div>`;
-            return
+            grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:4rem;color:var(--ash);font-style:italic">${escapeHtml(t('noItems'))}</div>`;
+            return;
         }
-        g.innerHTML = list.map(card).join('')
+        grid.innerHTML = list.map(renderCard).join('');
     }
-    function card(p) {
-        const v = p.variants.options;
-        return `<article class="card"><div class="card-image" onclick="openModal('${esc(p.id)}')">${p.badgeText ? `<div class="card-badge badge-${esc(p.badge || 'gold')}">${esc(loc(p.badgeText, p.badgeTextCn))}</div>` : ''}<div class="card-canvas">${art(p)}</div><div class="card-overlay"><button class="view-btn">${esc(tx('viewDetails'))}</button></div></div><div class="card-body"><div class="card-category">${esc(dprod(p, 'catLabel'))}</div><div class="card-name">${esc(dprod(p, 'name'))}</div><div class="card-subtitle">${esc(dprod(p, 'sub'))}</div>${v.length ? variants(p) : ''}<div class="price-row"><span class="enquire-label">${esc(tx('enquireForPrice'))}</span><button class="wa-card-btn" onclick="addToCart(event,'${esc(p.id)}')">${esc(tx('add'))}</button></div></div></article>`
-    }
-    function variants(p) {
-        return `<div class="variant-block"><div class="var-label">${esc(tx('variant'))}</div><div class="pattern-swatches">${p.variants.options.map(v => `<button class="pattern-pill ${(sel[p.id] || {}).variant === v.name ? 'active' : ''}" onclick="selectVariant(event,'${esc(p.id)}','${esc(v.name)}')">${esc(dvar(v))}</button>`).join('')}</div></div>`
-    }
-    function art(p) {
-        if (p.imageUrl)
-            return `<img class="product-photo loaded" src="${esc(p.imageUrl)}" alt="${esc(dprod(p, 'name'))}">`;
-        const icon = p.type.includes('dzi') ? '🪬' : p.type.includes('mala') ? '📿' : p.type.includes('incense') ? '🪔' : p.type.includes('crystal') ? '🔮' : '☸';
-        return `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse,#2A2015,#0D0A07)"><div style="text-align:center;color:var(--gold)"><div style="font-size:4rem">${icon}</div><div style="font-family:Cinzel,serif;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase">${esc(dprod(p, 'name'))}</div></div></div>`
-    }
-    function selectVariant(e, id, n) {
-        e.stopPropagation();
-        sel[id] = {
-            variant: n
+    function renderCard(p) {
+        const s = sel[p.id] || {
+            variant: ''
         };
-        renderProducts()
+        const variantItems = p.variants.options || [];
+        return `<article class="card"><div class="card-image" onclick="openModal('${escapeHtml(p.id)}')">${p.badgeText ? `<div class="card-badge badge-${escapeHtml(p.badge || 'gold')}">${escapeHtml(localText(p.badgeText, p.badgeTextCn))}</div>` : ''}<div class="card-canvas" id="art-${safeId(p.id)}">${renderArt(p, s.variant)}</div><div class="card-overlay"><button class="view-btn" type="button">${escapeHtml(t('viewDetails'))}</button></div></div><div class="card-body"><div class="card-category">${escapeHtml(displayProduct(p, 'catLabel'))}</div><div class="card-name">${escapeHtml(displayProduct(p, 'name'))}</div><div class="card-subtitle">${escapeHtml(displayProduct(p, 'sub'))}</div>${variantItems.length ? renderVariantBlock(p) : ''}<div class="price-row"><span class="enquire-label">${escapeHtml(t('enquireForPrice'))}</span><button class="wa-card-btn" type="button" onclick="addToCart(event,'${escapeHtml(p.id)}')">${escapeHtml(t('add'))}</button></div></div></article>`;
     }
-    function renderFaq() {
-        const l = document.getElementById('faqList');
-        if (!l)
+    function renderVariantBlock(p) {
+        const s = sel[p.id] || {};
+        const items = p.variants.options || [];
+        const buttons = items.map(item => `<button class="pattern-pill ${s.variant === item.name ? 'active' : ''}" title="${escapeHtml(displayVariant(item))}" onclick="selectVariant(event,'${escapeHtml(p.id)}','${escapeHtml(item.name)}')">${escapeHtml(displayVariant(item))}</button>`).join('');
+        return `<div class="variant-block"><div class="var-label">${escapeHtml(t('variant'))}</div><div class="pattern-swatches">${buttons}</div></div>`;
+    }
+    function renderArt(p, variantName='') {
+        if (p.imageUrl)
+            return renderProductImage(p.imageUrl, displayProduct(p, 'name'));
+        return getFallbackArt(p, variantName);
+    }
+    function renderProductImage(url, alt) {
+        const cleanUrl = escapeHtml(url);
+        return `<div class="photo-wrap" style="position:relative;width:100%;height:100%"><div class="photo-shimmer"></div><img class="product-photo" src="${cleanUrl}" alt="${escapeHtml(alt)}" onload="this.classList.add('loaded'); const s=this.previousElementSibling; if(s) s.style.display='none';" onerror="this.parentElement.innerHTML=getFallbackArt({type:'item',name:'${escapeHtml(alt)}',artAccent:'#C9963A'},'');" /><div class="photo-gold-overlay"></div></div>`;
+    }
+    function getFallbackArt(p, variantName='') {
+        const type = slugify(p.type || p.cat || 'item');
+        const accent = p.artAccent || '#C9963A';
+        const bg = p.bgGrad || 'radial-gradient(ellipse,#2A2015 0%,#0D0A07 100%)';
+        const match = (p.variants && p.variants.options || []).find(v => v.name === variantName);
+        const label = escapeHtml(variantName ? displayVariant(match || {
+            name: variantName
+        }) : (displayProduct(p, 'name') || t('sacredItem')));
+        const icon = type.includes('dzi') ? '🪬' : type.includes('mala') ? '📿' : type.includes('incense') ? '🪔' : type.includes('crystal') ? '🔮' : '☸';
+        return `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;background:${escapeHtml(bg)}"><div style="text-align:center;color:${escapeHtml(accent)}"><div style="font-size:4rem;line-height:1;margin-bottom:.8rem">${icon}</div><div style="font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;opacity:.75">${label}</div></div><div class="no-image-hint">${escapeHtml(t('addImage'))}</div></div>`;
+    }
+    function selectVariant(event, productId, name) {
+        if (event)
+            event.stopPropagation();
+        if (!sel[productId])
+            sel[productId] = {};
+        sel[productId].variant = name;
+        renderGrid();
+    }
+    function openModal(productId) {
+        const p = products.find(x => String(x.id) === String(productId));
+        if (!p)
             return;
-        l.innerHTML = (faqItems.length ? faqItems : DEFAULT_FAQ).map(f => `<div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">${esc(loc(f.question || '', f.questionCn || f.questionCN || ''))}<span class="faq-icon">+</span></button><div class="faq-a"><p>${esc(loc(f.answer || '', f.answerCn || f.answerCN || ''))}</p></div></div>`).join('')
+        const s = sel[p.id] || {
+            variant: ''
+        };
+        document.getElementById('modalArt').innerHTML = `<button class="modal-close" onclick="closeModal()">✕</button><div style="width:100%;height:100%;min-height:340px">${renderArt(p, s.variant)}</div>`;
+        document.getElementById('modalInfo').innerHTML = `<div class="modal-cat">${escapeHtml(displayProduct(p, 'catLabel'))}</div><div class="modal-name">${escapeHtml(displayProduct(p, 'name'))}</div><div class="modal-sub">${escapeHtml(displayProduct(p, 'sub'))}</div><p class="modal-desc">${escapeHtml(displayProduct(p, 'desc'))}</p>${(p.variants.options || []).length ? renderModalVariantBlock(p) : ''}<div class="modal-price-row"><span class="modal-enquire">${escapeHtml(t('enquireForPrice'))}</span></div><button class="modal-wa-btn" onclick="addToCart(null,'${escapeHtml(p.id)}'); closeModal(); openCart();">${escapeHtml(t('addToBag'))}</button><button class="modal-wa-btn" style="margin-top:.7rem;background:var(--gold-dim)" onclick="orderViaWa(null,'${escapeHtml(p.id)}',true)">${escapeHtml(t('enquireThisItem'))}</button><p class="modal-note">${escapeHtml(t('modalNote'))}</p>`;
+        document.getElementById('modalBg').classList.add('open');
     }
-    function renderTestimonials() {
-        if (!testimonials.length)
+    function renderModalVariantBlock(p) {
+        const items = p.variants.options || [];
+        const s = sel[p.id] || {};
+        const buttons = items.map(item => `<button class="pattern-pill ${s.variant === item.name ? 'active' : ''}" onclick="mSelectV('${escapeHtml(p.id)}','${escapeHtml(item.name)}')">${escapeHtml(displayVariant(item))}</button>`).join('');
+        return `<div class="variant-block"><div class="var-label">${escapeHtml(t('variant'))}</div><div class="pattern-swatches" id="m-vs">${buttons}</div></div>`;
+    }
+    function mSelectV(productId, name) {
+        if (!sel[productId])
+            sel[productId] = {};
+        sel[productId].variant = name;
+        openModal(productId);
+        renderGrid();
+    }
+    function closeModal() {
+        document.getElementById('modalBg').classList.remove('open');
+    }
+    function handleModalClick(e) {
+        if (e.target === document.getElementById('modalBg'))
+            closeModal();
+    }
+    function cartKey(item) {
+        return `${item.id}|${item.variant}`;
+    }
+    function addToCart(event, productId) {
+        if (event)
+            event.stopPropagation();
+        const p = products.find(x => String(x.id) === String(productId));
+        if (!p)
             return;
-        const g = document.getElementById('reviewsGrid');
-        if (!g)
-            return;
-        g.innerHTML = testimonials.map(r => `<div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"${esc(loc(r.review || r.text || '', r.reviewCn || r.textCn || ''))}"</p><div class="review-author"><div class="review-avatar">🙏</div><div><div class="review-name">${esc(r.name || 'Customer')}</div><div class="review-location">${esc(loc(r.location || '', r.locationCn || ''))}</div></div></div>${r.product ? `<div class="review-product-tag">${esc(loc(r.product, r.productCn || ''))}</div>` : ''}</div>`).join('')
+        const s = sel[p.id] || {};
+        const item = {
+            id: p.id,
+            name: p.name,
+            nameCn: p.nameCn,
+            catLabel: p.catLabel,
+            catLabelCn: p.catLabelCn,
+            sub: p.sub,
+            subCn: p.subCn,
+            imageUrl: p.imageUrl,
+            variant: s.variant || '',
+            variantCn: (p.variants.options || []).find(v => v.name === (s.variant || ''))?.nameCn || ''
+        };
+        if (!cart.some(x => cartKey(x) === cartKey(item)))
+            cart.push(item);
+        updateCartUI();
+        showToast(t('toastAdded'));
     }
-    function applySettings() {
-        document.documentElement.lang = currentLang === 'zh' ? 'zh-Hans' : 'en';
-        document.body.classList.toggle('lang-zh', currentLang === 'zh');
-        updateLangButtons();
-        setText('brandLogo', '☸ ' + getSet(['shopName', 'brandName'], ['shopNameCn', 'brandNameCn'], 'Tashi Delek Collection'));
-        setText('brandSub', getSet(['tagline', 'brandSub'], ['taglineCn', 'brandSubCn'], currentLang === 'zh' ? '天珠 · 藏香 · 佛珠' : 'Sacred Dzi · Incense · Mala'));
-        document.querySelectorAll('.footer-brand .logo').forEach(e => e.textContent = document.getElementById('brandLogo').textContent);
-        document.querySelectorAll('.footer-brand .logo-sub').forEach(e => e.textContent = document.getElementById('brandSub').textContent);
-        setHtml('heroTitle', getSet(['heroTitle'], ['heroTitleCn'], getSet(['heroTitleLine1'], ['heroTitleLine1Cn'], currentLang === 'zh' ? '如意吉祥' : 'Sacred') + '|' + getSet(['heroTitleLine2'], ['heroTitleLine2Cn'], currentLang === 'zh' ? '藏传珍宝佛具流通处' : 'Tibetan Treasures')));
-        setText('heroText', getSet(['heroSubtitle'], ['heroSubtitleCn'], currentLang === 'zh' ? '精选天珠、藏香、佛珠与藏传佛教供养佛具，以恭敬心整理呈现，方便您咨询结缘。' : 'Dzi beads of ancient power, healing crystals of the earth, incense and hand-knotted mala for your practice.'));
-        const ey = document.getElementById('heroEyebrow');
-        if (ey)
-            ey.style.display = 'none';
-        setText('aboutEyebrow', currentLang === 'zh' ? '我们的故事' : 'Our Story');
-        setHtml('aboutTitle', getSet(['aboutTitle'], ['aboutTitleCn'], currentLang === 'zh' ? '不只是一间店铺|更是一份虔敬的传承' : 'More Than a Collection|A Path of Meaning'));
-        setText('aboutBadgeNumber', getSet(['yearsInBusiness', 'aboutBadgeNumber'], ['yearsInBusinessCn', 'aboutBadgeNumberCn'], '17+'));
-        setText('aboutBadgeText', getSet(['aboutBadgeText'], ['aboutBadgeTextCn'], currentLang === 'zh' ? '年寻访经验' : 'Years Sourcing'));
-        document.querySelectorAll('#about .about-text > p').forEach((p, i) => {
-            p.textContent = getSet([`aboutParagraph${i + 1}`], [`aboutParagraph${i + 1}Cn`], ABOUT[currentLang][i])
-        });
-        DEFAULT_TRUST.en.forEach((_, i) => {
-            const e = document.querySelector(`.trust-strip .trust-item:nth-child(${i + 1}) .trust-text`);
-            if (e)
-                e.textContent = getSet([`badge${i + 1}`, `trust${i + 1}`], [`badge${i + 1}Cn`, `trust${i + 1}Cn`], TRUST[currentLang][i])
-        });
-        setText('contactText', getSet(['contactText'], ['contactTextCn'], tx('contactText')));
-        setText('emailDisplay', settings.emailAddress || settings.email || 'hello@dharmahouse.com');
-        setText('locationDisplay', getSet(['location', 'address'], ['locationCn', 'addressCn'], 'Kuala Lumpur, Malaysia'));
-        setText('responseTimeDisplay', getSet(['orderHours', 'responseTime'], ['orderHoursCn', 'responseTimeCn'], currentLang === 'zh' ? '通常 2–4 小时内回复' : 'Usually within 2-4 hours'))
+    function removeCartItem(index) {
+        cart.splice(index, 1);
+        updateCartUI();
     }
-    function applyStatic() {
-        const nav = document.querySelectorAll('header nav a');
-        [tx('navShop'), tx('navHow'), tx('navAbout'), tx('navReviews'), tx('navFaq'), tx('navContact')].forEach((x, i) => {
-            if (nav[i])
-                nav[i].textContent = x
-        });
-        const mob = document.querySelectorAll('#mobileNav a');
-        [tx('navShop'), tx('navHow'), tx('navAboutUs'), tx('navReviews'), tx('navFaq'), tx('navContact'), tx('enquiryBag')].forEach((x, i) => {
-            if (mob[i])
-                mob[i].textContent = x
-        });
-        const bag = document.querySelector('.bag-wrap .wa-header-btn');
-        if (bag)
-            bag.textContent = tx('enquiryBag');
-        const wb = document.getElementById('waHeaderBtn');
-        if (wb)
-            wb.textContent = tx('whatsapp');
-        const fl = document.querySelector('.wa-float-label');
-        if (fl)
-            fl.textContent = tx('floatLabel');
-        setText('howEyebrow', tx('howEyebrow'));
-        setText('howTitle', tx('howTitle'));
-        document.querySelectorAll('#how .step-title').forEach((e, i) => e.textContent = [tx('step1Title'), tx('step2Title'), tx('step3Title'), tx('step4Title')][i]);
-        document.querySelectorAll('#how .step-desc').forEach((e, i) => e.textContent = [tx('step1Desc'), tx('step2Desc'), tx('step3Desc'), tx('step4Desc')][i]);
-        setText('reviewsEyebrow', tx('reviewsEyebrow'));
-        setText('reviewsTitle', tx('reviewsTitle'));
-        setText('faqEyebrow', tx('faqEyebrow'));
-        setText('faqTitle', tx('faqTitle'));
-        setText('contactEyebrow', tx('contactEyebrow'));
-        setText('contactTitle', tx('contactTitle'));
-        document.querySelectorAll('.contact-channels .channel-label').forEach((e, i) => e.textContent = [tx('waFastest'), tx('email'), tx('responseTime'), tx('basedIn')][i]);
-        document.querySelectorAll('.form-label').forEach((e, i) => e.textContent = [tx('formName'), tx('formPhone'), tx('formEmail'), tx('formInterest'), tx('formMessage')][i]);
-        ['cf-name', 'cf-phone', 'cf-email', 'cf-message'].forEach((id, i) => {
-            const e = document.getElementById(id);
-            if (e)
-                e.placeholder = [tx('formNamePH'), tx('formPhonePH'), tx('formEmailPH'), tx('formMessagePH')][i]
-        });
-        document.querySelectorAll('#cf-interest option').forEach((e, i) => e.textContent = [tx('formSelect'), tx('formDzi'), tx('formIncense'), tx('formCrystals'), tx('formMala'), tx('formCustom'), tx('formGeneral')][i]);
-        const fs = document.querySelector('.form-submit');
-        if (fs)
-            fs.textContent = tx('formSubmit');
-        const fn = document.querySelector('.form-note');
-        if (fn)
-            fn.textContent = tx('formNote');
-        const fbp = document.querySelector('.footer-brand p');
-        if (fbp)
-            fbp.textContent = tx('footerBrand');
-        document.querySelectorAll('.footer-col h4').forEach((e, i) => e.textContent = [tx('footerShop'), tx('footerInfo'), tx('footerContact')][i]);
-        document.querySelectorAll('.footer-bottom p').forEach((e, i) => e.textContent = [tx('footerRights'), tx('footerAvailability')][i]);
-        const ct = document.querySelector('.cart-title');
-        if (ct)
-            ct.textContent = tx('cartTitle');
-        const cb = document.getElementById('cartWaBtn');
-        if (cb)
-            cb.textContent = tx('cartSend');
-        const cn = document.querySelector('.cart-note');
-        if (cn)
-            cn.textContent = tx('cartNote')
-    }
-    function renderAll() {
-        applyStatic();
-        applySettings();
-        buildFilterBar();
-        renderProducts();
-        renderFaq();
-        renderTestimonials();
+    function updateCartUI() {
+        const badge = document.getElementById('bagBadge');
+        badge.textContent = cart.length;
+        badge.classList.toggle('show', cart.length > 0);
         renderCart();
-        initWaLinks()
-    }
-    function setLanguage(l) {
-        currentLang = l === 'zh' ? 'zh' : 'en';
-        localStorage.setItem('td_lang', currentLang);
-        renderAll()
-    }
-    function updateLangButtons() {
-        const en = document.getElementById('langEn'),
-            zh = document.getElementById('langZh');
-        if (en)
-            en.classList.toggle('active', currentLang === 'en');
-        if (zh)
-            zh.classList.toggle('active', currentLang === 'zh')
-    }
-    function phone() {
-        return clean(settings.whatsappNumber || settings.whatsapp || FALLBACK_WHATSAPP).replace(/\D/g, '')
-    }
-    function waLink(m='') {
-        const n = phone();
-        return n ? `https://wa.me/${n}${m ? '?text=' + encodeURIComponent(m) : ''}` : '#'
-    }
-    function initWaLinks() {
-        const msg = settings.defaultGreeting || (currentLang === 'zh' ? '您好，我想咨询产品。' : 'Hello, I would like to enquire about your products.');
-        ['waHeaderBtn', 'waFloat', 'waContactLink'].forEach(id => {
-            const e = document.getElementById(id);
-            if (e)
-                e.href = waLink(msg)
-        });
-        setText('waDisplayNumber', settings.whatsappDisplay || settings.whatsappNumber || FALLBACK_WHATSAPP)
     }
     function renderCart() {
         const body = document.getElementById('cartBody');
-        if (!body)
-            return;
-        const line = document.getElementById('cartCountLine'),
-            btn = document.getElementById('cartWaBtn');
+        const btn = document.getElementById('cartWaBtn');
+        const line = document.getElementById('cartCountLine');
+        line.textContent = `${cart.length} ${cart.length === 1 ? t('cartLineSingular') : t('cartLinePlural')}`;
+        btn.disabled = cart.length === 0;
         if (!cart.length) {
-            body.innerHTML = `<div class="cart-empty"><div class="cart-empty-icon">🪬</div><p>${esc(tx('cartEmpty'))}</p><p style="margin-top:.5rem;font-style:italic;font-size:.8rem;color:var(--ash)">${esc(tx('cartEmptySub'))}</p></div>`;
-            if (line)
-                line.textContent = '0 ' + tx('cartItems');
-            if (btn)
-                btn.disabled = true;
-            return
+            body.innerHTML = `<div class="cart-empty"><div class="cart-empty-icon">🪬</div><p>${escapeHtml(t('cartEmpty'))}</p><p style="margin-top:.5rem;font-style:italic;font-size:.8rem;color:var(--ash)">${escapeHtml(t('cartEmptyHint'))}</p></div>`;
+            return;
         }
-        body.innerHTML = cart.map((it, i) => `<div class="cart-item"><div class="cart-item-thumb">🪬</div><div class="cart-item-info"><div class="cart-item-name">${esc(it.name)}</div><div class="cart-item-meta">${esc(tx('variant'))}: ${esc(it.variant)}</div></div><button class="cart-item-remove" onclick="removeCartItem(${i})">×</button></div>`).join('');
-        if (line)
-            line.textContent = cart.length + ' ' + tx('cartItems');
-        if (btn)
-            btn.disabled = false
+        body.innerHTML = cart.map((item, i) => `<div class="cart-item"><div class="cart-item-thumb">${item.imageUrl ? `<img src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(localText(item.name, item.nameCn))}">` : '🪬'}</div><div class="cart-item-info"><div class="cart-item-name">${escapeHtml(localText(item.name, item.nameCn))}</div><div class="cart-item-meta">${escapeHtml(localText(item.catLabel, item.catLabelCn))}${item.variant ? `<br>${escapeHtml(t('variant'))}: ${escapeHtml(localText(item.variant, item.variantCn))}` : ''}</div></div><button class="cart-item-remove" aria-label="${escapeHtml(t('remove'))}" onclick="removeCartItem(${i})">✕</button></div>`).join('');
     }
-    function addToCart(e, id) {
-        if (e)
-            e.stopPropagation();
-        const p = products.find(x => x.id === id);
+    function openCart() {
+        document.getElementById('cartOverlay').classList.add('open');
+    }
+    function closeCart() {
+        document.getElementById('cartOverlay').classList.remove('open');
+    }
+    function handleCartOverlayClick(e) {
+        if (e.target === document.getElementById('cartOverlay'))
+            closeCart();
+    }
+    function cleanWhatsappNumber(value) {
+        return normalizeText(value || FALLBACK_WHATSAPP).replace(/[^0-9]/g, '');
+    }
+    function waLink(message='') {
+        const number = cleanWhatsappNumber(getSettingValue(['whatsapp', 'whatsappNumber', 'phoneNumber', 'phone', 'contactNumber'], FALLBACK_WHATSAPP));
+        return `https://wa.me/${number}${message ? `?text=${encodeURIComponent(message)}` : ''}`;
+    }
+    function initWaLinks() {
+        const greeting = getSettingValue(['defaultGreeting', 'whatsappGreeting', 'greeting'], currentLang === 'zh' ? '您好，我想咨询您的产品。' : 'Hello, I would like to enquire about your products.');
+        const base = waLink(greeting);
+        ['waHeaderBtn', 'waFloat', 'waContactLink'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el)
+                el.href = base;
+        });
+        const display = document.getElementById('waDisplayNumber');
+        if (display)
+            display.textContent = getSettingValue(['whatsappDisplay', 'whatsappNumber', 'whatsapp', 'phoneNumber', 'phone', 'contactNumber'], FALLBACK_WHATSAPP);
+        const email = document.getElementById('emailDisplay');
+        if (email)
+            email.textContent = getSettingValue(['email', 'emailAddress', 'contactEmail', 'businessEmail'], 'hello@dharmahouse.com');
+    }
+    function selectedProductMessage(p) {
+        const s = sel[p.id] || {};
+        const match = (p.variants.options || []).find(v => v.name === s.variant);
+        return `${t('msgSingleTitle')}\n\n${t('msgProduct')}: ${displayProduct(p, 'name')}\n${t('msgCategory')}: ${displayProduct(p, 'catLabel')}${s.variant ? `\n${t('msgVariant')}: ${displayVariant(match || {name: s.variant})}` : ''}\n\n${t('msgConfirm')}`;
+    }
+    function orderViaWa(event, productId, fromModal=false) {
+        if (event)
+            event.stopPropagation();
+        const p = products.find(x => String(x.id) === String(productId));
         if (!p)
             return;
-        const v = (p.variants.options.find(x => x.name === (sel[id] || {}).variant) || p.variants.options[0] || {});
-        cart.push({
-            name: dprod(p, 'name'),
-            variant: dvar(v)
-        });
-        updateCartUI();
-        showToast(tx('toastAdded'))
-    }
-    function updateCartUI() {
-        const b = document.getElementById('bagBadge');
-        if (b) {
-            b.textContent = cart.length;
-            b.classList.toggle('show', cart.length > 0)
-        }
-        renderCart()
-    }
-    function removeCartItem(i) {
-        cart.splice(i, 1);
-        updateCartUI()
+        if (fromModal)
+            closeModal();
+        window.open(waLink(selectedProductMessage(p)), '_blank');
     }
     function sendCartViaWa() {
         if (!cart.length)
             return;
-        let m = currentLang === 'zh' ? '您好，我想咨询以下商品：\n\n' : 'Hello, I would like to enquire about:\n\n';
-        cart.forEach((it, i) => m += `${i + 1}. ${it.name}${it.variant ? ' - ' + it.variant : ''}\n`);
-        window.open(waLink(m), '_blank')
-    }
-    function openModal(id) {
-        const p = products.find(x => x.id === id);
-        if (!p)
-            return;
-        document.getElementById('modalArt').innerHTML = art(p);
-        document.getElementById('modalInfo').innerHTML = `<button class="modal-close" onclick="closeModal()">×</button><div class="modal-cat">${esc(dprod(p, 'catLabel'))}</div><h3 class="modal-name">${esc(dprod(p, 'name'))}</h3><div class="modal-sub">${esc(dprod(p, 'sub'))}</div><p class="modal-desc">${esc(dprod(p, 'desc'))}</p>${p.variants.options.length ? variants(p) : ''}<div class="modal-price-row"><span class="modal-enquire">${esc(tx('modalEnquire'))}</span></div><button class="modal-wa-btn" onclick="addToCart(event,'${esc(p.id)}');openCart();closeModal();">${esc(tx('add'))}</button><p class="modal-note">${esc(tx('modalNote'))}</p>`;
-        document.getElementById('modalBg').classList.add('open')
-    }
-    function closeModal() {
-        document.getElementById('modalBg').classList.remove('open')
-    }
-    function handleModalClick(e) {
-        if (e.target.id === 'modalBg')
-            closeModal()
-    }
-    function openCart() {
-        document.getElementById('cartOverlay').classList.add('open')
-    }
-    function closeCart() {
-        document.getElementById('cartOverlay').classList.remove('open')
-    }
-    function handleCartOverlayClick(e) {
-        if (e.target.id === 'cartOverlay')
-            closeCart()
-    }
-    function toggleFaq(b) {
-        const it = b.parentElement,
-            open = it.classList.contains('open');
-        document.querySelectorAll('.faq-item').forEach(x => x.classList.remove('open'));
-        if (!open)
-            it.classList.add('open')
-    }
-    function toggleMobileNav() {
-        document.getElementById('mobileNav').classList.toggle('open')
-    }
-    function closeMobileNav() {
-        document.getElementById('mobileNav').classList.remove('open')
-    }
-    function navScrollTo(id) {
-        const e = document.getElementById(id);
-        if (e)
-            e.scrollIntoView({
-                behavior: 'smooth'
-            })
+        let msg = `${t('msgCartTitle')}\n\n`;
+        cart.forEach((item, i) => {
+            msg += `${i + 1}. ${localText(item.name, item.nameCn)}\n`;
+            msg += `${t('msgCategory')}: ${localText(item.catLabel, item.catLabelCn)}\n`;
+            if (item.variant)
+                msg += `${t('msgVariant')}: ${localText(item.variant, item.variantCn)}\n`;
+            msg += '\n';
+        });
+        msg += t('msgCartConfirm');
+        window.open(waLink(msg), '_blank');
     }
     function submitContactForm() {
-        const msg = `${currentLang === 'zh' ? '您好，我想咨询：' : 'Hello, I would like to enquire:'}\n\nName: ${clean(document.getElementById('cf-name').value)}\nPhone: ${clean(document.getElementById('cf-phone').value)}\nEmail: ${clean(document.getElementById('cf-email').value)}\nInterest: ${clean(document.getElementById('cf-interest').value)}\nMessage: ${clean(document.getElementById('cf-message').value)}`;
-        window.open(waLink(msg), '_blank')
+        const name = document.getElementById('cf-name').value.trim();
+        const phone = document.getElementById('cf-phone').value.trim();
+        const email = document.getElementById('cf-email').value.trim();
+        const interest = document.getElementById('cf-interest').value;
+        const message = document.getElementById('cf-message').value.trim();
+        if (!name) {
+            showToast(t('toastName'));
+            return;
+        }
+        if (!message) {
+            showToast(t('toastMessage'));
+            return;
+        }
+        const msg = `${t('msgContactHello')}\n\n${t('msgNewEnquiry')}\n\n${t('msgName')}: ${name}\n${phone ? `${t('msgPhone')}: ${phone}\n` : ''}${email ? `${t('msgEmail')}: ${email}\n` : ''}${interest ? `${t('msgInterest')}: ${interest}\n` : ''}\n${t('msgMessage')}:\n${message}\n\n${t('msgThanks')}`;
+        window.open(waLink(msg), '_blank');
+    }
+    function getSettingValue(keys, fallback='') {
+        for (const key of keys) {
+            if (settings[key] !== undefined && settings[key] !== null && String(settings[key]).trim() !== '')
+                return settings[key];
+        }
+        return fallback;
+    }
+    function getSettingLang(enKeys, cnKeys=[], fallback='') {
+        const en = getSettingValue(enKeys, fallback);
+        const cn = cnKeys.length ? getSettingValue(cnKeys, '') : '';
+        return localText(en, cn);
+    }
+    function setTextById(id, value) {
+        const el = document.getElementById(id);
+        if (el && value !== undefined && value !== null && String(value).trim() !== '')
+            el.textContent = String(value).trim();
+    }
+    function setHtmlById(id, value) {
+        const el = document.getElementById(id);
+        if (!el || value === undefined || value === null || String(value).trim() === '')
+            return;
+        const parts = normalizeText(value).split('|').map(escapeHtml);
+        el.innerHTML = parts.length > 1 ? `${parts[0]}<span>${parts.slice(1).join(' ')}</span>` : parts[0];
+    }
+    function aliasSetting(source, target, aliases) {
+        if (source[target])
+            return;
+        for (const key of aliases) {
+            if (source[key] !== undefined && source[key] !== null && String(source[key]).trim() !== '') {
+                source[target] = source[key];
+                return;
+            }
+        }
+    }
+    function applyTextToAll(selector, value) {
+        if (value === undefined || value === null || String(value).trim() === '')
+            return;
+        document.querySelectorAll(selector).forEach(el => {
+            el.textContent = value;
+        });
+    }
+    function applySettings(newSettings) {
+        if (!newSettings || typeof newSettings !== 'object')
+            return;
+        const mapped = {
+            ...newSettings
+        };
+        aliasSetting(mapped, 'shopName', ['shop', 'storeName', 'companyName', 'businessName', 'brandName', 'siteName']);
+        aliasSetting(mapped, 'shopNameCn', ['shopNameCN', 'shopCn', 'businessNameCn', 'brandNameCn', 'siteNameCn']);
+        aliasSetting(mapped, 'brandSub', ['tagline', 'logoSubtitle', 'logoSub', 'subtitle', 'slogan']);
+        aliasSetting(mapped, 'brandSubCn', ['taglineCn', 'taglineCN', 'logoSubtitleCn', 'subtitleCn', 'sloganCn']);
+        aliasSetting(mapped, 'whatsapp', ['whatsappNumber', 'whatsAppNumber', 'whatsappNo', 'phoneNumber', 'phone', 'contactNumber']);
+        aliasSetting(mapped, 'email', ['emailAddress', 'contactEmail', 'businessEmail']);
+        aliasSetting(mapped, 'location', ['basedIn', 'address', 'businessLocation']);
+        aliasSetting(mapped, 'locationCn', ['locationCN', 'basedInCn', 'addressCn', 'businessLocationCn']);
+        aliasSetting(mapped, 'responseTime', ['orderHours', 'replyTime', 'businessHours']);
+        aliasSetting(mapped, 'responseTimeCn', ['orderHoursCn', 'replyTimeCn', 'businessHoursCn']);
+        if (!mapped.heroTitle && (mapped.heroTitleLine1 || mapped.heroTitleLine2))
+            mapped.heroTitle = `${mapped.heroTitleLine1 || ''}|${mapped.heroTitleLine2 || ''}`;
+        if (!mapped.heroTitleCn && (mapped.heroTitleLine1Cn || mapped.heroTitleLine2Cn))
+            mapped.heroTitleCn = `${mapped.heroTitleLine1Cn || ''}|${mapped.heroTitleLine2Cn || ''}`;
+        aliasSetting(mapped, 'heroText', ['heroSubtitle', 'heroDescription', 'heroParagraph']);
+        aliasSetting(mapped, 'heroTextCn', ['heroSubtitleCn', 'heroDescriptionCn', 'heroParagraphCn']);
+        aliasSetting(mapped, 'aboutBadgeNumber', ['yearsInBusiness', 'yearsSourcing']);
+        aliasSetting(mapped, 'aboutText1', ['aboutParagraph1', 'aboutDescription1']);
+        aliasSetting(mapped, 'aboutText1Cn', ['aboutParagraph1Cn', 'aboutDescription1Cn']);
+        aliasSetting(mapped, 'aboutText2', ['aboutParagraph2', 'aboutDescription2']);
+        aliasSetting(mapped, 'aboutText2Cn', ['aboutParagraph2Cn', 'aboutDescription2Cn']);
+        aliasSetting(mapped, 'aboutText3', ['aboutParagraph3', 'aboutDescription3']);
+        aliasSetting(mapped, 'aboutText3Cn', ['aboutParagraph3Cn', 'aboutDescription3Cn']);
+        aliasSetting(mapped, 'contactText', ['contactDescription', 'contactParagraph']);
+        aliasSetting(mapped, 'contactTextCn', ['contactDescriptionCn', 'contactParagraphCn']);
+        if (!mapped.shopName || mapped.shopName === 'Dharma House')
+            mapped.shopName = 'Tashi Delek Collection';
+        if (!mapped.shopNameCn)
+            mapped.shopNameCn = 'Tashi Delek Collection';
+        if (!mapped.brandSub || mapped.brandSub === 'Sacred Beads · Crystals · Mala')
+            mapped.brandSub = 'Dzi Beads · Tibetan Incense · Buddhist Mala';
+        if (!mapped.brandSubCn)
+            mapped.brandSubCn = '天珠 · 藏香 · 佛珠';
+        if (!mapped.heroTitleCn)
+            mapped.heroTitleCn = '如意吉祥|藏传珍宝佛具流通处';
+        if (!mapped.heroTextCn)
+            mapped.heroTextCn = '精选天珠、藏香、佛珠与藏传佛教供养佛具，以恭敬心整理呈现，方便您咨询结缘。';
+        if (!mapped.contactTextCn)
+            mapped.contactTextCn = '若您想了解天珠、藏香、佛珠或其他供养佛具，欢迎通过 WhatsApp 与我们联系。我们会为您整理咨询内容，并亲自回复价格、库存与适合选择。';
+        if (isPlaceholderText(mapped.aboutText1))
+            mapped.aboutText1 = DEFAULT_ABOUT_EN[0];
+        if (isPlaceholderText(mapped.aboutText2))
+            mapped.aboutText2 = DEFAULT_ABOUT_EN[1];
+        if (isPlaceholderText(mapped.aboutText3))
+            mapped.aboutText3 = DEFAULT_ABOUT_EN[2];
+        if (!mapped.aboutText1Cn)
+            mapped.aboutText1Cn = DEFAULT_ABOUT_CN[0];
+        if (!mapped.aboutText2Cn)
+            mapped.aboutText2Cn = DEFAULT_ABOUT_CN[1];
+        if (!mapped.aboutText3Cn)
+            mapped.aboutText3Cn = DEFAULT_ABOUT_CN[2];
+        if (mapped.shopName)
+            mapped.brandName = String(mapped.shopName).includes('☸') ? String(mapped.shopName) : '☸ ' + mapped.shopName;
+        if (mapped.shopNameCn)
+            mapped.brandNameCn = String(mapped.shopNameCn).includes('☸') ? String(mapped.shopNameCn) : '☸ ' + mapped.shopNameCn;
+        if (!mapped.whatsappDisplay && mapped.whatsapp)
+            mapped.whatsappDisplay = String(mapped.whatsapp).trim();
+        settings = {
+            ...settings,
+            ...mapped
+        };
+        console.log('Applied website settings:', settings);
+        const siteTitle = getSettingLang(['websiteTitle'], ['websiteTitleCn'], settings.websiteTitle || 'Tashi Delek Collection');
+        if (siteTitle)
+            document.title = siteTitle;
+        const metaDesc = document.querySelector('meta[name="description"]');
+        const metaText = getSettingLang(['metaDescription'], ['metaDescriptionCn']);
+        if (metaDesc && metaText)
+            metaDesc.setAttribute('content', metaText);
+        setTextById('brandLogo', getSettingLang(['brandName'], ['brandNameCn'], '☸ Tashi Delek Collection'));
+        setTextById('brandSub', getSettingLang(['brandSub', 'tagline'], ['brandSubCn', 'taglineCn'], currentLang === 'zh' ? '天珠 · 藏香 · 佛珠' : 'Dzi Beads · Tibetan Incense · Buddhist Mala'));
+        applyTextToAll('.footer-brand .logo', getSettingLang(['brandName'], ['brandNameCn'], '☸ Tashi Delek Collection'));
+        applyTextToAll('.footer-brand .logo-sub', getSettingLang(['brandSub', 'tagline'], ['brandSubCn', 'taglineCn'], currentLang === 'zh' ? '天珠 · 藏香 · 佛珠' : 'Dzi Beads · Tibetan Incense · Buddhist Mala'));
+        const heroEyebrowEl = document.getElementById('heroEyebrow');
+        if (heroEyebrowEl)
+            heroEyebrowEl.style.display = 'none';
+        setHtmlById('heroTitle', getSettingLang(['heroTitle'], ['heroTitleCn'], currentLang === 'zh' ? '如意吉祥|藏传珍宝佛具流通处' : 'Sacred|Tibetan Treasures'));
+        setTextById('heroText', getSettingLang(['heroText', 'heroSubtitle'], ['heroTextCn', 'heroSubtitleCn'], currentLang === 'zh' ? '精选天珠、藏香、佛珠与藏传佛教供养佛具，以恭敬心整理呈现，方便您咨询结缘。' : 'Dzi beads, Tibetan incense, mala and sacred Buddhist objects selected with care for practice, altar and collection.'));
+        const heroButtons = document.querySelectorAll('.hero-ctas a');
+        const heroButton1 = getSettingLang(['heroButton1', 'browseButton', 'primaryCta'], ['heroButton1Cn', 'browseButtonCn', 'primaryCtaCn'], currentLang === 'zh' ? '浏览产品' : 'Browse Collection');
+        const heroButton2 = getSettingLang(['heroButton2', 'howButton', 'secondaryCta'], ['heroButton2Cn', 'howButtonCn', 'secondaryCtaCn'], t('howTitle'));
+        if (heroButtons[0])
+            heroButtons[0].textContent = heroButton1;
+        if (heroButtons[1])
+            heroButtons[1].textContent = heroButton2;
+        for (let i = 1; i <= 5; i++) {
+            const defaultBadge = (DEFAULT_TRUST[currentLang] || DEFAULT_TRUST.en)[i - 1] || '';
+            const badgeText = getSettingLang([`badge${i}`, `trust${i}`], [`badge${i}Cn`, `trust${i}Cn`], defaultBadge);
+            const el = document.querySelector(`.trust-strip .trust-item:nth-child(${i}) .trust-text`);
+            if (el)
+                el.textContent = badgeText || defaultBadge;
+        }
+        setTextById('howEyebrow', getSettingLang(['howEyebrow'], ['howEyebrowCn'], t('howEyebrow')));
+        setTextById('howTitle', getSettingLang(['howTitle'], ['howTitleCn'], t('howTitle')));
+        setTextById('aboutEyebrow', getSettingLang(['aboutEyebrow'], ['aboutEyebrowCn'], currentLang === 'zh' ? '我们的故事' : 'Our Story'));
+        setHtmlById('aboutTitle', getSettingLang(['aboutTitle'], ['aboutTitleCn'], currentLang === 'zh' ? '不只是收藏|更是一条有意义的道路' : 'More Than a Collection|A Path of Meaning'));
+        setTextById('aboutBadgeNumber', getSettingValue(['aboutBadgeNumber', 'yearsInBusiness', 'yearsSourcing']));
+        setTextById('aboutBadgeText', getSettingLang(['aboutBadgeText'], ['aboutBadgeTextCn'], currentLang === 'zh' ? '年寻访经验' : 'Years Sourcing'));
+        const aboutPs = document.querySelectorAll('#about .about-text > p');
+        [[['aboutParagraph1', 'aboutText1', 'aboutText'], ['aboutParagraph1Cn', 'aboutText1Cn']], [['aboutParagraph2', 'aboutText2'], ['aboutParagraph2Cn', 'aboutText2Cn']], [['aboutParagraph3', 'aboutText3'], ['aboutParagraph3Cn', 'aboutText3Cn']]].forEach((pair, idx) => {
+            const value = getSettingLang(pair[0], pair[1], DEFAULT_ABOUT_EN[idx]);
+            if (aboutPs[idx] && value)
+                aboutPs[idx].textContent = currentLang === 'zh' ? (getSettingValue(pair[1], DEFAULT_ABOUT_CN[idx]) || DEFAULT_ABOUT_CN[idx]) : value;
+        });
+        setTextById('reviewsEyebrow', getSettingLang(['reviewsEyebrow', 'testimonialEyebrow'], ['reviewsEyebrowCn', 'testimonialEyebrowCn'], t('reviewsEyebrow')));
+        setTextById('reviewsTitle', getSettingLang(['reviewsTitle', 'testimonialTitle'], ['reviewsTitleCn', 'testimonialTitleCn'], t('reviewsTitle')));
+        setTextById('faqEyebrow', getSettingLang(['faqEyebrow'], ['faqEyebrowCn'], t('faqEyebrow')));
+        setTextById('faqTitle', getSettingLang(['faqTitle'], ['faqTitleCn'], t('faqTitle')));
+        setTextById('contactEyebrow', getSettingLang(['contactEyebrow'], ['contactEyebrowCn'], t('contactEyebrow')));
+        setTextById('contactTitle', getSettingLang(['contactTitle'], ['contactTitleCn'], t('contactTitle')));
+        setTextById('contactText', getSettingLang(['contactText'], ['contactTextCn'], t('contactText')));
+        setTextById('emailDisplay', getSettingValue(['email', 'emailAddress'], 'hello@dharmahouse.com'));
+        setTextById('locationDisplay', getSettingLang(['location', 'basedIn', 'address'], ['locationCn', 'basedInCn', 'addressCn'], 'Kuala Lumpur, Malaysia'));
+        setTextById('responseTimeDisplay', getSettingLang(['responseTime', 'orderHours', 'replyTime'], ['responseTimeCn', 'orderHoursCn', 'replyTimeCn'], currentLang === 'zh' ? '通常 2–4 小时内回复' : 'Usually within 2-4 hours'));
+        document.querySelectorAll('a[href^="mailto:"]').forEach(a => {
+            const email = getSettingValue(['email', 'emailAddress'], 'hello@dharmahouse.com');
+            a.href = 'mailto:' + email;
+        });
+        initWaLinks();
+    }
+    function applyTestimonials(items) {
+        if (!Array.isArray(items) || !items.length)
+            return;
+        lastTestimonialItems = items;
+        const grid = document.getElementById('reviewsGrid');
+        grid.innerHTML = items.map(tst => `<div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"${escapeHtml(localText(tst.text || tst.review || '', tst.textCn || tst.reviewCn || tst.reviewCN || ''))}"</p><div class="review-author"><div class="review-avatar">${escapeHtml(tst.icon || '🙏')}</div><div><div class="review-name">${escapeHtml(tst.name || 'Customer')}</div><div class="review-location">${escapeHtml(localText(tst.location || '', tst.locationCn || tst.locationCN || ''))}</div></div></div>${tst.product ? `<div class="review-product-tag">${escapeHtml(localText(tst.product, tst.productCn || tst.productCN || ''))}</div>` : ''}</div>`).join('');
+    }
+    function applyFaq(items) {
+        if (!Array.isArray(items) || !items.length)
+            return;
+
+        lastFaqItems = items;
+
+        const list = document.getElementById('faqList');
+        if (!list)
+            return;
+
+        list.innerHTML = items.map(f => {
+            const question = translateKnownText(
+            f.question || f.Question || '',
+            f.questionCn || f.questionCN || f['Question CN'] || ''
+            );
+
+            const answer = translateKnownText(
+            f.answer || f.Answer || '',
+            f.answerCn || f.answerCN || f['Answer CN'] || ''
+            );
+
+            return `<div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">${escapeHtml(question)} <span class="faq-icon">+</span></button><div class="faq-a"><p>${escapeHtml(answer)}</p></div></div>`;
+        }).join('');
+    }
+    function applyStaticLanguage() {
+        document.documentElement.lang = currentLang === 'zh' ? 'zh-Hans' : 'en';
+        const heroEyebrowEl = document.getElementById('heroEyebrow');
+        if (heroEyebrowEl)
+            heroEyebrowEl.style.display = 'none';
+        document.body.classList.toggle('lang-zh', currentLang === 'zh');
+        updateLangButtons();
+        for (let i = 1; i <= 5; i++) {
+            const el = document.querySelector(`.trust-strip .trust-item:nth-child(${i}) .trust-text`);
+            if (el)
+                el.textContent = (DEFAULT_TRUST[currentLang] || DEFAULT_TRUST.en)[i - 1] || el.textContent;
+        }
+        const navs = document.querySelectorAll('header nav a');
+        [t('navShop'), t('navHow'), t('navAbout'), t('navReviews'), t('navFaq'), t('navContact')].forEach((txt, i) => {
+            if (navs[i])
+                navs[i].textContent = txt;
+        });
+        const m = document.querySelectorAll('#mobileNav a');
+        [t('navShop'), t('navHow'), t('navAboutUs'), t('navReviews'), t('navFaq'), t('navContact'), t('enquiryBag')].forEach((txt, i) => {
+            if (m[i])
+                m[i].textContent = txt;
+        });
+        const bagBtn = document.querySelector('.bag-wrap .wa-header-btn');
+        if (bagBtn)
+            bagBtn.textContent = t('enquiryBag');
+        const waBtn = document.getElementById('waHeaderBtn');
+        if (waBtn)
+            waBtn.textContent = t('whatsapp');
+        document.querySelector('.wa-float-label') && (document.querySelector('.wa-float-label').textContent = t('floatLabel'));
+        setTextById('howEyebrow', t('howEyebrow'));
+        setTextById('howTitle', t('howTitle'));
+        document.querySelectorAll('#how .step-title').forEach((el, i) => el.textContent = [t('step1Title'), t('step2Title'), t('step3Title'), t('step4Title')][i] || el.textContent);
+        document.querySelectorAll('#how .step-desc').forEach((el, i) => el.textContent = [t('step1Desc'), t('step2Desc'), t('step3Desc'), t('step4Desc')][i] || el.textContent);
+        setTextById('reviewsEyebrow', t('reviewsEyebrow'));
+        setTextById('reviewsTitle', t('reviewsTitle'));
+        setTextById('faqEyebrow', t('faqEyebrow'));
+        setTextById('faqTitle', t('faqTitle'));
+        setTextById('contactEyebrow', t('contactEyebrow'));
+        setTextById('contactTitle', t('contactTitle'));
+        setTextById('contactText', t('contactText'));
+        document.querySelectorAll('.contact-channels .channel-label').forEach((el, i) => el.textContent = [t('waFastest'), t('email'), t('responseTime'), t('basedIn')][i] || el.textContent);
+        const labels = document.querySelectorAll('.form-label');
+        [t('formName'), t('formPhone'), t('formEmail'), t('formInterest'), t('formMessage')].forEach((txt, i) => {
+            if (labels[i])
+                labels[i].textContent = txt;
+        });
+        const setPH = (id, txt) => {
+            const el = document.getElementById(id);
+            if (el)
+                el.placeholder = txt;
+        };
+        setPH('cf-name', t('formNamePH'));
+        setPH('cf-phone', t('formPhonePH'));
+        setPH('cf-email', t('formEmailPH'));
+        setPH('cf-message', t('formMessagePH'));
+        const opts = document.querySelectorAll('#cf-interest option');
+        [t('formSelect'), t('formDzi'), t('formIncense'), t('formCrystals'), t('formMala'), t('formCustom'), t('formGeneral')].forEach((txt, i) => {
+            if (opts[i])
+                opts[i].textContent = txt;
+        });
+        const submit = document.querySelector('.form-submit');
+        if (submit)
+            submit.textContent = t('formSubmit');
+        const note = document.querySelector('.form-note');
+        if (note)
+            note.textContent = t('formNote');
+        const footerP = document.querySelector('.footer-brand p');
+        if (footerP)
+            footerP.textContent = t('footerBrand');
+        const footerH = document.querySelectorAll('.footer-col h4');
+        [t('footerShop'), t('footerInfo'), t('footerContact')].forEach((txt, i) => {
+            if (footerH[i])
+                footerH[i].textContent = txt;
+        });
+        const footerLinks = document.querySelectorAll('.footer-col a');
+        const texts = [t('formDzi'), t('formIncense'), t('formCrystals'), t('formMala'), t('footerAbout'), t('howTitle'), t('faqTitle'), t('navReviews'), t('footerWhatsapp'), t('email'), 'Instagram', 'Facebook'];
+        texts.forEach((txt, i) => {
+            if (footerLinks[i])
+                footerLinks[i].textContent = txt;
+        });
+        const bottom = document.querySelectorAll('.footer-bottom p');
+        if (bottom[0])
+            bottom[0].textContent = t('footerRights');
+        if (bottom[1])
+            bottom[1].textContent = t('footerAvailability');
+        const cartTitle = document.querySelector('.cart-title');
+        if (cartTitle)
+            cartTitle.textContent = t('cartTitle');
+        const cartBtn = document.getElementById('cartWaBtn');
+        if (cartBtn)
+            cartBtn.textContent = t('cartSend');
+        const cartNote = document.querySelector('.cart-note');
+        if (cartNote)
+            cartNote.textContent = t('cartNote');
+        applySettings(settings);
+        buildFilterBar();
+        renderGrid();
+        renderCart();
+        if (lastTestimonialItems.length)
+            applyTestimonials(lastTestimonialItems);
+        if (lastFaqItems.length)
+            applyFaq(lastFaqItems);
+        initWaLinks();
+    }
+    function setLanguage(lang) {
+        currentLang = lang === 'zh' ? 'zh' : 'en';
+        localStorage.setItem('td_lang', currentLang);
+        applyStaticLanguage();
+    }
+    function updateLangButtons() {
+        const en = document.getElementById('langEn');
+        const zh = document.getElementById('langZh');
+        if (en)
+            en.classList.toggle('active', currentLang === 'en');
+        if (zh)
+            zh.classList.toggle('active', currentLang === 'zh');
     }
     function showLoading() {
-        const g = document.getElementById('grid');
-        if (g)
-            g.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:4rem;color:var(--gold);opacity:.6">${esc(tx('loading'))}</div>`
+        document.getElementById('grid').innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:4rem;color:var(--gold);opacity:.6"><div style="font-size:2rem;margin-bottom:1rem;animation:spin 2s linear infinite;display:inline-block">☸</div><div style="font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.3em;text-transform:uppercase">${escapeHtml(t('loading'))}</div></div>`;
     }
-    function showToast(m) {
-        const t = document.getElementById('toast');
-        if (!t)
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        if (!toast)
             return;
-        t.textContent = m;
-        t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 2500)
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2800);
     }
-    document.addEventListener('DOMContentLoaded', () => {
-        renderCart();
-        renderAll();
-        fetchFromSheet()
-    });
+    function toggleFaq(btn) {
+        const item = btn.parentElement;
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+        if (!isOpen)
+            item.classList.add('open');
+    }
+    function toggleMobileNav() {
+        document.getElementById('mobileNav').classList.toggle('open');
+    }
+    function closeMobileNav() {
+        document.getElementById('mobileNav').classList.remove('open');
+    }
+    function navScrollTo(id) {
+        const el = document.getElementById(id);
+        if (el)
+            el.scrollIntoView({
+                behavior: 'smooth'
+            });
+    }
     </script>
 </body>
 </html>
