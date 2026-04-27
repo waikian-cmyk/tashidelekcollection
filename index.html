@@ -2223,13 +2223,13 @@
                             <div class="channel-value" id="waDisplayNumber">+60 12-345 6789</div>
                         </div>
                     </a>
-                    <div class="channel">
+                    <a class="channel" id="emailContactLink" href="mailto:hello@dharmahouse.com">
                         <span class="channel-icon">📧</span>
                         <div>
                             <div class="channel-label">Email</div>
                             <div class="channel-value" id="emailDisplay">hello@dharmahouse.com</div>
                         </div>
-                    </div>
+                    </a>
                     <div class="channel">
                         <span class="channel-icon">🕐</span>
                         <div>
@@ -2329,16 +2329,16 @@
                 <h4>Contact</h4>
                 <ul>
                     <li>
-                        <a href="#contact">WhatsApp Us</a>
+                        <a href="#" id="footerWaLink" target="_blank" rel="noopener">WhatsApp Us</a>
                     </li>
                     <li>
-                        <a href="mailto:hello@dharmahouse.com">Email</a>
+                        <a href="mailto:hello@dharmahouse.com" id="footerEmailLink">Email</a>
                     </li>
                     <li>
-                        <a href="#contact">Instagram</a>
+                        <a href="#" id="footerInstagramLink" target="_blank" rel="noopener">Instagram</a>
                     </li>
                     <li>
-                        <a href="#contact">Facebook</a>
+                        <a href="#" id="footerFacebookLink" target="_blank" rel="noopener">Facebook</a>
                     </li>
                 </ul>
             </div>
@@ -3125,14 +3125,50 @@
         const n = waNumber();
         return `https://wa.me/${n}${msg ? '?text=' + encodeURIComponent(msg) : ''}`;
     }
+    function normalizeExternalUrl(url) {
+        const value = clean(url);
+        if (!value)
+            return '#';
+        if (value.startsWith('http://') || value.startsWith('https://') || value.startsWith('mailto:') || value.startsWith('tel:') || value.startsWith('#'))
+            return value;
+        return 'https://' + value;
+    }
     function initWaLinks() {
         const greeting = setting(['defaultGreeting', 'whatsappGreeting'], ['defaultGreetingCn', 'whatsappGreetingCn'], currentLang === 'zh' ? '您好，我想咨询商品。' : 'Hello, I would like to enquire about your products.');
-        ['waHeaderBtn', 'waFloat', 'waContactLink'].forEach(id => {
+        const waHref = waLink(greeting);
+        ['waHeaderBtn', 'waFloat', 'waContactLink', 'footerWaLink'].forEach(id => {
             const el = byId(id);
             if (el)
-                el.href = waLink(greeting);
+                el.href = waHref;
         });
         setText('waDisplayNumber', setting(['whatsappDisplay', 'whatsappNumber'], [], FALLBACK_WHATSAPP));
+
+        const email = setting(['emailAddress', 'email', 'contactEmail', 'businessEmail'], [], 'hello@dharmahouse.com');
+        setText('emailDisplay', email);
+        ['emailContactLink', 'footerEmailLink'].forEach(id => {
+            const el = byId(id);
+            if (el)
+                el.href = 'mailto:' + email;
+        });
+
+        const instagramUrl = setting(['instagramUrl', 'instagramURL', 'instagramLink', 'instagram'], [], '');
+        const facebookUrl = setting(['facebookUrl', 'facebookURL', 'facebookLink', 'facebookPageUrl'], [], '');
+        const ig = byId('footerInstagramLink');
+        const fb = byId('footerFacebookLink');
+        if (ig) {
+            ig.href = normalizeExternalUrl(instagramUrl);
+            ig.onclick = instagramUrl ? null : function(e) {
+                e.preventDefault();
+                showToast(currentLang === 'zh' ? 'Instagram 链接尚未设置' : 'Instagram link is not set');
+            };
+        }
+        if (fb) {
+            fb.href = normalizeExternalUrl(facebookUrl);
+            fb.onclick = facebookUrl ? null : function(e) {
+                e.preventDefault();
+                showToast(currentLang === 'zh' ? 'Facebook 链接尚未设置' : 'Facebook link is not set');
+            };
+        }
     }
     function sendCartViaWa() {
         if (!cart.length)
