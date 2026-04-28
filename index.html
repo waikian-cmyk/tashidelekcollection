@@ -2092,7 +2092,7 @@
                     <line x1="249" y1="51" x2="51" y2="249" stroke="#C9963A" stroke-width=".5"/>
                     <polygon points="150,20 275,230 25,230" stroke="#C9963A" stroke-width=".8" fill="none"/>
                     <polygon points="150,280 25,70 275,70" stroke="#C9963A" stroke-width=".8" fill="none"/>
-                    <text x="150" y="158" text-anchor="middle" font-size="24" fill="#C9963A" font-family="serif">☸</text>
+                    <text x="150" y="158" text-anchor="middle" font-size="24" fill="#C9963A" font-family="serif"></text>
                 </svg>
             </div>
             <div class="about-badge">
@@ -2172,7 +2172,7 @@
                 <div class="review-stars">★★★★★</div>
                 <p class="review-text">"The website feels premium and calm. The product categories are easy to browse."</p>
                 <div class="review-author">
-                    <div class="review-avatar">☸</div>
+                    <div class="review-avatar"></div>
                     <div>
                         <div class="review-name">Customer C</div>
                         <div class="review-location">Online</div>
@@ -2305,7 +2305,7 @@
     <footer>
         <div class="footer-grid">
             <div class="footer-brand">
-                <span class="logo">☸ Dharma House</span>
+                <span class="logo"> Dharma House</span>
                 <span class="logo-sub" style="text-align:left;margin-bottom:.5rem">Sacred Beads · Crystals · Mala</span>
                 <p>Authentic Tibetan treasures, incense and practice objects, managed through Google Sheet and ordered by WhatsApp enquiry.</p>
             </div>
@@ -2363,7 +2363,7 @@
         </div>
         <div class="footer-bottom">
             <p>© 2026 Dharma House · All rights reserved</p>
-            <span class="footer-sym">☸</span>
+            <span class="footer-sym"></span>
             <p>Enquire for current price and availability</p>
         </div>
     </footer>
@@ -2955,7 +2955,7 @@
     function applySettings() {
         const shopName = setting(['shopName', 'brandName'], ['shopNameCn', 'brandNameCn'], 'Tashi Delek Collection');
         const tagline = setting(['tagline', 'brandSub'], ['taglineCn', 'brandSubCn'], currentLang === 'zh' ? '天珠 · 藏香 · 佛珠' : 'Dzi Beads · Tibetan Incense · Buddhist Mala');
-        document.querySelectorAll('.logo').forEach(el => el.textContent = '☸ ' + shopName.replace(/^☸\s*/, ''));
+        document.querySelectorAll('.logo').forEach(el => el.textContent = shopName.replace(/^\s*/, ''));
         document.querySelectorAll('.logo-sub').forEach(el => el.textContent = tagline);
         const title = setting(['websiteTitle'], ['websiteTitleCn'], 'Tashi Delek Collection');
         if (title)
