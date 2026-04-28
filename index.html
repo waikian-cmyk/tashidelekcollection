@@ -1835,9 +1835,50 @@
         }
 
         .grid {
-            grid-template-columns:1fr
+          grid-template-columns: repeat(2, 1fr);
+             gap: 1rem;
         }
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
 
+  .card-body {
+    padding: .85rem;
+  }
+
+  .card-category {
+    font-size: .45rem;
+    letter-spacing: .18em;
+  }
+
+  .card-name {
+    font-size: .78rem;
+    line-height: 1.25;
+  }
+
+  .card-subtitle {
+    font-size: .7rem;
+    margin-bottom: .7rem;
+  }
+
+  .pattern-pill,
+  .spill {
+    font-size: .45rem;
+    padding: .22rem .42rem;
+  }
+
+  .enquire-label {
+    font-size: .45rem;
+    letter-spacing: .12em;
+  }
+
+  .wa-card-btn {
+    font-size: .45rem;
+    padding: .38rem .5rem;
+  }
+}
         .steps-grid {
             grid-template-columns:1fr 1fr
         }
