@@ -2946,11 +2946,8 @@
     }
     function setting(enKeys, cnKeys=[], fallback='') {
         const keys = currentLang === 'zh' ? cnKeys.concat(enKeys) : enKeys;
-        for (const k of keys) {
-            if (clean(settings[k]))
-                return clean(settings[k]);
-        }
-        return fallback;
+        const value = pick(settings, keys, '');
+        return clean(value) || fallback;
     }
     function formatPhone(v) {
         return clean(v).replace(/\D/g, '');
@@ -3184,34 +3181,27 @@
         const md = setting(['metaDescription'], ['metaDescriptionCn'], '');
         if (meta && md)
             meta.setAttribute('content', md);
-        // Hero section — linked to backend Sheet
-        // ⚙️ Settings rows expected:
-        // Hero Title Line 1 | EN Value | CN Value
-        // Hero Title Line 2 | EN Value | CN Value
-        // Hero Subtitle     | EN Value | CN Value
         const heroLine1 = setting(
-            ['heroTitleLine1', 'heroLine1', 'heroTitle1'],
-            ['heroTitleLine1Cn', 'heroLine1Cn', 'heroTitle1Cn'],
+            ['heroTitleLine1', 'heroTitle1', 'heroMainTitle'],
+            ['heroTitleLine1Cn', 'heroTitleLine1CN', 'heroTitle1Cn', 'heroMainTitleCn'],
             'TASHI DELEK'
         );
         const heroLine2 = setting(
-            ['heroTitleLine2', 'heroLine2', 'heroTitle2', 'heroHighlight'],
-            ['heroTitleLine2Cn', 'heroLine2Cn', 'heroTitle2Cn', 'heroHighlightCn'],
+            ['heroTitleLine2', 'heroTitle2', 'heroSubTitle', 'heroHighlight'],
+            ['heroTitleLine2Cn', 'heroTitleLine2CN', 'heroTitle2Cn', 'heroSubTitleCn', 'heroHighlightCn'],
             currentLang === 'zh' ? '藏传珍宝佛具流通处' : 'SACRED TIBETAN TREASURES'
         );
-        const heroSubtitle = setting(
-            ['heroSubtitle', 'heroText'],
-            ['heroSubtitleCn', 'heroTextCn'],
-            currentLang === 'zh'
-                ? '精选天珠、藏香、佛珠与藏传佛教供养佛具，以恭敬心整理呈现，方便您咨询结缘。'
-                : 'Dzi beads of ancient power, healing crystals of the earth, incense and hand-knotted mala for your practice. Choose a few pieces and enquire once through WhatsApp.'
-        );
-
         const hero = byId('heroTitle');
         if (hero) {
             hero.innerHTML = '<span class="hero-title-main">' + esc(heroLine1) + '</span><span class="hero-title-sub">' + esc(heroLine2) + '</span>';
         }
-        setText('heroText', heroSubtitle);
+        setText('heroText', setting(
+            ['heroSubtitle', 'heroText', 'heroDescription'],
+            ['heroSubtitleCn', 'heroSubtitleCN', 'heroTextCn', 'heroDescriptionCn'],
+            currentLang === 'zh'
+                ? '精选天珠、藏香、佛珠与藏传佛教供养佛具，以恭敬心整理呈现，方便您咨询结缘。'
+                : 'Dzi beads of ancient power, healing crystals of the earth, incense and hand-knotted mala for your practice. Choose a few pieces and enquire once through WhatsApp.'
+        ));
         setText('heroButton1', currentLang === 'zh' ? (settings.heroButton1Cn || '浏览系列') : (settings.heroButton1 || 'Browse Collection'));
         setText('heroButton2', currentLang === 'zh' ? (settings.heroButton2Cn || '如何下单') : (settings.heroButton2 || 'How to Order'));
         setHtml('aboutTitle', setting(['aboutTitle'], ['aboutTitleCn'], currentLang === 'zh' ? '不只是收藏|更是一条有意义的道路' : 'More Than a Collection|A Path of Meaning'));
