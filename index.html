@@ -1,14 +1,16 @@
+
 <!DOCTYPE html>
-<!-- TD_BUILD: 2026-04-29 CLEAN_EN_CN_LINK_AUDIT -->
+<!-- TD_BUILD: 2026-04-29 FAQ_CN_QUESTION_1_35REM -->
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Tashi Delek Collection — Sacred Dzi Beads, Crystals & Mala</title>
+    <title>Dharma House - Sacred Dzi Beads, Crystals & Mala</title>
     <meta name="description" content="Authentic Tibetan dzi beads, healing crystals, incense and hand-knotted Buddhist mala. Enquire through WhatsApp."/>
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
     :root {
         --void: #0D0A07;
@@ -21,35 +23,35 @@
         --warm-white: #F0E8D8;
         --parchment: #C8B898;
         --ash: #7A6E62;
-        --border: rgba(201, 150, 58, .22);
+        --border: rgba(201, 150, 58, .2);
         --wa: #25D366;
-        --wa-dark: #1aab52;
+        --wa-dark: #1aab52
     }
 
-    *, *::before, *::after {
+    *, *:before, *:after {
         box-sizing: border-box;
         margin: 0;
-        padding: 0
+        padding:0
     }
 
     html {
-        scroll-behavior: smooth
+        scroll-behavior:smooth
     }
 
     body {
         background: var(--void);
         color: var(--warm-white);
-        font-family: 'EB Garamond', 'Noto Serif SC', serif;
-        overflow-x: hidden
+        font-family: 'EB Garamond', serif;
+        overflow-x:hidden
     }
 
-    body::before {
+    body:before {
         content: "";
         position: fixed;
         inset: 0;
         pointer-events: none;
         z-index: 9999;
-        opacity: .33;
+        opacity: .35;
         background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E")
     }
 
@@ -62,29 +64,21 @@
         color:inherit
     }
 
-    .is-hidden {
-        display: none !important
-    }
-
     .section-eyebrow {
         font-family: 'Cinzel', serif;
         font-size: .6rem;
-        letter-spacing: .5em;
+        letter-spacing: .55em;
         text-transform: uppercase;
         color: var(--gold);
         display: block;
         margin-bottom:.8rem
     }
 
-    .hero-eyebrow {
-        display: none !important
-    }
-
     .section-title {
-        font-family: 'Cinzel Decorative', 'Noto Serif SC', serif;
-        font-size: clamp(1.6rem, 3.4vw, 2.75rem);
+        font-family: 'Cinzel Decorative', serif;
+        font-size: clamp(1.6rem, 3.5vw, 2.8rem);
         font-weight: 400;
-        line-height: 1.22;
+        line-height: 1.2;
         margin-bottom:1rem
     }
 
@@ -96,7 +90,7 @@
         margin:1.5rem auto
     }
 
-    .gold-divider::before, .gold-divider::after {
+    .gold-divider:before, .gold-divider:after {
         content: "";
         flex: 1;
         max-width: 80px;
@@ -104,7 +98,7 @@
         background:linear-gradient(to right, transparent, var(--gold-dim))
     }
 
-    .gold-divider::after {
+    .gold-divider:after {
         background:linear-gradient(to left, transparent, var(--gold-dim))
     }
 
@@ -117,8 +111,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 1rem;
-        padding: 1.25rem 3rem;
+        padding: 1.4rem 3rem;
         border-bottom: 1px solid var(--border);
         position: sticky;
         top: 0;
@@ -128,43 +121,41 @@
     }
 
     .logo-wrap {
-        text-align:center
-    }
+  text-align: center;
+}
 
-    .logo-with-image {
-        display: flex;
-        align-items: center;
-        gap: .75rem;
-        text-align: left;
-        min-width:0
-    }
+.logo {
+  font-family: 'Cinzel Decorative', 'Times New Roman', serif;
+  font-size: 1rem;
+  letter-spacing: .12em;
+  color: var(--gold);
+  display: block;
+}
 
-    .site-logo-img {
-        width: 46px;
-        height: 46px;
-        object-fit: contain;
-        flex-shrink:0
-    }
+.logo-sub {
+  font-family: 'Noto Serif SC', 'Songti SC', 'STSong', 'PingFang SC', serif;
+  font-size: .65rem;
+  letter-spacing: .22em;
+  text-transform: none;
+  color: var(--gold-dim);
+  margin-top: .25rem;
+  display: block;
+}
 
-    .logo {
-        font-family: 'Cinzel Decorative', 'Times New Roman', serif;
-        font-size: 1.02rem;
-        letter-spacing: .11em;
-        color: var(--gold);
-        display: block;
-        white-space:nowrap
-    }
+/* Shop logo image beside shop name */
+.logo-with-image {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-align: left;
+}
 
-    .logo-sub {
-        font-family: 'Cinzel', 'Noto Serif SC', 'Songti SC', serif;
-        font-size: .58rem;
-        letter-spacing: .26em;
-        text-transform: uppercase;
-        color: var(--gold-dim);
-        margin-top: .25rem;
-        display: block;
-        white-space: nowrap
-    }
+.site-logo-img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
 
     nav {
         display: flex;
@@ -172,19 +163,19 @@
         align-items:center
     }
 
-    nav a, .mobile-nav a {
+    nav a {
         font-family: 'Cinzel', serif;
         font-size: .62rem;
-        letter-spacing: .2em;
+        letter-spacing: .22em;
         text-transform: uppercase;
         text-decoration: none;
         color: var(--parchment);
-        opacity: .72;
+        opacity: .65;
         transition: .2s;
         cursor:pointer
     }
 
-    nav a:hover, .mobile-nav a:hover {
+    nav a:hover {
         opacity: 1;
         color:var(--gold-light)
     }
@@ -192,7 +183,7 @@
     .hamburger {
         display: none;
         background: none;
-        border: 0;
+        border: none;
         color: var(--gold);
         font-size: 1.6rem;
         cursor: pointer;
@@ -203,12 +194,12 @@
     .wa-header-btn {
         font-family: 'Cinzel', serif;
         font-size: .58rem;
-        letter-spacing: .16em;
+        letter-spacing: .18em;
         text-transform: uppercase;
         background: var(--wa);
-        border: 0;
+        border: none;
         color: #fff;
-        padding: .54rem 1rem;
+        padding: .5rem 1.1rem;
         cursor: pointer;
         transition: .2s;
         display: flex;
@@ -238,47 +229,28 @@
     }
 
     .mobile-nav a {
+        font-family: 'Cinzel', serif;
+        font-size: .75rem;
+        letter-spacing: .25em;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: var(--parchment);
         padding: 1rem 0;
-        border-bottom:1px solid rgba(201, 150, 58, .1)
+        border-bottom: 1px solid rgba(201, 150, 58, .1);
+        cursor:pointer
     }
 
     .mobile-nav a:last-child {
         border-bottom:0
     }
 
-    .lang-toggle {
-        display: flex;
-        gap: .35rem;
-        align-items:center
-    }
-
-    .lang-toggle button {
-        font-family: 'Cinzel', serif;
-        font-size: .55rem;
-        letter-spacing: .12em;
-        text-transform: uppercase;
-        background: none;
-        color: var(--parchment);
-        border: 1px solid rgba(201, 150, 58, .35);
-        padding: .38rem .6rem;
-        cursor: pointer;
-        transition:.2s
-    }
-
-    .lang-toggle button:hover {
-        border-color: var(--gold);
-        color:var(--gold-light)
-    }
-
-    .lang-toggle button.active {
-        background: var(--gold);
-        color: var(--void);
-        border-color: var(--gold)
+    .mobile-nav a:hover {
+        color: var(--gold-light)
     }
 
     #home {
         position: relative;
-        padding: 7.2rem 3rem 5.2rem;
+        padding: 7rem 3rem 5rem;
         text-align: center;
         overflow: hidden;
         background:radial-gradient(ellipse at center, #1E1408 0%, var(--void) 70%)
@@ -314,43 +286,45 @@
         }
     }
 
-    .hero-h1 {
-        font-family: 'Cinzel Decorative', serif;
-        font-size: clamp(2.6rem, 6.5vw, 5.45rem);
-        font-weight: 400;
-        line-height: 1.05;
-        letter-spacing: .04em;
-        color: var(--warm-white);
-        margin: 0 auto 1.4rem;
-        max-width: 1180px;
-        text-transform: uppercase;
-        animation:fadeUp 1s .15s ease both
+    .hero-eyebrow {
+        animation:fadeUp 1s ease both
     }
 
-    .hero-title-main {
+    .hero-h1 {
+        font-family: 'Cinzel Decorative', serif;
+        font-size: clamp(2rem, 4.8vw, 4.2rem);
+        font-weight: 700;
+        line-height: 1.12;
+        color: var(--warm-white);
+        margin: 0 auto 1.2rem;
+        letter-spacing: .08em;
+        max-width: 1120px;
+        overflow-wrap: anywhere;
+        text-transform: uppercase;
+    }
+
+    .hero-h1 span {
         display:block
     }
 
     .hero-title-sub {
-        display: block;
         color: var(--gold);
         font-family: 'Cinzel', serif;
-        font-size: clamp(1.5rem, 4.4vw, 3.85rem);
-        font-weight: 400;
-        letter-spacing: .16em;
-        line-height: 1.12;
-        margin-top:.55rem
+        font-size: clamp(1.15rem, 3.3vw, 3rem);
+        font-weight: 500;
+        letter-spacing: .13em;
+        line-height: 1.18;
+        margin-top:.45rem
     }
 
     .hero-p {
-        font-family: 'EB Garamond', 'Noto Serif SC', serif;
-        font-size: 1.16rem;
+        font-size: 1.15rem;
         color: var(--parchment);
         font-style: italic;
-        max-width: 640px;
-        margin: 0 auto 2.8rem;
-        line-height: 1.9;
-        opacity: .9;
+        max-width: 560px;
+        margin: 0 auto 2.5rem;
+        line-height: 1.85;
+        opacity: .82;
         animation:fadeUp 1s .3s ease both
     }
 
@@ -367,7 +341,7 @@
         font-size: .65rem;
         letter-spacing: .28em;
         text-transform: uppercase;
-        padding: .92rem 2rem;
+        padding: .9rem 2rem;
         cursor: pointer;
         text-decoration: none;
         transition:.2s
@@ -376,7 +350,7 @@
     .btn-primary {
         background: var(--gold);
         color: var(--void);
-        border:0
+        border:none
     }
 
     .btn-primary:hover {
@@ -401,14 +375,14 @@
         padding: 1.2rem 3rem;
         display: flex;
         justify-content: center;
-        gap: 2.4rem;
+        gap: 3rem;
         flex-wrap:wrap
     }
 
     .trust-item {
         display: flex;
         align-items: center;
-        gap:.55rem
+        gap:.6rem
     }
 
     .trust-icon {
@@ -417,11 +391,11 @@
 
     .trust-text {
         font-family: 'Cinzel', serif;
-        font-size: .6rem;
-        letter-spacing: .18em;
+        font-size: .58rem;
+        letter-spacing: .2em;
         text-transform: uppercase;
         color: var(--parchment);
-        opacity:.78
+        opacity:.75
     }
 
     .filter-bar {
@@ -437,15 +411,15 @@
     .filter-pill {
         font-family: 'Cinzel', serif;
         font-size: .6rem;
-        letter-spacing: .2em;
+        letter-spacing: .25em;
         text-transform: uppercase;
         background: none;
         border: 1px solid rgba(201, 150, 58, .25);
         color: var(--parchment);
-        padding: .5rem 1.05rem;
+        padding: .5rem 1.2rem;
         cursor: pointer;
         transition: .2s;
-        opacity:.72
+        opacity:.65
     }
 
     .filter-pill:hover {
@@ -487,7 +461,7 @@
     .shop-header h2 {
         font-family: 'Cinzel', serif;
         font-size: .7rem;
-        letter-spacing: .26em;
+        letter-spacing: .3em;
         text-transform: uppercase;
         color: var(--ash);
         font-weight:300
@@ -528,67 +502,13 @@
         justify-content:center
     }
 
-    .product-photo {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        opacity: 0;
-        transition:opacity .35s
-    }
-
-    .product-photo.loaded {
-        opacity:1
-    }
-
-    .photo-shimmer {
-        position: absolute;
-        inset: 0;
-        z-index: 2;
-        background: linear-gradient(90deg, #181210 25%, #2C2218 50%, #181210 75%);
-        background-size: 200% 100%;
-        animation:shimmer 1.5s infinite
-    }
-
-    @keyframes shimmer {
-        0% {
-            background-position:200% 0
-        }
-
-        100% {
-            background-position:-200% 0
-        }
-    }
-
-    .photo-gold-overlay {
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        background: linear-gradient(to bottom, transparent 60%, rgba(13, 10, 7, .5));
-        z-index:3
-    }
-
-    .no-image-hint {
-        position: absolute;
-        bottom: .6rem;
-        left: 0;
-        right: 0;
-        text-align: center;
-        font-family: 'Cinzel', serif;
-        font-size: .48rem;
-        letter-spacing: .16em;
-        text-transform: uppercase;
-        color: var(--gold-dim);
-        opacity: .6;
-        z-index:4
-    }
-
     .card-badge {
         position: absolute;
         top: .8rem;
         left: .8rem;
         font-family: 'Cinzel', serif;
         font-size: .52rem;
-        letter-spacing: .22em;
+        letter-spacing: .28em;
         text-transform: uppercase;
         padding: .25rem .65rem;
         z-index:5
@@ -628,12 +548,12 @@
     .view-btn {
         font-family: 'Cinzel', serif;
         font-size: .6rem;
-        letter-spacing: .25em;
+        letter-spacing: .3em;
         text-transform: uppercase;
         border: 1px solid var(--gold);
         color: var(--gold);
         background: none;
-        padding: .65rem 1.4rem;
+        padding: .65rem 1.6rem;
         cursor: pointer;
         transform: translateY(8px);
         transition:.3s
@@ -649,20 +569,20 @@
     }
 
     .card-body {
-        padding:1.25rem
+        padding:1.3rem
     }
 
     .card-category {
         font-family: 'Cinzel', serif;
         font-size: .52rem;
-        letter-spacing: .28em;
+        letter-spacing: .35em;
         text-transform: uppercase;
         color: var(--gold-dim);
         margin-bottom:.35rem
     }
 
     .card-name {
-        font-family: 'Cinzel', 'Noto Serif SC', serif;
+        font-family: 'Cinzel', serif;
         font-size: .95rem;
         font-weight: 500;
         color: var(--warm-white);
@@ -673,18 +593,18 @@
         font-style: italic;
         font-size: .82rem;
         color: var(--parchment);
-        opacity: .66;
-        margin-bottom:1rem
+        opacity: .6;
+        margin-bottom:1.1rem
     }
 
     .variant-block {
-        margin-bottom:.85rem
+        margin-bottom:.9rem
     }
 
     .var-label {
         font-family: 'Cinzel', serif;
         font-size: .52rem;
-        letter-spacing: .18em;
+        letter-spacing: .22em;
         text-transform: uppercase;
         color: var(--ash);
         margin-bottom: .4rem;
@@ -692,17 +612,22 @@
         justify-content:space-between
     }
 
+    .var-label em {
+        color: var(--gold-light);
+        font-style:normal
+    }
+
     .pattern-swatches, .color-swatches, .size-row {
         display: flex;
-        gap: .42rem;
+        gap: .45rem;
         flex-wrap:wrap
     }
 
     .pattern-pill, .spill {
-        font-family: 'Cinzel', 'Noto Serif SC', serif;
+        font-family: 'Cinzel', serif;
         font-size: .52rem;
-        letter-spacing: .08em;
-        padding: .28rem .55rem;
+        letter-spacing: .1em;
+        padding: .28rem .6rem;
         border: 1px solid rgba(201, 150, 58, .25);
         color: var(--parchment);
         background: none;
@@ -729,6 +654,23 @@
         text-decoration:line-through
     }
 
+    .cswatch {
+        width: 18px;
+        height: 18px;
+        border-radius: 3px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition:.15s
+    }
+
+    .cswatch:hover {
+        transform:scale(1.2)
+    }
+
+    .cswatch.active {
+        border-color:var(--gold)
+    }
+
     .price-row {
         display: flex;
         align-items: center;
@@ -741,8 +683,8 @@
 
     .enquire-label {
         font-family: 'Cinzel', serif;
-        font-size: .56rem;
-        letter-spacing: .16em;
+        font-size: .58rem;
+        letter-spacing: .2em;
         text-transform: uppercase;
         color: var(--gold-dim);
         font-style:italic
@@ -751,12 +693,12 @@
     .wa-card-btn {
         font-family: 'Cinzel', serif;
         font-size: .52rem;
-        letter-spacing: .14em;
+        letter-spacing: .18em;
         text-transform: uppercase;
         background: var(--wa);
-        border: 0;
+        border: none;
         color: #fff;
-        padding: .45rem .78rem;
+        padding: .45rem .8rem;
         cursor: pointer;
         transition: .2s;
         display: flex;
@@ -765,7 +707,61 @@
     }
 
     .wa-card-btn:hover {
-        background: var(--wa-dark)
+        background:var(--wa-dark)
+    }
+
+    .product-photo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transition:opacity .35s
+    }
+
+    .product-photo.loaded {
+        opacity:1
+    }
+
+    .photo-shimmer {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        background: linear-gradient(90deg, #181210 25%, #2C2218 50%, #181210 75%);
+        background-size: 200% 100%;
+        animation:shimmer 1.5s infinite
+    }
+
+    @keyframes shimmer {
+        0% {
+            background-position:200% 0
+        }
+
+        100% {
+            background-position:-200% 0
+        }
+    }
+
+    .photo-gold-overlay {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(to bottom, transparent 60%, rgba(13, 10, 7, .5) 100%);
+        z-index:3
+    }
+
+    .no-image-hint {
+        position: absolute;
+        bottom: .6rem;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-family: 'Cinzel', serif;
+        font-size: .48rem;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        color: var(--gold-dim);
+        opacity: .6;
+        z-index: 4
     }
 
     .bag-wrap {
@@ -846,7 +842,7 @@
 
     .cart-close, .cart-item-remove {
         background: none;
-        border: 0;
+        border: none;
         color: var(--ash);
         font-size: 1.4rem;
         cursor: pointer;
@@ -878,7 +874,7 @@
     .cart-empty p {
         font-family: 'Cinzel', serif;
         font-size: .62rem;
-        letter-spacing: .18em;
+        letter-spacing: .2em;
         text-transform: uppercase;
         color:var(--ash)
     }
@@ -916,7 +912,7 @@
     }
 
     .cart-item-name {
-        font-family: 'Cinzel', 'Noto Serif SC', serif;
+        font-family: 'Cinzel', serif;
         font-size: .75rem;
         color: var(--warm-white);
         margin-bottom: .25rem;
@@ -924,9 +920,9 @@
     }
 
     .cart-item-meta {
-        font-family: 'Cinzel', 'Noto Serif SC', serif;
+        font-family: 'Cinzel', serif;
         font-size: .58rem;
-        letter-spacing: .1em;
+        letter-spacing: .12em;
         text-transform: uppercase;
         color: var(--gold-dim);
         line-height:1.6
@@ -950,7 +946,7 @@
     .cart-count-line {
         font-family: 'Cinzel', serif;
         font-size: .6rem;
-        letter-spacing: .16em;
+        letter-spacing: .2em;
         text-transform: uppercase;
         color: var(--ash);
         margin-bottom: 1rem;
@@ -962,10 +958,10 @@
         padding: 1rem;
         background: var(--wa);
         color: #fff;
-        border: 0;
+        border: none;
         font-family: 'Cinzel', serif;
         font-size: .7rem;
-        letter-spacing: .22em;
+        letter-spacing: .28em;
         text-transform: uppercase;
         cursor: pointer;
         transition: .2s;
@@ -1044,7 +1040,7 @@
         top: .8rem;
         right: .8rem;
         background: none;
-        border: 0;
+        border: none;
         color: var(--ash);
         font-size: 1.3rem;
         cursor: pointer;
@@ -1065,14 +1061,14 @@
     .modal-cat {
         font-family: 'Cinzel', serif;
         font-size: .52rem;
-        letter-spacing: .34em;
+        letter-spacing: .4em;
         text-transform: uppercase;
         color: var(--gold-dim);
         margin-bottom:.4rem
     }
 
     .modal-name {
-        font-family: 'Cinzel Decorative', 'Noto Serif SC', serif;
+        font-family: 'Cinzel Decorative', serif;
         font-size: 1.4rem;
         font-weight: 400;
         color: var(--warm-white);
@@ -1106,7 +1102,7 @@
     .modal-enquire {
         font-family: 'Cinzel', serif;
         font-size: .65rem;
-        letter-spacing: .16em;
+        letter-spacing: .2em;
         text-transform: uppercase;
         color: var(--gold-dim);
         font-style:italic
@@ -1117,10 +1113,10 @@
         padding: 1rem;
         background: var(--wa);
         color: #fff;
-        border: 0;
+        border: none;
         font-family: 'Cinzel', serif;
         font-size: .68rem;
-        letter-spacing: .22em;
+        letter-spacing: .28em;
         text-transform: uppercase;
         cursor: pointer;
         margin-top: 1rem;
@@ -1138,14 +1134,14 @@
     .modal-note {
         font-family: 'Cinzel', serif;
         font-size: .52rem;
-        letter-spacing: .12em;
+        letter-spacing: .15em;
         text-transform: uppercase;
         color: var(--ash);
         text-align: center;
         margin-top: .8rem
     }
 
-    #how, #reviews {
+    #how {
         background: var(--surface);
         border-top: 1px solid var(--border);
         border-bottom: 1px solid var(--border);
@@ -1157,8 +1153,10 @@
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         gap: 2rem;
-        margin: 3rem auto 0;
-        max-width:1000px
+        margin-top: 3rem;
+        max-width: 1000px;
+        margin-left: auto;
+        margin-right:auto
     }
 
     .step {
@@ -1180,9 +1178,9 @@
     }
 
     .step-title {
-        font-family: 'Cinzel', 'Noto Serif SC', serif;
+        font-family: 'Cinzel', serif;
         font-size: .7rem;
-        letter-spacing: .2em;
+        letter-spacing: .25em;
         text-transform: uppercase;
         color: var(--warm-white);
         margin-bottom:.6rem
@@ -1202,7 +1200,7 @@
         right: -1rem;
         color: var(--gold-dim);
         font-size: 1.2rem;
-        opacity: .4
+        opacity:.4
     }
 
     #about {
@@ -1252,9 +1250,9 @@
     }
 
     .about-badge-txt {
-        font-family: 'Cinzel', 'Noto Serif SC', serif;
+        font-family: 'Cinzel', serif;
         font-size: .5rem;
-        letter-spacing: .24em;
+        letter-spacing: .3em;
         text-transform: uppercase;
         color: var(--parchment);
         opacity:.65
@@ -1287,9 +1285,9 @@
     }
 
     .value-title {
-        font-family: 'Cinzel', 'Noto Serif SC', serif;
+        font-family: 'Cinzel', serif;
         font-size: .6rem;
-        letter-spacing: .18em;
+        letter-spacing: .22em;
         text-transform: uppercase;
         color: var(--gold);
         margin-bottom:.3rem
@@ -1298,17 +1296,27 @@
     .value-desc {
         font-size: .82rem;
         color: var(--parchment);
-        opacity: .65;
+        opacity: .6;
         font-style: italic;
         line-height: 1.6
+    }
+
+    #reviews {
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        padding: 5rem 3rem;
+        text-align:center
     }
 
     .reviews-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 1.5rem;
-        margin: 3rem auto 0;
-        max-width:1100px
+        margin-top: 3rem;
+        max-width: 1100px;
+        margin-left: auto;
+        margin-right:auto
     }
 
     .review-card {
@@ -1354,9 +1362,9 @@
     }
 
     .review-name {
-        font-family: 'Cinzel', 'Noto Serif SC', serif;
+        font-family: 'Cinzel', serif;
         font-size: .6rem;
-        letter-spacing: .16em;
+        letter-spacing: .2em;
         text-transform: uppercase;
         color:var(--warm-white)
     }
@@ -1371,18 +1379,18 @@
         position: absolute;
         top: 1rem;
         right: 1rem;
-        font-family: 'Cinzel', 'Noto Serif SC', serif;
+        font-family: 'Cinzel', serif;
         font-size: .48rem;
-        letter-spacing: .15em;
+        letter-spacing: .2em;
         text-transform: uppercase;
         border: 1px solid var(--border);
         padding: .2rem .5rem;
-        color: var(--gold-dim)
+        color:var(--gold-dim)
     }
 
     #faq {
         padding: 5rem 3rem;
-        max-width: 820px;
+        max-width: 780px;
         margin:0 auto
     }
 
@@ -1401,11 +1409,11 @@
     .faq-q {
         width: 100%;
         background: none;
-        border: 0;
+        border: none;
         color: var(--warm-white);
-        font-family: 'Cinzel', 'Noto Serif SC', serif;
+        font-family: 'Cinzel', serif;
         font-size: .72rem;
-        letter-spacing: .13em;
+        letter-spacing: .15em;
         text-transform: uppercase;
         text-align: left;
         padding: 1.3rem 0;
@@ -1439,7 +1447,7 @@
     }
 
     .faq-item.open .faq-a {
-        max-height: 500px;
+        max-height: 400px;
         padding-bottom:1.2rem
     }
 
@@ -1472,7 +1480,8 @@
         color: var(--parchment);
         opacity: .72;
         font-style: italic;
-        margin:1rem 0 2rem
+        margin-top: 1rem;
+        margin-bottom:2rem
     }
 
     .contact-channels {
@@ -1502,9 +1511,9 @@
     }
 
     .channel-label {
-        font-family: 'Cinzel', 'Noto Serif SC', serif;
+        font-family: 'Cinzel', serif;
         font-size: .58rem;
-        letter-spacing: .2em;
+        letter-spacing: .25em;
         text-transform: uppercase;
         color:var(--gold-dim)
     }
@@ -1543,9 +1552,9 @@
     }
 
     .form-label {
-        font-family: 'Cinzel', 'Noto Serif SC', serif;
+        font-family: 'Cinzel', serif;
         font-size: .55rem;
-        letter-spacing: .22em;
+        letter-spacing: .28em;
         text-transform: uppercase;
         color:var(--ash)
     }
@@ -1554,7 +1563,7 @@
         background: var(--deep);
         border: 1px solid rgba(201, 150, 58, .2);
         color: var(--warm-white);
-        font-family: 'EB Garamond', 'Noto Serif SC', serif;
+        font-family: 'EB Garamond', serif;
         font-size: .95rem;
         padding: .75rem 1rem;
         outline: none;
@@ -1585,13 +1594,13 @@
     }
 
     .form-submit {
-        font-family: 'Cinzel', 'Noto Serif SC', serif;
+        font-family: 'Cinzel', serif;
         font-size: .65rem;
-        letter-spacing: .24em;
+        letter-spacing: .3em;
         text-transform: uppercase;
         background: var(--wa);
         color: #fff;
-        border: 0;
+        border: none;
         padding: 1rem;
         cursor: pointer;
         transition: .2s;
@@ -1610,7 +1619,7 @@
         font-size: .78rem;
         color: var(--ash);
         font-style: italic;
-        text-align: center
+        text-align:center
     }
 
     .wa-float {
@@ -1655,9 +1664,9 @@
         background: var(--deep);
         border: 1px solid var(--border);
         color: var(--warm-white);
-        font-family: 'Cinzel', 'Noto Serif SC', serif;
+        font-family: 'Cinzel', serif;
         font-size: .55rem;
-        letter-spacing: .12em;
+        letter-spacing: .15em;
         text-transform: uppercase;
         padding: .4rem .8rem;
         white-space: nowrap;
@@ -1677,9 +1686,9 @@
         background: var(--surface);
         border: 1px solid var(--gold-dim);
         color: var(--gold-light);
-        font-family: 'Cinzel', 'Noto Serif SC', serif;
+        font-family: 'Cinzel', serif;
         font-size: .62rem;
-        letter-spacing: .14em;
+        letter-spacing: .18em;
         text-transform: uppercase;
         padding: .9rem 1.5rem;
         transform: translateY(60px);
@@ -1715,17 +1724,17 @@
     .footer-brand p {
         font-size: .88rem;
         color: var(--parchment);
-        opacity: .58;
+        opacity: .55;
         font-style: italic;
         line-height: 1.7;
         margin-top: .8rem;
-        max-width:260px
+        max-width:240px
     }
 
     .footer-col h4 {
-        font-family: 'Cinzel', 'Noto Serif SC', serif;
+        font-family: 'Cinzel', serif;
         font-size: .58rem;
-        letter-spacing: .24em;
+        letter-spacing: .3em;
         text-transform: uppercase;
         color: var(--gold-dim);
         margin-bottom:1rem
@@ -1741,7 +1750,7 @@
     .footer-col a {
         font-size: .85rem;
         color: var(--parchment);
-        opacity: .6;
+        opacity: .55;
         text-decoration: none;
         transition:.2s
     }
@@ -1764,9 +1773,9 @@
     }
 
     .footer-bottom p {
-        font-family: 'Cinzel', 'Noto Serif SC', serif;
+        font-family: 'Cinzel', serif;
         font-size: .52rem;
-        letter-spacing: .16em;
+        letter-spacing: .2em;
         text-transform: uppercase;
         color:var(--ash)
     }
@@ -1775,94 +1784,6 @@
         color: var(--gold);
         opacity: .4;
         font-size: 1rem
-    }
-
-    body.lang-zh {
-        font-family: 'Noto Serif SC', 'Songti SC', 'PingFang SC', serif
-    }
-
-    body.lang-zh .logo {
-        font-family: 'Cinzel Decorative', 'Noto Serif SC', serif
-    }
-
-    body.lang-zh .logo-sub {
-        font-family: 'Noto Serif SC', 'Songti SC', serif;
-        font-size: .68rem;
-        letter-spacing: .14em;
-        text-transform:none
-    }
-
-    body.lang-zh nav a, body.lang-zh .mobile-nav a {
-        font-family: 'Noto Serif SC', 'Songti SC', serif;
-        font-size: .82rem;
-        letter-spacing: .08em;
-        text-transform:none
-    }
-
-    body.lang-zh .hero-h1 {
-        font-family: 'Cinzel Decorative', 'Noto Serif SC', 'Songti SC', serif;
-        letter-spacing:.08em
-    }
-
-    body.lang-zh .hero-title-sub {
-        font-family: 'Noto Serif SC', 'Songti SC', serif;
-        font-size: clamp(1.45rem, 4vw, 3rem);
-        letter-spacing: .12em;
-        text-transform:none
-    }
-
-    body.lang-zh .hero-p {
-        font-family: 'Noto Serif SC', 'Songti SC', serif;
-        font-style: normal;
-        font-size: 1.08rem;
-        line-height:2
-    }
-
-    body.lang-zh .btn-primary, body.lang-zh .btn-outline, body.lang-zh .wa-header-btn, body.lang-zh .filter-pill, body.lang-zh .view-btn, body.lang-zh .wa-card-btn, body.lang-zh .cart-wa-btn, body.lang-zh .modal-wa-btn, body.lang-zh .form-submit {
-        font-family: 'Noto Serif SC', 'Songti SC', serif;
-        letter-spacing: .08em;
-        text-transform:none
-    }
-
-    body.lang-zh .section-eyebrow, body.lang-zh .card-category, body.lang-zh .var-label, body.lang-zh .channel-label, body.lang-zh .form-label, body.lang-zh .footer-col h4 {
-        font-family: 'Noto Serif SC', 'Songti SC', serif;
-        letter-spacing: .08em;
-        text-transform:none
-    }
-
-    body.lang-zh .trust-text {
-        font-family: 'Noto Serif SC', 'Songti SC', serif;
-        font-size: .86rem;
-        letter-spacing: .06em;
-        text-transform: none;
-        opacity:.86
-    }
-
-    body.lang-zh .section-title, body.lang-zh .card-name, body.lang-zh .modal-name, body.lang-zh .step-title, body.lang-zh .value-title {
-        font-family: 'Noto Serif SC', 'Songti SC', serif;
-        letter-spacing: .06em;
-        text-transform:none
-    }
-
-    body.lang-zh .faq-q {
-        font-family: 'Noto Serif SC', 'Songti SC', serif;
-        font-size: 1.14rem;
-        font-weight: 600;
-        letter-spacing: .02em;
-        text-transform: none;
-        line-height:1.55
-    }
-
-    body.lang-zh .faq-a p {
-        font-family: 'Noto Serif SC', 'Songti SC', serif;
-        font-size: 1rem;
-        line-height: 1.9;
-        font-style:normal
-    }
-
-    body.lang-zh .value-desc, body.lang-zh .step-desc, body.lang-zh .about-text p, body.lang-zh .contact-info p {
-        font-family: 'Noto Serif SC', 'Songti SC', serif;
-        font-style: normal
     }
 
     @media (max-width: 1024px) {
@@ -1895,13 +1816,22 @@
 
         .footer-grid {
             grid-template-columns: 1fr 1fr;
-            gap: 2rem
+            gap:2rem
         }
     }
 
     @media (max-width: 768px) {
         header {
-            padding:1rem 1.3rem
+            padding:1.2rem 1.5rem
+        }
+
+        .logo {
+            font-size:.82rem
+        }
+
+        .logo-sub {
+            font-size:.56rem;
+            letter-spacing:.12em
         }
 
         .site-logo-img {
@@ -1909,24 +1839,8 @@
             height:38px
         }
 
-        .logo {
-            font-size: .82rem;
-            letter-spacing:.08em
-        }
-
-        .logo-sub {
-            font-size: .54rem;
-            letter-spacing: .12em;
-            white-space: normal;
-            max-width:260px
-        }
-
         nav {
             display:none
-        }
-
-        .hamburger {
-            display:block
         }
 
         .wa-header-btn {
@@ -1939,71 +1853,80 @@
             padding:.45rem .7rem
         }
 
+        .hamburger {
+            display:block
+        }
+
         #home, #shop, #about, #faq, #contact, #how, #reviews, footer {
             padding-left: 1.5rem;
             padding-right:1.5rem
         }
 
         .grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap:1rem
-        }
-
-        .card-body {
-            padding:.85rem
-        }
-
-        .card-category {
-            font-size: .45rem;
-            letter-spacing:.14em
-        }
-
-        .card-name {
-            font-size: .82rem;
-            line-height:1.25
-        }
-
-        .card-subtitle {
-            font-size: .72rem;
-            margin-bottom:.7rem
-        }
-
-        .pattern-pill, .spill {
-            font-size: .45rem;
-            padding:.22rem .42rem
-        }
-
-        .enquire-label {
-            font-size: .45rem;
-            letter-spacing:.1em
-        }
-
-        .wa-card-btn {
-            font-size: .45rem;
-            padding:.38rem .5rem
+          grid-template-columns: repeat(2, 1fr);
+             gap: 1rem;
         }
 
         .hero-h1 {
-            font-size: clamp(2rem, 9vw, 3.2rem);
-            line-height: 1.12;
-            letter-spacing:.04em
+            font-size: clamp(1.9rem, 9vw, 3rem);
+            letter-spacing:.05em
         }
 
         .hero-title-sub {
-            font-size: clamp(1.05rem, 5.7vw, 1.8rem);
-            letter-spacing:.08em
+            font-size: clamp(1rem, 5.6vw, 1.8rem);
+            letter-spacing:.08em;
+            line-height:1.22
         }
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
 
-        .hero-p {
-            font-size: 1rem;
-            max-width:92%
-        }
+  .card-body {
+    padding: .85rem;
+  }
 
+  .card-category {
+    font-size: .45rem;
+    letter-spacing: .18em;
+  }
+
+  .card-name {
+    font-size: .78rem;
+    line-height: 1.25;
+  }
+
+  .card-subtitle {
+    font-size: .7rem;
+    margin-bottom: .7rem;
+  }
+
+  .pattern-pill,
+  .spill {
+    font-size: .45rem;
+    padding: .22rem .42rem;
+  }
+
+  .enquire-label {
+    font-size: .45rem;
+    letter-spacing: .12em;
+  }
+
+  .wa-card-btn {
+    font-size: .45rem;
+    padding: .38rem .5rem;
+  }
+}
         .steps-grid {
             grid-template-columns:1fr 1fr
         }
 
-        .reviews-grid, .modal, .form-row, .footer-grid {
+        .reviews-grid {
+            grid-template-columns:1fr
+        }
+
+        .modal {
             grid-template-columns:1fr
         }
 
@@ -2012,17 +1935,16 @@
             border-top:1px solid var(--border)
         }
 
+        .form-row {
+            grid-template-columns:1fr
+        }
+
+        .footer-grid {
+            grid-template-columns:1fr
+        }
+
         .step-connector {
             display:none
-        }
-
-        .footer-bottom {
-            justify-content: center;
-            text-align:center
-        }
-
-        .contact-inner {
-            gap: 3rem
         }
     }
 
@@ -2036,19 +1958,16 @@
             gap:.45rem
         }
 
-        .site-logo-img {
-            width: 34px;
-            height:34px
-        }
-
         .logo {
-            font-size:.7rem
+            font-size:.72rem;
+            letter-spacing:.08em
         }
 
         .logo-sub {
-            font-size: .48rem;
-            line-height: 1.35;
-            max-width:150px
+            max-width: 148px;
+            font-size:.5rem;
+            letter-spacing:.06em;
+            line-height:1.35
         }
 
         header .bag-wrap {
@@ -2065,12 +1984,14 @@
 
         .hero-h1 {
             font-size: clamp(1.75rem, 11vw, 2.45rem);
-            line-height:1.1
+            letter-spacing:.035em;
+            line-height:1.08
         }
 
         .hero-title-sub {
-            font-size: clamp(.95rem, 6.4vw, 1.35rem);
-            letter-spacing:.05em
+            font-size: clamp(.9rem, 6.4vw, 1.3rem);
+            letter-spacing:.05em;
+            line-height:1.22
         }
 
         .hero-ctas {
@@ -2078,42 +1999,179 @@
             align-items:center
         }
 
-        .hero-ctas a {
-            width:min(100%, 240px)
-        }
-
         .trust-strip {
-            gap: 1.2rem;
+            gap: 1.5rem;
             padding:1rem 1.5rem
         }
 
+        body.lang-zh .trust-text {
+            font-size:.82rem
+        }
+
+        body.lang-zh .hero-ctas .btn-primary,
+        body.lang-zh .hero-ctas .btn-outline {
+            width: min(100%, 220px);
+            font-size: .88rem;
+            letter-spacing: .08em;
+            padding:.9rem 1rem
+        }
+
+        body.lang-zh .faq-q {
+            font-size:1.12rem;
+            letter-spacing:.02em
+        }
+
+        body.lang-zh .faq-a p {
+            font-size:1rem
+        }
+
         .steps-grid, .about-values {
-            grid-template-columns:1fr
-        }
-
-        .faq-q {
-            font-size:.78rem
-        }
-
-        .wa-float {
-            right: 1.2rem;
-            bottom: 1.2rem
+            grid-template-columns: 1fr
         }
     }
 
-    @media (max-width: 380px) {
-        .grid {
-            grid-template-columns: 1fr
+    .lang-toggle {
+        display: flex;
+        gap: .35rem;
+        align-items: center;
+        margin-left:.2rem
+    }
+
+    .lang-toggle button {
+        font-family: 'Cinzel', serif;
+        font-size: .55rem;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        background: none;
+        color: var(--parchment);
+        border: 1px solid rgba(201, 150, 58, .3);
+        padding: .38rem .55rem;
+        cursor: pointer;
+        transition:.2s
+    }
+
+    .lang-toggle button:hover {
+        border-color: var(--gold);
+        color:var(--gold-light)
+    }
+
+    .lang-toggle button.active {
+        background: var(--gold);
+        color: var(--void);
+        border-color:var(--gold)
+    }
+
+    body.lang-zh {
+        font-family: 'EB Garamond', 'Noto Serif SC', 'Songti SC', 'PingFang SC', serif
+    }
+
+    body.lang-zh .section-eyebrow, body.lang-zh .trust-text, body.lang-zh nav a, body.lang-zh .filter-pill, body.lang-zh .card-category, body.lang-zh .var-label, body.lang-zh .pattern-pill, body.lang-zh .spill, body.lang-zh .wa-card-btn, body.lang-zh .channel-label, body.lang-zh .form-label, body.lang-zh .footer-col h4 {
+        letter-spacing: .12em
+    }/* Polished Chinese language display */
+    body.lang-zh header nav a {
+        font-size: .78rem;
+        letter-spacing: .08em
+    }
+
+    body.lang-zh .mobile-nav a {
+        font-size: .9rem;
+        letter-spacing: .1em
+    }
+
+    body.lang-zh .trust-text {
+        font-family: 'Noto Serif SC', 'Songti SC', 'STSong', 'PingFang SC', serif;
+        font-size: .78rem;
+        letter-spacing: .08em;
+        text-transform:none
+    }
+
+    body.lang-zh .hero-ctas .btn-primary,
+    body.lang-zh .hero-ctas .btn-outline {
+        font-family: 'Noto Serif SC', 'Songti SC', 'STSong', 'PingFang SC', serif;
+        font-size: .9rem;
+        letter-spacing: .12em;
+        padding: .95rem 2.2rem;
+        text-transform:none
+    }
+
+    body.lang-zh .faq-q {
+        font-family: 'Noto Serif SC', 'Songti SC', 'STSong', 'PingFang SC', serif;
+        font-size: 1.2rem;
+        letter-spacing: .02em;
+        font-weight: 600;
+        line-height: 1.55;
+        text-transform:none
+    }
+
+    body.lang-zh .faq-a p {
+        font-family: 'Noto Serif SC', 'Songti SC', 'STSong', 'PingFang SC', serif;
+        font-size: 1.05rem;
+        line-height: 1.9;
+        font-style:normal
+    }
+
+    .hero-eyebrow {
+        display: none !important
+    }
+
+    .lang-zh .hero-h1 {
+        font-family: 'Cinzel Decorative', serif;
+        font-weight: 700;
+        letter-spacing: .08em;
+        line-height: 1.12;
+    }
+
+    .lang-zh .hero-title-sub {
+        font-family: 'Cinzel', serif;
+        font-weight: 500;
+        letter-spacing: .13em;
+    }
+
+    .lang-zh .section-title, .lang-zh .logo, .lang-zh .card-name, .lang-zh .modal-name {
+        font-family: 'Noto Serif SC', 'Songti SC', 'STSong', 'PingFang SC', serif;
+    }
+
+    .lang-zh .logo-sub {
+        letter-spacing: .25em
+    }
+
+    body.lang-zh #faq .faq-list .faq-item .faq-q {
+        font-family: 'Noto Serif SC', 'Songti SC', 'STSong', 'PingFang SC', serif !important;
+        font-size: 1.35rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0 !important;
+        line-height: 1.55 !important;
+        text-transform: none !important;
+    }
+
+    #faq .faq-list .faq-item .faq-q-cn {
+        font-family: 'Noto Serif SC', 'Songti SC', 'STSong', 'PingFang SC', serif !important;
+        font-size: 1.35rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0 !important;
+        line-height: 1.55 !important;
+        text-transform: none !important;
+    }
+
+    @media (max-width: 480px) {
+        body.lang-zh #faq .faq-list .faq-item .faq-q {
+            font-size: 1.18rem !important;
+            line-height: 1.5 !important;
+        }
+
+        #faq .faq-list .faq-item .faq-q-cn {
+            font-size: 1.18rem !important;
+            line-height: 1.5 !important;
         }
     }
     </style>
 </head>
 <body>
-
     <header>
-        <button aria-label="Menu" class="hamburger" onclick="toggleMobileNav()">☰</button>
+        <button class="hamburger" onclick="toggleMobileNav()" aria-label="Menu">☰</button>
+        
         <div class="logo-wrap logo-with-image">
-            <img alt="Tashi Delek Collection Logo" class="site-logo-img" src="logo.png"/>
+            <img src="logo.png" alt="Tashi Delek Collection Logo" class="site-logo-img">
             <div>
                 <span class="logo" id="brandLogo">Tashi Delek Collection</span>
                 <span class="logo-sub" id="brandSub">藏传珍宝佛具流通处 天珠 · 藏香 · 佛珠</span>
@@ -2129,13 +2187,13 @@
         </nav>
         <div style="display:flex;gap:.8rem;align-items:center">
             <div class="bag-wrap">
-                <button class="wa-header-btn" onclick="openCart()" style="background:var(--gold-dim);color:var(--warm-white)">🛍 Enquiry Bag</button>
+                <button class="wa-header-btn" style="background:var(--gold-dim);color:var(--warm-white)" onclick="openCart()">🛍 Enquiry Bag</button>
                 <span class="bag-count-badge" id="bagBadge">0</span>
             </div>
-            <a class="wa-header-btn" href="#" id="waHeaderBtn" rel="noopener" target="_blank">💬 WhatsApp</a>
-            <div aria-label="Language" class="lang-toggle">
-                <button id="langEn" onclick="setLanguage('en')" type="button">EN</button>
-                <button id="langZh" onclick="setLanguage('zh')" type="button">中</button>
+            <a class="wa-header-btn" id="waHeaderBtn" href="#" target="_blank" rel="noopener">💬 WhatsApp</a>
+            <div class="lang-toggle" aria-label="Language">
+                <button id="langEn" type="button" onclick="setLanguage('en')">EN</button>
+                <button id="langZh" type="button" onclick="setLanguage('zh')">中</button>
             </div>
         </div>
     </header>
@@ -2149,17 +2207,17 @@
         <a onclick="openCart();closeMobileNav()" style="color:var(--gold)">🛍 Enquiry Bag</a>
     </div>
     <section id="home">
-        <svg class="hero-mandala" viewbox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="200" cy="200" fill="none" r="190" stroke="white" stroke-width="1"></circle>
-            <circle cx="200" cy="200" fill="none" r="150" stroke="white" stroke-width=".5"></circle>
-            <circle cx="200" cy="200" fill="none" r="100" stroke="white" stroke-width="1"></circle>
-            <circle cx="200" cy="200" fill="none" r="50" stroke="white" stroke-width=".5"></circle>
-            <line stroke="white" stroke-width=".5" x1="10" x2="390" y1="200" y2="200"></line>
-            <line stroke="white" stroke-width=".5" x1="200" x2="200" y1="10" y2="390"></line>
-            <line stroke="white" stroke-width=".5" x1="66" x2="334" y1="66" y2="334"></line>
-            <line stroke="white" stroke-width=".5" x1="334" x2="66" y1="66" y2="334"></line>
-            <polygon fill="none" points="200,20 380,310 20,310" stroke="white" stroke-width=".7"></polygon>
-            <polygon fill="none" points="200,380 20,90 380,90" stroke="white" stroke-width=".7"></polygon>
+        <svg class="hero-mandala" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="200" cy="200" r="190" stroke="white" stroke-width="1" fill="none"/>
+            <circle cx="200" cy="200" r="150" stroke="white" stroke-width=".5" fill="none"/>
+            <circle cx="200" cy="200" r="100" stroke="white" stroke-width="1" fill="none"/>
+            <circle cx="200" cy="200" r="50" stroke="white" stroke-width=".5" fill="none"/>
+            <line x1="10" y1="200" x2="390" y2="200" stroke="white" stroke-width=".5"/>
+            <line x1="200" y1="10" x2="200" y2="390" stroke="white" stroke-width=".5"/>
+            <line x1="66" y1="66" x2="334" y2="334" stroke="white" stroke-width=".5"/>
+            <line x1="334" y1="66" x2="66" y2="334" stroke="white" stroke-width=".5"/>
+            <polygon points="200,20 380,310 20,310" stroke="white" stroke-width=".7" fill="none"/>
+            <polygon points="200,380 20,90 380,90" stroke="white" stroke-width=".7" fill="none"/>
         </svg>
         <span class="hero-eyebrow section-eyebrow" id="heroEyebrow">Authentic · Consecrated · Rare</span>
         <h1 class="hero-h1" id="heroTitle">
@@ -2168,8 +2226,8 @@
         </h1>
         <p class="hero-p" id="heroText">Dzi beads of ancient power, healing crystals of the earth, incense and hand-knotted mala for your practice. Choose a few pieces and enquire once through WhatsApp.</p>
         <div class="hero-ctas">
-            <a class="btn-primary" href="#shop" id="heroButton1">Browse Collection</a>
-            <a class="btn-outline" href="#how" id="heroButton2">How to Order</a>
+            <a href="#shop" class="btn-primary" id="heroButton1">Browse Collection</a>
+            <a href="#how" class="btn-outline" id="heroButton2">How to Order</a>
         </div>
     </section>
     <div class="trust-strip">
@@ -2183,7 +2241,7 @@
         </div>
         <div class="trust-item">
             <span class="trust-icon">📦</span>
-            <span class="trust-text">Malaysia &amp; Worldwide</span>
+            <span class="trust-text">Malaysia & Worldwide</span>
         </div>
         <div class="trust-item">
             <span class="trust-icon">💬</span>
@@ -2198,13 +2256,9 @@
     <section id="shop">
         <div class="shop-header">
             <h2>
-
-                                Collection - 
-                                
+                Collection - 
                 <span id="count">0</span>
-
-                                 pieces
-                            
+                 pieces
             </h2>
         </div>
         <div class="grid" id="grid"></div>
@@ -2219,7 +2273,7 @@
             <div class="step">
                 <div class="step-num">01</div>
                 <div class="step-icon">🔍</div>
-                <div class="step-title">Browse &amp; Choose</div>
+                <div class="step-title">Browse & Choose</div>
                 <p class="step-desc">Explore the collection. Select pattern, colour and size where available.</p>
                 <span class="step-connector">→</span>
             </div>
@@ -2240,7 +2294,7 @@
             <div class="step">
                 <div class="step-num">04</div>
                 <div class="step-icon">📦</div>
-                <div class="step-title">Confirm &amp; Ship</div>
+                <div class="step-title">Confirm & Ship</div>
                 <p class="step-desc">After confirmation and payment, your item is wrapped and shipped safely.</p>
             </div>
         </div>
@@ -2248,18 +2302,18 @@
     <section id="about">
         <div class="about-art">
             <div class="about-mandala-wrap">
-                <svg height="260" viewbox="0 0 300 300" width="260" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="150" cy="150" fill="none" r="140" stroke="#C9963A" stroke-width="1"></circle>
-                    <circle cx="150" cy="150" fill="none" r="100" stroke="#C9963A" stroke-width=".7"></circle>
-                    <circle cx="150" cy="150" fill="none" r="60" stroke="#C9963A" stroke-width="1"></circle>
-                    <circle cx="150" cy="150" fill="none" r="20" stroke="#C9963A" stroke-width=".7"></circle>
-                    <line stroke="#C9963A" stroke-width=".5" x1="10" x2="290" y1="150" y2="150"></line>
-                    <line stroke="#C9963A" stroke-width=".5" x1="150" x2="150" y1="10" y2="290"></line>
-                    <line stroke="#C9963A" stroke-width=".5" x1="51" x2="249" y1="51" y2="249"></line>
-                    <line stroke="#C9963A" stroke-width=".5" x1="249" x2="51" y1="51" y2="249"></line>
-                    <polygon fill="none" points="150,20 275,230 25,230" stroke="#C9963A" stroke-width=".8"></polygon>
-                    <polygon fill="none" points="150,280 25,70 275,70" stroke="#C9963A" stroke-width=".8"></polygon>
-                    <text fill="#C9963A" font-family="serif" font-size="24" text-anchor="middle" x="150" y="158"></text>
+                <svg viewBox="0 0 300 300" width="260" height="260" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="150" cy="150" r="140" stroke="#C9963A" stroke-width="1" fill="none"/>
+                    <circle cx="150" cy="150" r="100" stroke="#C9963A" stroke-width=".7" fill="none"/>
+                    <circle cx="150" cy="150" r="60" stroke="#C9963A" stroke-width="1" fill="none"/>
+                    <circle cx="150" cy="150" r="20" stroke="#C9963A" stroke-width=".7" fill="none"/>
+                    <line x1="10" y1="150" x2="290" y2="150" stroke="#C9963A" stroke-width=".5"/>
+                    <line x1="150" y1="10" x2="150" y2="290" stroke="#C9963A" stroke-width=".5"/>
+                    <line x1="51" y1="51" x2="249" y2="249" stroke="#C9963A" stroke-width=".5"/>
+                    <line x1="249" y1="51" x2="51" y2="249" stroke="#C9963A" stroke-width=".5"/>
+                    <polygon points="150,20 275,230 25,230" stroke="#C9963A" stroke-width=".8" fill="none"/>
+                    <polygon points="150,280 25,70 275,70" stroke="#C9963A" stroke-width=".8" fill="none"/>
+                    <text x="150" y="158" text-anchor="middle" font-size="24" fill="#C9963A" font-family="serif"></text>
                 </svg>
             </div>
             <div class="about-badge">
@@ -2270,18 +2324,14 @@
         <div class="about-text">
             <span class="section-eyebrow" id="aboutEyebrow">Our Story</span>
             <h2 class="section-title" id="aboutTitle">
-
-                                More Than a Shop -
-                                
-                <br/>
-
-                                A Sacred Practice
-                            
+                More Than a Shop -
+                <br>
+                A Sacred Practice
             </h2>
             <div class="gold-divider" style="justify-content:flex-start">
                 <span>❋</span>
             </div>
-            <p>Tashi Delek Collection was born from a deep personal journey into Tibetan Buddhism and sacred objects. We select dzi beads, incense, crystals and mala with care, so every piece feels meaningful and suitable for practice or collection.</p>
+            <p>Dharma House was born from a deep personal journey into Tibetan Buddhism and sacred objects. We select dzi beads, incense, crystals and mala with care, so every piece feels meaningful and suitable for practice or collection.</p>
             <p>Every product can be updated from your Google Sheet. Customers browse the website, place interested items into an enquiry bag, then send one WhatsApp message for current price and availability.</p>
             <p>This protects sensitive pricing while keeping the buying process personal, simple and easy to manage.</p>
             <div class="about-values">
@@ -2362,9 +2412,7 @@
         <div class="faq-list" id="faqList">
             <div class="faq-item">
                 <button class="faq-q faq-q-cn" onclick="toggleFaq(this)">
-
-                                        Why are prices not shown? 
-                                        
+                    Why are prices not shown? 
                     <span class="faq-icon">+</span>
                 </button>
                 <div class="faq-a">
@@ -2373,9 +2421,7 @@
             </div>
             <div class="faq-item">
                 <button class="faq-q faq-q-cn" onclick="toggleFaq(this)">
-
-                                        How does WhatsApp ordering work? 
-                                        
+                    How does WhatsApp ordering work? 
                     <span class="faq-icon">+</span>
                 </button>
                 <div class="faq-a">
@@ -2384,9 +2430,7 @@
             </div>
             <div class="faq-item">
                 <button class="faq-q faq-q-cn" onclick="toggleFaq(this)">
-
-                                        Can I enquire about multiple items? 
-                                        
+                    Can I enquire about multiple items? 
                     <span class="faq-icon">+</span>
                 </button>
                 <div class="faq-a">
@@ -2395,9 +2439,7 @@
             </div>
             <div class="faq-item">
                 <button class="faq-q faq-q-cn" onclick="toggleFaq(this)">
-
-                                        Can products be updated from Google Sheet? 
-                                        
+                    Can products be updated from Google Sheet? 
                     <span class="faq-icon">+</span>
                 </button>
                 <div class="faq-a">
@@ -2413,14 +2455,14 @@
                 <h2 class="section-title" id="contactTitle" style="text-align:left">Get in Touch</h2>
                 <p id="contactText">Have questions about dzi beads, incense, mala or crystals? Send us a message. The website will open WhatsApp with your enquiry prepared.</p>
                 <div class="contact-channels">
-                    <a class="channel wa-channel" href="#" id="waContactLink" rel="noopener" target="_blank">
+                    <a class="channel wa-channel" id="waContactLink" href="#" target="_blank" rel="noopener">
                         <span class="channel-icon">💬</span>
                         <div>
                             <div class="channel-label">WhatsApp Fastest</div>
                             <div class="channel-value" id="waDisplayNumber">+60 12-345 6789</div>
                         </div>
                     </a>
-                    <a class="channel" href="mailto:hello@dharmahouse.com" id="emailContactLink">
+                    <a class="channel" id="emailContactLink" href="mailto:hello@dharmahouse.com">
                         <span class="channel-icon">📧</span>
                         <div>
                             <div class="channel-label">Email</div>
@@ -2448,16 +2490,16 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">Your Name</label>
-                            <input class="form-input" id="cf-name" placeholder="Full name" type="text"/>
+                            <input class="form-input" type="text" id="cf-name" placeholder="Full name"/>
                         </div>
                         <div class="form-group">
                             <label class="form-label">WhatsApp / Phone</label>
-                            <input class="form-input" id="cf-phone" placeholder="+60 12 345 6789" type="tel"/>
+                            <input class="form-input" type="tel" id="cf-phone" placeholder="+60 12 345 6789"/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Email Address</label>
-                        <input class="form-input" id="cf-email" placeholder="your@email.com" type="email"/>
+                        <input class="form-input" type="email" id="cf-email" placeholder="your@email.com"/>
                     </div>
                     <div class="form-group">
                         <label class="form-label">I'm Interested In</label>
@@ -2526,16 +2568,16 @@
                 <h4>Contact</h4>
                 <ul>
                     <li>
-                        <a href="#" id="footerWaLink" rel="noopener" target="_blank">WhatsApp Us</a>
+                        <a href="#" id="footerWaLink" target="_blank" rel="noopener">WhatsApp Us</a>
                     </li>
                     <li>
                         <a href="mailto:hello@dharmahouse.com" id="footerEmailLink">Email</a>
                     </li>
                     <li>
-                        <a href="#" id="footerInstagramLink" rel="noopener" target="_blank">Instagram</a>
+                        <a href="#" id="footerInstagramLink" target="_blank" rel="noopener">Instagram</a>
                     </li>
                     <li>
-                        <a href="#" id="footerFacebookLink" rel="noopener" target="_blank">Facebook</a>
+                        <a href="#" id="footerFacebookLink" target="_blank" rel="noopener">Facebook</a>
                     </li>
                 </ul>
             </div>
@@ -2546,10 +2588,8 @@
             <p>Enquire for current price and availability</p>
         </div>
     </footer>
-    <a class="wa-float" href="#" id="waFloat" rel="noopener" target="_blank">
-
-                💬
-                
+    <a class="wa-float" id="waFloat" href="#" target="_blank" rel="noopener">
+        💬
         <span class="wa-float-label">Order on WhatsApp</span>
     </a>
     <div class="cart-overlay" id="cartOverlay" onclick="handleCartOverlayClick(event)">
@@ -2561,7 +2601,7 @@
             <div class="cart-body" id="cartBody"></div>
             <div class="cart-footer">
                 <div class="cart-count-line" id="cartCountLine">0 items in your enquiry bag</div>
-                <button class="cart-wa-btn" disabled="" id="cartWaBtn" onclick="sendCartViaWa()">💬 Send Enquiry via WhatsApp</button>
+                <button class="cart-wa-btn" id="cartWaBtn" onclick="sendCartViaWa()" disabled>💬 Send Enquiry via WhatsApp</button>
                 <p class="cart-note">Prices are confirmed personally through WhatsApp.</p>
             </div>
         </div>
@@ -2575,74 +2615,122 @@
     <div class="toast" id="toast"></div>
 
     <script>
-
+    /* ============================================================
+       TASHI DELEK COLLECTION — CLEAN FRONTEND JS
+       - Products from Apps Script: data.products
+       - Settings from Apps Script: data.settings
+       - FAQ from Apps Script: data.faq
+       - EN / 中文 toggle with Sheet CN fields when available
+    ============================================================ */
     const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbzzTInJ3B5h0SMzddVn8Z2Midni90HLPgAn0_AI6uPspsxY0IT9Q9QuYJbSgLjAp7nd/exec';
     const FALLBACK_WHATSAPP = '60165023699';
-    const LOGO_PATHS = ['logo.png', './logo.png', 'Logo.png', 'assets/logo.png', 'images/logo.png'];
+
     let products = [];
-    let selected = {};
-    let cart = [];
+    let filteredProducts = [];
     let currentFilter = 'all';
-    let currentLang = localStorage.getItem('td_lang') === 'zh' ? 'zh' : 'en';
+    let currentLang = localStorage.getItem('td_lang') || 'en';
     let settings = {};
+    let cart = [];
+    let selected = {};
     let faqItems = [];
     let testimonialItems = [];
 
     const DEFAULT_TRUST = {
-        en: ['Authentic Sourcing', 'Consecrated Items', 'Malaysia & Worldwide', 'Enquire via WhatsApp', 'Selected Pieces'],
-        zh: ['正品来源保证', '寺院加持圣物', '全球寄送', 'WhatsApp 咨询结缘', '精选藏品']
+        en: ['100% Authentic Sourcing', 'Monastery Consecrated', 'Worldwide Shipping', 'Order via WhatsApp', 'Certificate of Authenticity'],
+        zh: ['正品来源保证', '寺院加持圣物', '全球寄送', 'WhatsApp 咨询结缘', '附真实说明']
     };
-    const DEFAULT_ABOUT_VALUES = {
+
+    const DEFAULT_ABOUT = {
         en: [
-        ['Authentic', 'Carefully sourced dzi beads and sacred items.'],
-        ['Respectful', 'Presented with cultural and spiritual respect.'],
-        ['Selected', 'Curated products rather than mass listings.'],
-        ['Personal', 'WhatsApp enquiry before final confirmation.']
+        'Tashi Delek Collection began from a sincere respect for Tibetan Buddhism, sacred objects, and the quiet meaning they bring into daily life. What started as a personal journey of learning, collecting, and understanding dzi beads, mala, incense, and blessed items slowly became a way to share these meaningful pieces with others.',
+        'Every item in our collection is chosen with care. We look closely at the pattern, material, condition, feel, and overall character of each piece before offering it to customers. For dzi beads especially, we understand that people are not only looking for beauty, but also symbolism, protection, blessing, and a personal connection.',
+        'When you order from Tashi Delek Collection, you are not just buying an object. You are choosing something meaningful for your practice, altar, collection, protection, or daily reminder of peace and mindfulness. Each piece is handled with care and sent with sincere good wishes.'
         ],
         zh: [
-        ['真实', '用心寻访天珠、藏香、佛珠与藏传圣物。'],
-        ['恭敬', '以尊重藏传文化与信仰的方式呈现每一件物品。'],
-        ['精选', '重视品相、材质与缘分，不做大量杂乱上架。'],
-        ['亲自咨询', '通过 WhatsApp 先行咨询，确认细节后再结缘。']
+        'Tashi Delek Collection 源于对藏传佛教、圣物以及它们为日常生活带来的宁静意义的真诚敬意。最初，这只是个人学习、收藏与理解天珠、佛珠、藏香和加持圣物的旅程；慢慢地，它成为一种把这些有意义的物件分享给更多人的方式。',
+        '我们用心挑选每一件藏品。在呈现给客户之前，我们会仔细观察其纹饰、材质、状态、手感以及整体气质。尤其是天珠，我们明白人们寻找的不只是外在之美，也包括象征、护佑、祝福以及与自己内心相应的缘分。',
+        '当您从 Tashi Delek Collection 结缘一件物品时，您选择的不只是一件物件，而是一份可用于修持、供桌、收藏、护身，或在日常中提醒自己保持平静与正念的意义。每一件物品都会被用心处理，并带着真诚的祝愿寄出。'
         ]
     };
+
+
+    const DEFAULT_ABOUT_VALUES = {
+        en: [
+        {
+            title: 'Authentic',
+            desc: 'Carefully sourced dzi beads and sacred items.'
+        },
+        {
+            title: 'Respectful',
+            desc: 'Presented with cultural and spiritual respect.'
+        },
+        {
+            title: 'Selected',
+            desc: 'Curated products rather than mass listings.'
+        },
+        {
+            title: 'Personal',
+            desc: 'WhatsApp enquiry before final confirmation.'
+        }
+        ],
+        zh: [
+        {
+            title: '真实',
+            desc: '用心寻访天珠、藏香、佛珠与藏传圣物。'
+        },
+        {
+            title: '恭敬',
+            desc: '以尊重藏传文化与信仰的方式呈现每一件物品。'
+        },
+        {
+            title: '精选',
+            desc: '重视品相、材质与缘分，不做大量杂乱上架。'
+        },
+        {
+            title: '亲自咨询',
+            desc: '通过 WhatsApp 先行咨询，确认细节后再结缘。'
+        }
+        ]
+    };
+
     const DEFAULT_FAQ = [
     {
         question: 'Why are prices not shown?',
-        answer: 'Some sacred and collectible items vary by availability, grade and condition. Please add items to the enquiry bag and we will confirm the latest price by WhatsApp.',
         questionCn: '为什么没有显示价格？',
-        answerCn: '部分佛具、天珠与收藏品会因品相、等级、来源与现货情况而有所不同。您可以先把感兴趣的商品加入询价袋，我们会通过 WhatsApp 为您确认最新价格与库存。'
+        answer: 'Some sacred and collectible items vary by availability, grade and condition. Please add items to the enquiry bag and we will confirm the latest price by WhatsApp.',
+        answerCn: '部分佛具、天珠与收藏品会因品相、等级、来源与现货情况而有所不同。您可以先把感兴趣的商品加入咨询清单，我们会通过 WhatsApp 为您确认最新价格与库存。'
     },
     {
         question: 'How does WhatsApp ordering work?',
-        answer: 'Select the items you are interested in, add them to the enquiry bag, then send the prepared WhatsApp message. We will reply with price, availability and details.',
         questionCn: '如何通过 WhatsApp 下单？',
-        answerCn: '您可以先浏览商品，把感兴趣的款式加入询价袋，然后点击 WhatsApp 发送已整理好的咨询信息。我们会亲自回复价格、库存、实物细节与后续付款方式。'
+        answer: 'Select the items you are interested in, add them to the enquiry bag, then send the prepared WhatsApp message. We will reply with price, availability and details.',
+        answerCn: '您可以先浏览商品，把感兴趣的款式加入咨询清单，然后点击 WhatsApp 发送已整理好的咨询信息。我们会亲自回复价格、库存、实物细节与后续付款方式。'
     },
     {
         question: 'Can I enquire about multiple items?',
-        answer: 'Yes. The enquiry bag is designed for this. Add a few items and send all details in one WhatsApp message.',
         questionCn: '可以一次咨询多件商品吗？',
-        answerCn: '可以。询价袋就是为了方便您一次整理多件感兴趣的商品。您可以加入多个商品，然后通过一则 WhatsApp 信息发送给我们。'
+        answer: 'Yes. The enquiry bag is designed for this. Add a few items and send all details in one WhatsApp message.',
+        answerCn: '可以。咨询清单就是为了方便您一次整理多件感兴趣的商品。您可以加入多个商品，然后通过一则 WhatsApp 信息发送给我们。'
     },
     {
         question: 'Can products be updated from Google Sheet?',
-        answer: 'Yes. Product names, categories, images, variants, sizes and status can be managed from your backend sheet.',
         questionCn: '商品内容可以从 Google Sheet 更新吗？',
+        answer: 'Yes. Product names, categories, images, patterns, colours and sizes can be managed from your backend sheet.',
         answerCn: '可以。商品名称、分类、图片、款式、尺寸、说明与显示状态都可以从后台 Google Sheet 管理，网站会根据表格内容自动更新。'
     }
     ];
+
     const SAMPLE_PRODUCTS = [
     {
         id: 'sample-1',
         cat: 'dzi',
         catLabel: 'Dzi Bead',
         catLabelCn: '天珠',
-        name: '2 Eyed Dzi',
+        name: 'Two-Eyed Dzi',
         nameCn: '二眼天珠',
-        sub: 'Harmony Dzi',
-        subCn: '和合天珠',
-        desc: 'A meaningful dzi bead associated with harmony, balance and connection.',
+        sub: 'Agate Dzi',
+        subCn: '玛瑙天珠',
+        desc: 'A meaningful dzi pattern often chosen for harmony and balance.',
         descCn: '象征和合、平衡与良缘的天珠。',
         type: 'dzi',
         imageUrl: '',
@@ -2678,6 +2766,7 @@
         }
     }
     ];
+
     const UI = {
         en: {
             shop: 'Shop',
@@ -2698,7 +2787,6 @@
             add: '🛍 Add',
             viewDetails: 'View Details',
             addImage: 'Add image URL in Sheet',
-            loading: 'Loading Collection...',
             howEyebrow: 'Simple · Fast · Personal',
             howTitle: 'How to Order',
             stepTitles: ['Browse & Choose', 'Add to Bag', 'WhatsApp Us', 'Confirm & Ship'],
@@ -2722,24 +2810,24 @@
             formSubmit: '💬 Send via WhatsApp',
             formNote: 'Your message will open in WhatsApp for you to send directly.',
             selectCategory: 'Select a category...',
-            categories: ['Dzi Beads', 'Incense', 'Crystals', 'Buddhist Mala', 'Custom Order / Wholesale', 'General Enquiry'],
-            cartTitle: '🛍 Enquiry Bag',
-            emptyCart: 'Your enquiry bag is empty.',
-            sendCart: '💬 Send Enquiry via WhatsApp',
-            cartNote: 'Prices are confirmed personally through WhatsApp.',
-            itemCount: 'items in your enquiry bag',
-            oneItem: 'item in your enquiry bag',
-            modalNote: 'Added items can be sent together from your enquiry bag.',
+            dzi: 'Dzi Beads',
+            incense: 'Incense',
+            crystals: 'Crystals',
+            mala: 'Buddhist Mala',
+            custom: 'Custom Order / Wholesale',
+            general: 'General Enquiry',
+            footerBrand: 'Authentic Tibetan treasures, incense and practice objects, managed through Google Sheet and ordered by WhatsApp enquiry.',
             footerShop: 'Shop',
             footerInfo: 'Information',
             footerContact: 'Contact',
-            footerText: 'Authentic Tibetan treasures, incense and practice objects, managed through Google Sheet and ordered by WhatsApp enquiry.',
-            rights: '© 2026 Tashi Delek Collection · All rights reserved',
-            priceAvailability: 'Enquire for current price and availability',
-            whatsappUs: 'WhatsApp Us',
-            instagram: 'Instagram',
-            facebook: 'Facebook',
-            productFallback: 'Sacred Item'
+            footerRights: '© 2026 Tashi Delek Collection · All rights reserved',
+            footerAvailability: 'Enquire for current price and availability',
+            cartTitle: '🛍 Enquiry Bag',
+            emptyBag: 'Your bag is empty',
+            cartSend: '💬 Send Enquiry via WhatsApp',
+            cartNote: 'Prices are confirmed personally through WhatsApp.',
+            itemAdded: 'Added to enquiry bag',
+            loading: 'Loading Collection...'
         },
         zh: {
             shop: '商品',
@@ -2749,66 +2837,66 @@
             faq: '常见问题',
             contact: '联系我们',
             aboutUs: '关于我们',
-            enquiryBag: '🛍 询价袋',
+            enquiryBag: '🛍 咨询清单',
             whatsapp: '💬 WhatsApp',
             allPieces: '全部商品',
             collection: '产品系列',
             pieces: '件产品',
             noItems: '暂无商品。',
             variant: '款式',
-            enquireForPrice: '询价确认',
+            enquireForPrice: '咨询价格',
             add: '🛍 加入',
             viewDetails: '查看详情',
             addImage: '请在表格加入图片链接',
-            loading: '正在载入商品...',
             howEyebrow: '简单 · 快速 · 亲自回复',
             howTitle: '如何下单',
-            stepTitles: ['浏览选择', '加入询价袋', 'WhatsApp 咨询', '确认与寄送'],
-            stepDescs: ['浏览商品系列，并选择可用款式。', '将一件或多件商品加入询价袋，网页不公开显示价格。', '通过 WhatsApp 一次发送感兴趣的商品，我们会确认价格与库存。', '确认付款后，我们会妥善包装并安全寄送。'],
-            reviewsEyebrow: '客户分享',
-            reviewsTitle: '藏友与顾客的信任',
+            stepTitles: ['浏览选择', '加入咨询清单', 'WhatsApp 咨询', '确认与寄送'],
+            stepDescs: ['浏览商品系列，并选择可选款式。', '可一次加入多件感兴趣的商品，价格不公开显示。', '通过一则 WhatsApp 信息发送所有咨询内容，我们会确认库存与价格。', '确认付款后，我们会妥善包装并安全寄出。'],
+            reviewsEyebrow: '客户反馈',
+            reviewsTitle: '收藏者的信任',
             faqEyebrow: '常见问题',
             faqTitle: '常见问题',
             contactEyebrow: '联系我们',
             contactTitle: '欢迎咨询',
             contactText: '若您想了解天珠、藏香、佛珠或其他供养佛具，欢迎通过 WhatsApp 与我们联系。我们会为您整理咨询内容，并亲自回复价格、库存与适合选择。',
-            waFastest: 'WhatsApp 最快',
-            email: '电邮',
+            waFastest: 'WhatsApp 最快回复',
+            email: '电子邮件',
             responseTime: '回复时间',
-            basedIn: '所在地',
+            basedIn: '所在地区',
             formName: '您的姓名',
             formPhone: 'WhatsApp / 电话',
-            formEmail: '电邮地址',
-            formInterest: '感兴趣项目',
+            formEmail: '电子邮件',
+            formInterest: '感兴趣类别',
             formMessage: '留言',
             formSubmit: '💬 通过 WhatsApp 发送',
-            formNote: '您的信息会自动整理并打开 WhatsApp，由您亲自发送。',
-            selectCategory: '请选择分类...',
-            categories: ['天珠', '藏香', '水晶', '佛珠', '定制 / 批发', '一般咨询'],
-            cartTitle: '🛍 询价袋',
-            emptyCart: '询价袋目前为空。',
-            sendCart: '💬 通过 WhatsApp 发送询价',
-            cartNote: '价格与库存将通过 WhatsApp 亲自确认。',
-            itemCount: '件商品在询价袋中',
-            oneItem: '件商品在询价袋中',
-            modalNote: '加入的商品可从询价袋一起发送。',
+            formNote: '系统会打开 WhatsApp，由您亲自发送信息。',
+            selectCategory: '请选择类别...',
+            dzi: '天珠',
+            incense: '藏香',
+            crystals: '水晶',
+            mala: '佛珠',
+            custom: '定制 / 批发',
+            general: '一般咨询',
+            footerBrand: '藏传珍宝、藏香与修持佛具，可通过 Google Sheet 管理，并以 WhatsApp 咨询方式结缘。',
             footerShop: '商品',
             footerInfo: '资讯',
             footerContact: '联系',
-            footerText: '精选藏传珍宝、藏香与修持圣物，由 Google Sheet 后台管理，并通过 WhatsApp 咨询结缘。',
-            rights: '© 2026 Tashi Delek Collection · 版权所有',
-            priceAvailability: '价格与库存请通过 WhatsApp 咨询',
-            whatsappUs: 'WhatsApp 咨询',
-            instagram: 'Instagram',
-            facebook: 'Facebook',
-            productFallback: '佛具圣物'
+            footerRights: '© 2026 Tashi Delek Collection · 版权所有',
+            footerAvailability: '欢迎咨询当前价格与库存',
+            cartTitle: '🛍 咨询清单',
+            emptyBag: '咨询清单为空',
+            cartSend: '💬 通过 WhatsApp 发送咨询',
+            cartNote: '价格将通过 WhatsApp 亲自确认。',
+            itemAdded: '已加入咨询清单',
+            loading: '正在加载商品...'
         }
     };
+
     function tr(key) {
-        return (UI[currentLang] && UI[currentLang][key]) || UI.en[key] || key
+        return (UI[currentLang] && UI[currentLang][key]) || UI.en[key] || key;
     }
     function clean(v) {
-        return v === undefined || v === null ? '' : String(v).trim()
+        return v === undefined || v === null ? '' : String(v).trim();
     }
     function esc(v) {
         return clean(v).replace(/[&<>'"]/g, c => ({
@@ -2817,118 +2905,120 @@
             '>': '&gt;',
             "'": '&#39;',
             '"': '&quot;'
-        }[c]))
+        }[c]));
     }
     function slug(v) {
-        return clean(v).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'item'
+        return clean(v).toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'item';
     }
     function splitList(v) {
         if (Array.isArray(v))
             return v.map(clean).filter(Boolean);
-        return clean(v).split(/[|,;]/).map(clean).filter(Boolean)
+        return clean(v).split(/[|,;]/).map(clean).filter(Boolean);
     }
     function byId(id) {
-        return document.getElementById(id)
+        return document.getElementById(id);
     }
     function setText(id, value) {
         const el = byId(id);
         if (el && clean(value))
-            el.textContent = value
+            el.textContent = value;
     }
     function setHtml(id, value) {
         const el = byId(id);
         if (el && clean(value))
-            el.innerHTML = value
+            el.innerHTML = esc(value).replace(/\|/g, '<br>');
     }
     function local(en, cn) {
-        return currentLang === 'zh' && clean(cn) ? cn : en
+        return currentLang === 'zh' && clean(cn) ? clean(cn) : clean(en);
     }
-    function pick(row, names, fallback='') {
-        if (!row || typeof row !== 'object')
+    function pick(obj, keys, fallback='') {
+        if (!obj || typeof obj !== 'object')
             return fallback;
-        for (const name of names) {
-            if (row[name] !== undefined && clean(row[name]))
-                return row[name]
-        }
-        const normalized = names.map(n => clean(n).toLowerCase().replace(/[^a-z0-9]/g, ''));
-        for (const key of Object.keys(row)) {
-            if (normalized.includes(key.toLowerCase().replace(/[^a-z0-9]/g, '')) && clean(row[key]))
-                return row[key]
-        }
-        return fallback
-    }
-    function setting(key, fallback='') {
-        const keys = Array.isArray(key) ? key : [key];
         for (const k of keys) {
-            if (settings && settings[k] !== undefined && clean(settings[k]))
-                return settings[k]
+            if (obj[k] !== undefined && obj[k] !== null && clean(obj[k]) !== '')
+                return obj[k];
         }
-        return fallback
+        const targets = keys.map(k => String(k).toLowerCase().replace(/[^a-z0-9]/g, ''));
+        for (const k of Object.keys(obj)) {
+            if (targets.includes(String(k).toLowerCase().replace(/[^a-z0-9]/g, '')) && clean(obj[k]) !== '')
+                return obj[k];
+        }
+        return fallback;
+    }
+    function setting(enKeys, cnKeys=[], fallback='') {
+        const keys = currentLang === 'zh' ? cnKeys.concat(enKeys) : enKeys;
+        for (const k of keys) {
+            if (clean(settings[k]))
+                return clean(settings[k]);
+        }
+        return fallback;
     }
     function formatPhone(v) {
-        const n = clean(v).replace(/\D/g, '');
-        return n ? (n.startsWith('60') ? '+' + n : '+' + n) : ''
+        return clean(v).replace(/\D/g, '');
+    }
+
+    function variantObjects(p) {
+        const v = p.variants || {};
+        let en = [];
+        let cn = [];
+        if (Array.isArray(v.options)) {
+            return v.options.map(x => ({
+                name: clean(x.name || x.value || x),
+                nameCn: clean(x.nameCn || x.cn || '')
+            })).filter(x => x.name || x.nameCn);
+        }
+        if (v.variant !== undefined)
+            en = splitList(v.variant);
+        else if (v.pattern !== undefined)
+            en = Array.isArray(v.pattern) ? v.pattern.map(x => clean(x.name || x)) : splitList(v.pattern);
+        else if (v.color !== undefined)
+            en = Array.isArray(v.color) ? v.color.map(x => clean(x.name || x)) : splitList(v.color);
+        else if (p.variant !== undefined)
+            en = splitList(p.variant);
+        cn = splitList(v.variantCn || p.variantCn || '');
+        return en.map((name, i) => ({
+            name,
+            nameCn: cn[i] || ''
+        })).filter(x => x.name);
+    }
+    function normalizeProduct(row, i) {
+        const cat = pick(row, ['cat', 'category', 'Category', 'Product Category'], 'item');
+        const p = {
+            id: clean(pick(row, ['id', 'ID', 'sku', 'SKU'], `p-${i + 1}`)),
+            cat: slug(cat),
+            catLabel: clean(pick(row, ['catLabel', 'categoryLabel', 'Category', 'Product Category'], cat)),
+            catLabelCn: clean(pick(row, ['catLabelCn', 'Category CN', 'Product Category CN'], '')),
+            name: clean(pick(row, ['name', 'Name', 'Product Name', 'Item Name', 'product'], `Product ${i + 1}`)),
+            nameCn: clean(pick(row, ['nameCn', 'Product Name CN', 'Name CN', 'Item Name CN'], '')),
+            sub: clean(pick(row, ['sub', 'subtitle', 'Subtitle'], '')),
+            subCn: clean(pick(row, ['subCn', 'Subtitle CN'], '')),
+            desc: clean(pick(row, ['desc', 'description', 'Description', 'Short Description', 'Product Description'], '')),
+            descCn: clean(pick(row, ['descCn', 'Description CN', 'Short Description CN', 'Product Description CN'], '')),
+            type: slug(pick(row, ['type', 'Type', 'cat', 'category'], cat)),
+            badge: clean(pick(row, ['badge', 'Badge'], 'gold')),
+            badgeText: clean(pick(row, ['badgeText', 'Badge Text'], '')),
+            badgeTextCn: clean(pick(row, ['badgeTextCn', 'Badge Text CN', 'Badge CN'], '')),
+            imageUrl: clean(pick(row, ['imageUrl', 'Image URL', 'Image', 'Photo URL'], '')),
+            stockNote: clean(pick(row, ['stockNote', 'Stock Note'], '')),
+            bgGrad: clean(pick(row, ['bgGrad'], '')),
+            artAccent: clean(pick(row, ['artAccent'], '#C9963A')),
+            variants: row.variants || {}
+        };
+        if (!p.variants.variant && !p.variants.options) {
+            p.variants.variant = pick(row, ['Colour / Pattern Variants', 'Color / Pattern Variants', 'Variant', 'variant'], '');
+            p.variants.variantCn = pick(row, ['Colour / Pattern Variants CN', 'Color / Pattern Variants CN', 'Variant CN', 'variantCn'], '');
+        }
+        p.variantOptions = variantObjects(p);
+        return p;
     }
     function normalizeArray(x) {
         if (Array.isArray(x))
             return x;
         if (x && typeof x === 'object')
             return Object.values(x);
-        return []
+        return [];
     }
-    function variantObjects(p) {
-        const source = currentLang === 'zh' && (p.variants?.variantCn?.length || p.variantCn) ? (p.variants?.variantCn || p.variantCn) : (p.variants?.variant || p.variants?.pattern || p.variants?.color || p.variant || p.variants || []);
-        let arr = [];
-        if (Array.isArray(source))
-            arr = source;
-        else if (source && typeof source === 'object')
-            arr = Object.values(source);
-        else
-            arr = splitList(source);
-        const seen = new Set();
-        return arr.map(item => {
-            let name = typeof item === 'object' && item ? clean(item.name || item.label || item.value || item.text || item.variant || item.pattern || item.colour || item.color) : clean(item);
-            return name ? {
-                name
-            } : null
-        }).filter(Boolean).filter(v => {
-            const k = v.name.toLowerCase();
-            if (seen.has(k))
-                return false;
-            seen.add(k);
-            return true
-        })
-    }
-    function normalizeProduct(row, i=0) {
-        const v = row && typeof row === 'object' ? row : {};
-        const id = clean(pick(v, ['id', 'ID', 'Product ID'], '')) || 'p-' + i;
-        const catLabel = clean(pick(v, ['catLabel', 'Category', 'category'], 'Item'));
-        const cat = clean(pick(v, ['cat', 'typeKey'], '')) || slug(catLabel);
-        const p = {
-            id,
-            cat,
-            catLabel,
-            catLabelCn: pick(v, ['catLabelCn', 'categoryCn', 'Category CN'], ''),
-            name: pick(v, ['name', 'Product Name', 'productName', 'title'], ''),
-            nameCn: pick(v, ['nameCn', 'Product Name CN', 'productNameCn', 'titleCn'], ''),
-            sub: pick(v, ['sub', 'Subtitle', 'subtitle'], ''),
-            subCn: pick(v, ['subCn', 'Subtitle CN', 'subtitleCn'], ''),
-            desc: pick(v, ['desc', 'Short Description', 'description', 'Description'], ''),
-            descCn: pick(v, ['descCn', 'Short Description CN', 'descriptionCn', 'Description CN'], ''),
-            type: clean(pick(v, ['type', 'Type'], cat)).toLowerCase(),
-            imageUrl: pick(v, ['imageUrl', 'Image URL', 'image', 'Image', 'Photo URL'], ''),
-            badge: pick(v, ['badge', 'Badge'], ''),
-            badgeText: pick(v, ['badgeText', 'Badge Text', 'label'], ''),
-            badgeTextCn: pick(v, ['badgeTextCn', 'Badge Text CN', 'labelCn'], ''),
-            stockNote: pick(v, ['stockNote', 'Stock Note'], ''),
-            variants: v.variants || {
-                variant: pick(v, ['Colour / Pattern Variants', 'variant', 'variants', 'Variant'], ''),
-                variantCn: pick(v, ['Colour / Pattern Variants CN', 'Variant CN', 'variantCn'], '')
-            }
-        };
-        p.variantOptions = variantObjects(p);
-        return p
-    }
+
     async function fetchFromSheet() {
         showLoading();
         try {
@@ -2941,28 +3031,30 @@
             if (!res.ok)
                 throw new Error('API status ' + res.status);
             const data = await res.json();
+            console.log('Sheet API response:', data);
             settings = data.settings || data.Settings || {};
             faqItems = normalizeArray(data.faq || data.FAQ || data.faqs);
             testimonialItems = normalizeArray(data.testimonials || data.reviews || []);
             const rows = Array.isArray(data) ? data : normalizeArray(data.products || data.Products || data.items || data.data || data.productRows || data.rows);
-            products = rows.map(normalizeProduct).filter(p => clean(p.name) || clean(p.nameCn));
+            products = rows.map(normalizeProduct).filter(p => p.name);
             if (!products.length)
-                throw new Error('No products returned from API')
+                throw new Error('No products returned from API');
         } catch (err) {
             console.warn('Using sample products:', err);
             products = SAMPLE_PRODUCTS.map(normalizeProduct);
-            faqItems = faqItems.length ? faqItems : DEFAULT_FAQ
+            faqItems = faqItems.length ? faqItems : DEFAULT_FAQ;
         }
         initSelection();
-        renderAll()
+        renderAll();
     }
+
     function initSelection() {
         selected = {};
         products.forEach(p => {
             selected[p.id] = {
                 variant: (p.variantOptions[0] && p.variantOptions[0].name) || ''
-            }
-        })
+            };
+        });
     }
     function renderAll() {
         applyStaticText();
@@ -2974,12 +3066,11 @@
         renderCart();
         initWaLinks();
         updateLangButtons();
-        initLogoImage()
     }
     function setLanguage(lang) {
         currentLang = lang === 'zh' ? 'zh' : 'en';
         localStorage.setItem('td_lang', currentLang);
-        renderAll()
+        renderAll();
     }
     function updateLangButtons() {
         const en = byId('langEn'),
@@ -2987,20 +3078,21 @@
         if (en)
             en.classList.toggle('active', currentLang === 'en');
         if (zh)
-            zh.classList.toggle('active', currentLang === 'zh')
+            zh.classList.toggle('active', currentLang === 'zh');
     }
+
     function applyStaticText() {
         document.documentElement.lang = currentLang === 'zh' ? 'zh-Hans' : 'en';
         document.body.classList.toggle('lang-zh', currentLang === 'zh');
         const nav = document.querySelectorAll('header nav a');
         [tr('shop'), tr('how'), tr('about'), tr('reviews'), tr('faq'), tr('contact')].forEach((v, i) => {
             if (nav[i])
-                nav[i].textContent = v
+                nav[i].textContent = v;
         });
         const mob = document.querySelectorAll('#mobileNav a');
         [tr('shop'), tr('how'), tr('aboutUs'), tr('reviews'), tr('faq'), tr('contact'), tr('enquiryBag')].forEach((v, i) => {
             if (mob[i])
-                mob[i].textContent = v
+                mob[i].textContent = v;
         });
         const heroEyebrow = byId('heroEyebrow');
         if (heroEyebrow)
@@ -3014,7 +3106,7 @@
         if (waBtn)
             waBtn.textContent = tr('whatsapp');
         document.querySelectorAll('.trust-strip .trust-text').forEach((el, i) => {
-            el.textContent = DEFAULT_TRUST[currentLang][i] || el.textContent
+            el.textContent = DEFAULT_TRUST[currentLang][i] || el.textContent;
         });
         setText('howEyebrow', tr('howEyebrow'));
         setText('howTitle', tr('howTitle'));
@@ -3027,365 +3119,333 @@
         setText('contactEyebrow', tr('contactEyebrow'));
         setText('contactTitle', tr('contactTitle'));
         setText('contactText', tr('contactText'));
-        document.querySelectorAll('.channel-label').forEach((el, i) => {
-            const labels = [tr('waFastest'), tr('email'), tr('responseTime'), tr('basedIn')];
-            if (labels[i])
-                el.textContent = labels[i]
+        document.querySelectorAll('.contact-channels .channel-label').forEach((el, i) => {
+            el.textContent = [tr('waFastest'), tr('email'), tr('responseTime'), tr('basedIn')][i] || el.textContent;
         });
-        document.querySelectorAll('.form-label').forEach((el, i) => {
-            const labels = [tr('formName'), tr('formPhone'), tr('formEmail'), tr('formInterest'), tr('formMessage')];
+        const labels = document.querySelectorAll('.form-label');
+        [tr('formName'), tr('formPhone'), tr('formEmail'), tr('formInterest'), tr('formMessage')].forEach((v, i) => {
             if (labels[i])
-                el.textContent = labels[i]
+                labels[i].textContent = v;
         });
-        const interest = byId('cf-interest');
-        if (interest) {
-            const current = interest.value;
-            interest.innerHTML = `<option value="">${esc(tr('selectCategory'))}</option>` + tr('categories').map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
-            interest.value = current
-        }
+        const opts = document.querySelectorAll('#cf-interest option');
+        [tr('selectCategory'), tr('dzi'), tr('incense'), tr('crystals'), tr('mala'), tr('custom'), tr('general')].forEach((v, i) => {
+            if (opts[i])
+                opts[i].textContent = v;
+        });
         const submit = document.querySelector('.form-submit');
         if (submit)
             submit.textContent = tr('formSubmit');
-        const note = document.querySelector('.form-note');
-        if (note)
-            note.textContent = tr('formNote');
+        const formNote = document.querySelector('.form-note');
+        if (formNote)
+            formNote.textContent = tr('formNote');
+        document.querySelectorAll('#about .about-values .value-item').forEach((item, i) => {
+            const data = DEFAULT_ABOUT_VALUES[currentLang][i] || DEFAULT_ABOUT_VALUES.en[i];
+            const title = item.querySelector('.value-title');
+            const desc = item.querySelector('.value-desc');
+            if (title && data)
+                title.textContent = data.title;
+            if (desc && data)
+                desc.textContent = data.desc;
+        });
+        const footerP = document.querySelector('.footer-brand p');
+        if (footerP)
+            footerP.textContent = tr('footerBrand');
+        const footerH = document.querySelectorAll('.footer-col h4');
+        [tr('footerShop'), tr('footerInfo'), tr('footerContact')].forEach((v, i) => {
+            if (footerH[i])
+                footerH[i].textContent = v;
+        });
+        const bottom = document.querySelectorAll('.footer-bottom p');
+        if (bottom[0])
+            bottom[0].textContent = tr('footerRights');
+        if (bottom[1])
+            bottom[1].textContent = tr('footerAvailability');
         const cartTitle = document.querySelector('.cart-title');
         if (cartTitle)
             cartTitle.textContent = tr('cartTitle');
         const cartBtn = byId('cartWaBtn');
         if (cartBtn)
-            cartBtn.textContent = tr('sendCart');
+            cartBtn.textContent = tr('cartSend');
         const cartNote = document.querySelector('.cart-note');
         if (cartNote)
             cartNote.textContent = tr('cartNote');
         const floatLabel = document.querySelector('.wa-float-label');
         if (floatLabel)
             floatLabel.textContent = currentLang === 'zh' ? 'WhatsApp 咨询' : 'Order on WhatsApp';
-        applyAboutValues();
-        applyFooterStatic()
     }
     function applySettings() {
-        const shop = local(setting('shopName', 'Tashi Delek Collection'), setting('shopNameCn', 'Tashi Delek Collection'));
-        const tagline = local(setting('tagline', 'Sacred Dzi · Incense · Mala'), setting('taglineCn', '天珠 · 藏香 · 佛珠'));
-        setText('brandLogo', shop);
-        setText('brandSub', tagline);
-        document.querySelectorAll('.footer-brand .logo').forEach(el => el.textContent = shop);
-        document.querySelectorAll('.footer-brand .logo-sub').forEach(el => el.textContent = tagline);
-
-        const titleEn = setting('websiteTitle', 'Tashi Delek Collection — Sacred Dzi Beads, Crystals & Mala');
-        const titleCn = setting('websiteTitleCn', 'Tashi Delek Collection — 藏传珍宝佛具流通处');
-        document.title = local(titleEn, titleCn);
-
+        const shopName = setting(['shopName', 'brandName'], ['shopNameCn', 'brandNameCn'], 'Tashi Delek Collection');
+        const tagline = setting(['tagline', 'brandSub'], ['taglineCn', 'brandSubCn'], currentLang === 'zh' ? '天珠 · 藏香 · 佛珠' : 'Dzi Beads · Tibetan Incense · Buddhist Mala');
+        document.querySelectorAll('.logo').forEach(el => el.textContent = shopName.replace(/^\s*/, ''));
+        document.querySelectorAll('.logo-sub').forEach(el => el.textContent = tagline);
+        const title = setting(['websiteTitle'], ['websiteTitleCn'], 'Tashi Delek Collection');
+        if (title)
+            document.title = title;
         const meta = document.querySelector('meta[name="description"]');
-        if (meta) {
-            const metaEn = setting('metaDescription', 'Authentic Tibetan dzi beads, healing crystals, incense and hand-knotted Buddhist mala. Enquire through WhatsApp.');
-            const metaCn = setting('metaDescriptionCn', '精选天珠、藏香、佛珠与藏传佛教供养佛具，以恭敬心整理呈现，方便您咨询结缘。');
-            meta.setAttribute('content', local(metaEn, metaCn));
+        const md = setting(['metaDescription'], ['metaDescriptionCn'], '');
+        if (meta && md)
+            meta.setAttribute('content', md);
+        // Hero section — linked to backend Sheet
+        // ⚙️ Settings rows expected:
+        // Hero Title Line 1 | EN Value | CN Value
+        // Hero Title Line 2 | EN Value | CN Value
+        // Hero Subtitle     | EN Value | CN Value
+        const heroLine1 = setting(
+            ['heroTitleLine1', 'heroLine1', 'heroTitle1'],
+            ['heroTitleLine1Cn', 'heroLine1Cn', 'heroTitle1Cn'],
+            'TASHI DELEK'
+        );
+        const heroLine2 = setting(
+            ['heroTitleLine2', 'heroLine2', 'heroTitle2', 'heroHighlight'],
+            ['heroTitleLine2Cn', 'heroLine2Cn', 'heroTitle2Cn', 'heroHighlightCn'],
+            currentLang === 'zh' ? '藏传珍宝佛具流通处' : 'SACRED TIBETAN TREASURES'
+        );
+        const heroSubtitle = setting(
+            ['heroSubtitle', 'heroText'],
+            ['heroSubtitleCn', 'heroTextCn'],
+            currentLang === 'zh'
+                ? '精选天珠、藏香、佛珠与藏传佛教供养佛具，以恭敬心整理呈现，方便您咨询结缘。'
+                : 'Dzi beads of ancient power, healing crystals of the earth, incense and hand-knotted mala for your practice. Choose a few pieces and enquire once through WhatsApp.'
+        );
+
+        const hero = byId('heroTitle');
+        if (hero) {
+            hero.innerHTML = '<span class="hero-title-main">' + esc(heroLine1) + '</span><span class="hero-title-sub">' + esc(heroLine2) + '</span>';
         }
-
-        const h1 = local(setting('heroTitleLine1', 'TASHI DELEK'), setting('heroTitleLine1Cn', 'TASHI DELEK'));
-        const h2 = local(setting('heroTitleLine2', 'SACRED TIBETAN TREASURES'), setting('heroTitleLine2Cn', '藏传珍宝佛具流通处'));
-        setHtml('heroTitle', `<span class="hero-title-main">${esc(h1)}</span><span class="hero-title-sub">${esc(h2)}</span>`);
-
-        const heroSubEn = setting('heroSubtitle', 'Dzi beads of ancient power, healing crystals of the earth, incense and hand-knotted mala for your practice. Choose a few pieces and enquire once through WhatsApp.');
-        const heroSubCn = setting('heroSubtitleCn', '精选天珠、藏香、佛珠与藏传佛教供养佛具，以恭敬心整理呈现，方便您咨询结缘。');
-        setText('heroText', local(heroSubEn, heroSubCn));
-
-        setText('heroButton1', local(setting('heroButton1', currentLang === 'zh' ? '浏览系列' : 'Browse Collection'), setting('heroButton1Cn', '浏览系列')));
-        setText('heroButton2', local(setting('heroButton2', currentLang === 'zh' ? '如何下单' : 'How to Order'), setting('heroButton2Cn', '如何下单')));
-
-        setText('aboutEyebrow', local(setting('aboutEyebrow', 'Our Story'), setting('aboutEyebrowCn', '我们的故事')));
-        const aboutTitle = local(setting('aboutTitle', 'More Than a Shop — A Sacred Practice'), setting('aboutTitleCn', '不只是一间店铺，更是一份虔敬的传承'));
-        setHtml('aboutTitle', esc(aboutTitle).replace(/—/g, '—<br>'));
-        setText('aboutBadgeNumber', setting('yearsInBusiness', '17+'));
-        setText('aboutBadgeText', local(setting('aboutBadgeText', 'Years Sourcing'), setting('aboutBadgeTextCn', '年用心寻访')));
-
-        const aboutPs = document.querySelectorAll('#about .about-text > p');
-        [['aboutParagraph1', 'aboutParagraph1Cn'], ['aboutParagraph2', 'aboutParagraph2Cn'], ['aboutParagraph3', 'aboutParagraph3Cn']].forEach((keys, i) => {
-            const v = local(setting(keys[0], ''), setting(keys[1], ''));
-            if (aboutPs[i] && v)
-                aboutPs[i].textContent = v;
+        setText('heroText', heroSubtitle);
+        setText('heroButton1', currentLang === 'zh' ? (settings.heroButton1Cn || '浏览系列') : (settings.heroButton1 || 'Browse Collection'));
+        setText('heroButton2', currentLang === 'zh' ? (settings.heroButton2Cn || '如何下单') : (settings.heroButton2 || 'How to Order'));
+        setHtml('aboutTitle', setting(['aboutTitle'], ['aboutTitleCn'], currentLang === 'zh' ? '不只是收藏|更是一条有意义的道路' : 'More Than a Collection|A Path of Meaning'));
+        setText('aboutBadgeNumber', setting(['yearsInBusiness', 'aboutBadgeNumber'], [], '17+'));
+        setText('aboutBadgeText', setting(['aboutBadgeText'], ['aboutBadgeTextCn'], currentLang === 'zh' ? '年寻访经验' : 'Years Sourcing'));
+        document.querySelectorAll('#about .about-text > p').forEach((el, i) => {
+            const en = setting([`aboutParagraph${i + 1}`, `aboutText${i + 1}`], [], DEFAULT_ABOUT.en[i]);
+            const cn = setting([`aboutParagraph${i + 1}`], [`aboutParagraph${i + 1}Cn`, `aboutText${i + 1}Cn`], DEFAULT_ABOUT.zh[i]);
+            el.textContent = currentLang === 'zh' ? cn : en;
         });
+        setText('emailDisplay', setting(['emailAddress', 'email'], [], 'hello@dharmahouse.com'));
+        setText('locationDisplay', setting(['location', 'address'], ['locationCn', 'addressCn'], 'Kuala Lumpur, Malaysia'));
+        setText('responseTimeDisplay', setting(['orderHours', 'responseTime'], ['orderHoursCn', 'responseTimeCn'], currentLang === 'zh' ? '通常 2–4 小时内回复' : 'Usually within 2-4 hours'));
+        for (let i = 1; i <= 5; i++) {
+            const el = document.querySelector(`.trust-strip .trust-item:nth-child(${i}) .trust-text`);
+            if (!el)
+                continue;
+            if (currentLang === 'zh') {
+                el.textContent = settings[`badge${i}Cn`] || settings[`trust${i}Cn`] || DEFAULT_TRUST.zh[i - 1];
+            } else {
+                el.textContent = settings[`badge${i}`] || settings[`trust${i}`] || DEFAULT_TRUST.en[i - 1];
+            }
+        }
+    }
 
-        setText('emailDisplay', setting(['emailAddress', 'email'], 'tashidelek99@gmail.com'));
-        setText('locationDisplay', setting('location', 'Ipoh, Malaysia'));
-        setText('responseTimeDisplay', setting('orderHours', setting('responseTime', 'Mon–Sat, 11am–6pm MYT')));
-        setText('contactText', local(setting('contactText', tr('contactText')), setting('contactTextCn', tr('contactText'))));
-        applyTrustFromSettings();
-        applyFooterStatic();
-    }
-    function applyTrustFromSettings() {
-        document.querySelectorAll('.trust-strip .trust-text').forEach((el, i) => {
-            const n = i + 1;
-            const fromSheet = local(setting('badge' + n, DEFAULT_TRUST.en[i]), setting('badge' + n + 'Cn', DEFAULT_TRUST.zh[i]));
-            el.textContent = fromSheet || DEFAULT_TRUST[currentLang][i]
-        })
-    }
-    function applyAboutValues() {
-        document.querySelectorAll('.about-values .value-item').forEach((item, i) => {
-            const pair = DEFAULT_ABOUT_VALUES[currentLang][i];
-            if (!pair)
-                return;
-            const title = item.querySelector('.value-title');
-            const desc = item.querySelector('.value-desc');
-            if (title)
-                title.textContent = pair[0];
-            if (desc)
-                desc.textContent = pair[1]
-        })
-    }
-    function applyFooterStatic() {
-        const footerHeaders = document.querySelectorAll('.footer-col h4');
-        [tr('footerShop'), tr('footerInfo'), tr('footerContact')].forEach((v, i) => {
-            if (footerHeaders[i])
-                footerHeaders[i].textContent = v
-        });
-        const footerBrand = document.querySelector('.footer-brand p');
-        if (footerBrand)
-            footerBrand.textContent = tr('footerText');
-        const bottom = document.querySelectorAll('.footer-bottom p');
-        if (bottom[0])
-            bottom[0].textContent = tr('rights');
-        if (bottom[1])
-            bottom[1].textContent = tr('priceAvailability');
-        const fw = byId('footerWaLink');
-        if (fw)
-            fw.textContent = tr('whatsappUs');
-        const fe = byId('footerEmailLink');
-        if (fe)
-            fe.textContent = tr('email');
-        const fi = byId('footerInstagramLink');
-        if (fi)
-            fi.textContent = tr('instagram');
-        const fb = byId('footerFacebookLink');
-        if (fb)
-            fb.textContent = tr('facebook')
-    }
     function buildFilterBar() {
         const bar = byId('filterBar');
         if (!bar)
             return;
-        const cats = [...new Map(products.map(p => [p.cat, {
-            key: p.cat,
-            label: local(p.catLabel, p.catLabelCn) || p.cat
-        }])).values()];
-        const allCount = products.length;
-        bar.innerHTML = `<button class="filter-pill ${currentFilter === 'all' ? 'active' : ''}" onclick="applyFilter('all')">${esc(tr('allPieces'))}<span class="pill-count">${allCount}</span></button>` + cats.map(c => `<button class="filter-pill ${currentFilter === c.key ? 'active' : ''}" onclick="applyFilter('${esc(c.key)}')">${esc(c.label)}<span class="pill-count">${products.filter(p => p.cat === c.key).length}</span></button>`).join('')
+        const cats = [...new Map(products.map(p => [p.cat, local(p.catLabel, p.catLabelCn)])).entries()];
+        bar.innerHTML = `<button class="filter-pill ${currentFilter === 'all' ? 'active' : ''}" onclick="applyFilter('all')">${esc(tr('allPieces'))} <span class="pill-count">${products.length}</span></button>` + cats.map(([cat, label]) => `<button class="filter-pill ${currentFilter === cat ? 'active' : ''}" onclick="applyFilter('${esc(cat)}')">${esc(label)} <span class="pill-count">${products.filter(p => p.cat === cat).length}</span></button>`).join('');
     }
     function applyFilter(cat) {
         currentFilter = cat || 'all';
         buildFilterBar();
         renderGrid();
-        const shop = byId('shop');
-        if (shop)
-            shop.scrollIntoView({
-                behavior: 'smooth'
-            })
     }
     function renderGrid() {
         const grid = byId('grid');
         if (!grid)
             return;
         const list = currentFilter === 'all' ? products : products.filter(p => p.cat === currentFilter);
-        setText('count', String(list.length));
-        const header = document.querySelector('.shop-header h2');
-        if (header)
-            header.innerHTML = `${esc(tr('collection'))} - <span id="count">${list.length}</span> ${esc(tr('pieces'))}`;
-        grid.innerHTML = list.length ? list.map(renderCard).join('') : `<div style="grid-column:1/-1;text-align:center;padding:4rem;color:var(--ash)">${esc(tr('noItems'))}</div>`
+        const h = document.querySelector('.shop-header h2');
+        if (h)
+            h.innerHTML = `${esc(tr('collection'))} - <span id="count">${list.length}</span> ${esc(tr('pieces'))}`;
+        if (!list.length) {
+            grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:4rem;color:var(--ash);font-style:italic">${esc(tr('noItems'))}</div>`;
+            return;
+        }
+        grid.innerHTML = list.map(renderCard).join('');
     }
     function renderCard(p) {
-        const variantButtons = (p.variantOptions || []).map(v => `<button class="pattern-pill ${selected[p.id]?.variant === v.name ? 'active' : ''}" onclick="selectVariant(event,'${esc(p.id)}','${esc(v.name)}')">${esc(v.name)}</button>`).join('');
-        return `<div class="card"><div class="card-image" onclick="openModal('${esc(p.id)}')">${p.badgeText ? `<div class="card-badge badge-${esc(p.badge || 'gold')}">${esc(local(p.badgeText, p.badgeTextCn))}</div>` : ''}${renderArt(p)}<div class="card-overlay"><button class="view-btn">${esc(tr('viewDetails'))}</button></div></div><div class="card-body"><div class="card-category">${esc(local(p.catLabel, p.catLabelCn))}</div><div class="card-name">${esc(local(p.name, p.nameCn) || tr('productFallback'))}</div><div class="card-subtitle">${esc(local(p.sub, p.subCn))}</div>${variantButtons ? `<div class="variant-block"><div class="var-label">${esc(tr('variant'))}</div><div class="pattern-swatches">${variantButtons}</div></div>` : ''}<div class="price-row"><span class="enquire-label">${esc(tr('enquireForPrice'))}</span><button class="wa-card-btn" onclick="addToCart('${esc(p.id)}')">${esc(tr('add'))}</button></div></div></div>`
+        const varHtml = p.variantOptions.length ? `<div class="variant-block"><div class="var-label">${esc(tr('variant'))}</div><div class="pattern-swatches">${p.variantOptions.map(v => `<button class="pattern-pill ${(selected[p.id] && selected[p.id].variant) === v.name ? 'active' : ''}" onclick="selectVariant(event,'${esc(p.id)}','${esc(v.name)}')">${esc(local(v.name, v.nameCn))}</button>`).join('')}</div></div>` : '';
+        return `<article class="card"><div class="card-image" onclick="openModal('${esc(p.id)}')">${p.badgeText ? `<div class="card-badge badge-${esc(p.badge || 'gold')}">${esc(local(p.badgeText, p.badgeTextCn))}</div>` : ''}${renderArt(p)}<div class="card-overlay"><button class="view-btn" type="button">${esc(tr('viewDetails'))}</button></div></div><div class="card-body"><div class="card-category">${esc(local(p.catLabel, p.catLabelCn))}</div><div class="card-name">${esc(local(p.name, p.nameCn))}</div><div class="card-subtitle">${esc(local(p.sub, p.subCn))}</div>${varHtml}<div class="price-row"><span class="enquire-label">${esc(tr('enquireForPrice'))}</span><button class="wa-card-btn" onclick="addToCart(event,'${esc(p.id)}')">${esc(tr('add'))}</button></div></div></article>`;
     }
     function renderArt(p) {
-        if (p.imageUrl) {
-            return `<div class="photo-shimmer"></div><img class="product-photo" src="${esc(p.imageUrl)}" alt="${esc(local(p.name, p.nameCn))}" loading="lazy" onload="this.classList.add('loaded');this.previousElementSibling&&this.previousElementSibling.remove()"><div class="photo-gold-overlay"></div>`
-        }
-        return `<div class="card-canvas"><div style="font-size:3rem;color:var(--gold);opacity:.35">❋</div></div><div class="no-image-hint">${esc(tr('addImage'))}</div>`
+        if (p.imageUrl)
+            return `<img class="product-photo loaded" src="${esc(p.imageUrl)}" alt="${esc(local(p.name, p.nameCn))}">`;
+        const icon = p.type.includes('incense') ? '🪔' : p.type.includes('mala') ? '📿' : p.type.includes('crystal') ? '🔮' : p.type.includes('dzi') ? '🪬' : '☸';
+        return `<div class="card-canvas" style="background:${esc(p.bgGrad || 'radial-gradient(ellipse,#2A2015 0%,#0D0A07 100%)')}"><div style="text-align:center;color:${esc(p.artAccent || '#C9963A')}"><div style="font-size:4rem">${icon}</div><div style="font-family:Cinzel,serif;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase">${esc(local(p.name, p.nameCn))}</div></div><div class="no-image-hint">${esc(tr('addImage'))}</div></div>`;
     }
-    function selectVariant(event, id, name) {
-        if (event)
-            event.stopPropagation();
+    function selectVariant(e, id, name) {
+        if (e)
+            e.stopPropagation();
         if (!selected[id])
             selected[id] = {};
         selected[id].variant = name;
-        renderGrid()
+        renderGrid();
     }
     function openModal(id) {
-        const p = products.find(x => x.id === id);
+        const p = products.find(x => String(x.id) === String(id));
         if (!p)
             return;
-        byId('modalArt').innerHTML = renderArt(p) + `<button class="modal-close" onclick="closeModal()">✕</button>`;
-        byId('modalInfo').innerHTML = `<div class="modal-cat">${esc(local(p.catLabel, p.catLabelCn))}</div><h3 class="modal-name">${esc(local(p.name, p.nameCn))}</h3><div class="modal-sub">${esc(local(p.sub, p.subCn))}</div><p class="modal-desc">${esc(local(p.desc, p.descCn))}</p>${p.variantOptions?.length ? `<div class="variant-block"><div class="var-label">${esc(tr('variant'))}</div><div class="pattern-swatches">${p.variantOptions.map(v => `<button class="pattern-pill ${selected[p.id]?.variant === v.name ? 'active' : ''}" onclick="selectVariant(event,'${esc(p.id)}','${esc(v.name)}');openModal('${esc(p.id)}')">${esc(v.name)}</button>`).join('')}</div></div>` : ''}<div class="modal-price-row"><span class="modal-enquire">${esc(tr('enquireForPrice'))}</span></div><button class="modal-wa-btn" onclick="addToCart('${esc(p.id)}');closeModal();openCart()">${esc(tr('add'))}</button><p class="modal-note">${esc(tr('modalNote'))}</p>`;
-        byId('modalBg').classList.add('open')
+        byId('modalArt').innerHTML = `<button class="modal-close" onclick="closeModal()">✕</button>${renderArt(p)}`;
+        byId('modalInfo').innerHTML = `<div class="modal-cat">${esc(local(p.catLabel, p.catLabelCn))}</div><div class="modal-name">${esc(local(p.name, p.nameCn))}</div><div class="modal-sub">${esc(local(p.sub, p.subCn))}</div><p class="modal-desc">${esc(local(p.desc, p.descCn))}</p><button class="modal-wa-btn" onclick="addToCart(null,'${esc(p.id)}');closeModal();openCart();">${esc(tr('enquiryBag'))}</button><button class="modal-wa-btn" style="margin-top:.7rem;background:var(--gold-dim)" onclick="orderOne('${esc(p.id)}')">${esc(tr('whatsapp'))}</button>`;
+        byId('modalBg').classList.add('open');
     }
     function closeModal() {
-        byId('modalBg').classList.remove('open')
+        byId('modalBg').classList.remove('open');
     }
     function handleModalClick(e) {
         if (e.target.id === 'modalBg')
-            closeModal()
+            closeModal();
     }
-    function faqFallbackCn(q, a) {
-        const hit = DEFAULT_FAQ.find(f => f.question.toLowerCase() === clean(q).toLowerCase());
-        return hit ? {
-            q: hit.questionCn,
-            a: hit.answerCn
-        } : {
-            q: q,
-            a: a
-        }
+
+    function faqFallbackCn(question, answer) {
+        const q = clean(question).toLowerCase();
+        const found = DEFAULT_FAQ.find(item => clean(item.question).toLowerCase() === q);
+        return {
+            qCn: found ? found.questionCn : '',
+            aCn: found ? found.answerCn : ''
+        };
     }
     function renderFaq() {
         const list = byId('faqList');
         if (!list)
             return;
-        const items = (faqItems && faqItems.length ? faqItems : DEFAULT_FAQ);
+        const items = faqItems.length ? faqItems : DEFAULT_FAQ;
         list.innerHTML = items.map((f, i) => {
-            const qEn = pick(f, ['question', 'Question', 'FAQ Question'], '');
-            const aEn = pick(f, ['answer', 'Answer', 'FAQ Answer'], '');
-            let qCn = pick(f, ['questionCn', 'questionCN', 'Question CN', 'FAQ Question CN'], '');
-            let aCn = pick(f, ['answerCn', 'answerCN', 'Answer CN', 'FAQ Answer CN'], '');
-            if (currentLang === 'zh' && (!qCn || !aCn)) {
-                const fb = faqFallbackCn(qEn, aEn);
-                qCn = qCn || fb.q;
-                aCn = aCn || fb.a
-            }
-            const q = local(qEn, qCn) || qEn;
-            const a = local(aEn, aCn) || aEn;
-            return `<div class="faq-item ${i === 0 ? 'open' : ''}"><button class="faq-q" onclick="toggleFaq(this)">${esc(q)}<span class="faq-icon">+</span></button><div class="faq-a"><p>${esc(a)}</p></div></div>`
-        }).join('')
+            const qEn = pick(f, ['question', 'Question'], '');
+            const aEn = pick(f, ['answer', 'Answer'], '');
+            const fb = faqFallbackCn(qEn, aEn);
+            const defaultCn = DEFAULT_FAQ[i] || {};
+            const qCn = pick(f, ['questionCn', 'questionCN', 'Question CN'], fb.qCn || defaultCn.questionCn || '');
+            const aCn = pick(f, ['answerCn', 'answerCN', 'Answer CN'], fb.aCn || defaultCn.answerCn || '');
+            const q = currentLang === 'zh' ? (qCn || qEn) : qEn;
+            const a = currentLang === 'zh' ? (aCn || aEn) : aEn;
+            const qClass = currentLang === 'zh' ? 'faq-q faq-q-cn' : 'faq-q';
+            const qStyle = currentLang === 'zh' ? ' style="font-size:1.35rem;font-weight:700;letter-spacing:0;line-height:1.55;text-transform:none"' : '';
+            return `<div class="faq-item"><button class="${qClass}"${qStyle} onclick="toggleFaq(this)">${esc(q)} <span class="faq-icon">+</span></button><div class="faq-a"><p>${esc(a)}</p></div></div>`;
+        }).join('');
     }
     function renderTestimonials() {
         const grid = byId('reviewsGrid');
-        if (!grid)
+        if (!grid || !testimonialItems.length)
             return;
-        const items = testimonialItems.length ? testimonialItems : [];
-        if (!items.length)
-            return;
-        grid.innerHTML = items.map(t => {
-            const name = pick(t, ['name', 'Name'], 'Customer');
-            const loc = local(pick(t, ['location', 'Location'], ''), pick(t, ['locationCn', 'Location CN'], ''));
-            const product = local(pick(t, ['product', 'Product'], ''), pick(t, ['productCn', 'Product CN'], ''));
-            const review = local(pick(t, ['review', 'Review'], ''), pick(t, ['reviewCn', 'Review CN'], ''));
-            const stars = '★'.repeat(Math.max(1, Math.min(5, Number(pick(t, ['rating', 'Rating'], 5)) || 5)));
-            return `<div class="review-card"><div class="review-stars">${stars}</div><p class="review-text">“${esc(review)}”</p><div class="review-author"><div class="review-avatar">🙏</div><div><div class="review-name">${esc(name)}</div><div class="review-location">${esc(loc)}</div></div></div>${product ? `<div class="review-product-tag">${esc(product)}</div>` : ''}</div>`
-        }).join('')
+        grid.innerHTML = testimonialItems.slice(0, 3).map(r => `<div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"${esc(local(pick(r, ['review', 'text'], ''), pick(r, ['reviewCn', 'textCn', 'Review CN'], '')))}"</p><div class="review-author"><div class="review-avatar">🙏</div><div><div class="review-name">${esc(pick(r, ['name', 'Name'], 'Customer'))}</div><div class="review-location">${esc(local(pick(r, ['location', 'Location'], ''), pick(r, ['locationCn', 'Location CN'], '')))}</div></div></div><div class="review-product-tag">${esc(local(pick(r, ['product', 'Product'], ''), pick(r, ['productCn', 'Product CN'], '')))}</div></div>`).join('');
     }
-    function addToCart(id) {
-        const p = products.find(x => x.id === id);
+
+    function addToCart(e, id) {
+        if (e)
+            e.stopPropagation();
+        const p = products.find(x => String(x.id) === String(id));
         if (!p)
             return;
         cart.push({
             id: p.id,
             name: local(p.name, p.nameCn),
-            variant: selected[p.id]?.variant || '',
-            imageUrl: p.imageUrl
+            variant: selected[p.id]?.variant || ''
         });
         renderCart();
-        showToast(currentLang === 'zh' ? '已加入询价袋' : 'Added to enquiry bag')
+        showToast(tr('itemAdded'));
     }
     function renderCart() {
         const body = byId('cartBody');
-        const badge = byId('bagBadge');
+        const line = byId('cartCountLine');
         const btn = byId('cartWaBtn');
+        const badge = byId('bagBadge');
         if (badge) {
             badge.textContent = cart.length;
-            badge.classList.toggle('show', cart.length > 0)
+            badge.classList.toggle('show', cart.length > 0);
         }
+        if (line)
+            line.textContent = currentLang === 'zh' ? `${cart.length} 件商品在咨询清单中` : `${cart.length} items in your enquiry bag`;
         if (btn)
             btn.disabled = !cart.length;
         if (!body)
             return;
         if (!cart.length) {
-            body.innerHTML = `<div class="cart-empty"><div class="cart-empty-icon">🛍</div><p>${esc(tr('emptyCart'))}</p></div>`
-        } else {
-            body.innerHTML = cart.map((item, i) => `<div class="cart-item"><div class="cart-item-thumb">${item.imageUrl ? `<img src="${esc(item.imageUrl)}" alt="">` : '❋'}</div><div class="cart-item-info"><div class="cart-item-name">${esc(item.name)}</div><div class="cart-item-meta">${esc(tr('variant'))}: ${esc(item.variant || '-')}</div></div><button class="cart-item-remove" onclick="removeCart(${i})">✕</button></div>`).join('')
+            body.innerHTML = `<div class="cart-empty"><div class="cart-empty-icon">🪬</div><p>${esc(tr('emptyBag'))}</p></div>`;
+            return;
         }
-        const line = byId('cartCountLine');
-        if (line)
-            line.textContent = `${cart.length} ${cart.length === 1 ? tr('oneItem') : tr('itemCount')}`
+        body.innerHTML = cart.map((it, i) => `<div class="cart-item"><div class="cart-item-info"><div class="cart-item-name">${esc(it.name)}</div><div class="cart-item-meta">${esc(it.variant)}</div></div><button class="cart-item-remove" onclick="removeCart(${i})">✕</button></div>`).join('');
     }
     function removeCart(i) {
         cart.splice(i, 1);
-        renderCart()
+        renderCart();
     }
     function openCart() {
-        byId('cartOverlay').classList.add('open')
+        byId('cartOverlay').classList.add('open');
     }
     function closeCart() {
-        byId('cartOverlay').classList.remove('open')
+        byId('cartOverlay').classList.remove('open');
     }
     function handleCartOverlayClick(e) {
         if (e.target.id === 'cartOverlay')
-            closeCart()
+            closeCart();
     }
+
     function waNumber() {
-        return clean(setting(['whatsappNumber', 'whatsapp', 'phoneNumber', 'phone'], FALLBACK_WHATSAPP)).replace(/\D/g, '')
+        return formatPhone(setting(['whatsappNumber', 'whatsapp'], [], FALLBACK_WHATSAPP));
     }
-    function waLink(message='') {
+    function waLink(msg='') {
         const n = waNumber();
-        return n ? `https://wa.me/${n}${message ? '?text=' + encodeURIComponent(message) : ''}` : '#'
+        return `https://wa.me/${n}${msg ? '?text=' + encodeURIComponent(msg) : ''}`;
     }
     function normalizeExternalUrl(url) {
-        const u = clean(url);
-        if (!u)
-            return '';
-        if (/^https?:\/\//i.test(u))
-            return u;
-        return 'https://' + u
+        const value = clean(url);
+        if (!value)
+            return '#';
+        if (value.startsWith('http://') || value.startsWith('https://') || value.startsWith('mailto:') || value.startsWith('tel:') || value.startsWith('#'))
+            return value;
+        return 'https://' + value;
     }
     function initWaLinks() {
-        const greeting = local(setting('defaultGreeting', 'Hello Tashi Delek! 🙏'), setting('defaultGreetingCn', '您好，Tashi Delek！🙏'));
+        const greeting = setting(['defaultGreeting', 'whatsappGreeting'], ['defaultGreetingCn', 'whatsappGreetingCn'], currentLang === 'zh' ? '您好，我想咨询商品。' : 'Hello, I would like to enquire about your products.');
+        const waHref = waLink(greeting);
         ['waHeaderBtn', 'waFloat', 'waContactLink', 'footerWaLink'].forEach(id => {
             const el = byId(id);
             if (el)
-                el.href = waLink(greeting)
+                el.href = waHref;
         });
-        const display = byId('waDisplayNumber');
-        if (display)
-            display.textContent = setting(['whatsappDisplay', 'whatsappNumber', 'whatsapp'], formatPhone(FALLBACK_WHATSAPP));
-        const email = setting(['emailAddress', 'email'], 'tashidelek99@gmail.com');
+        setText('waDisplayNumber', setting(['whatsappDisplay', 'whatsappNumber'], [], FALLBACK_WHATSAPP));
+
+        const email = setting(['emailAddress', 'email', 'contactEmail', 'businessEmail'], [], 'hello@dharmahouse.com');
+        setText('emailDisplay', email);
         ['emailContactLink', 'footerEmailLink'].forEach(id => {
             const el = byId(id);
-            if (el) {
+            if (el)
                 el.href = 'mailto:' + email;
-                el.removeAttribute('target')
-            }
         });
-        setText('emailDisplay', email);
-        const ig = normalizeExternalUrl(setting(['instagramUrl', 'instagram', 'instagramLink'], ''));
-        const fb = normalizeExternalUrl(setting(['facebookUrl', 'facebook', 'facebookLink'], ''));
-        const igEl = byId('footerInstagramLink');
-        if (igEl) {
-            igEl.href = ig || '#contact';
-            igEl.onclick = ig ? null : () => {
-                showToast(currentLang === 'zh' ? '请先在 Sheet 加入 Instagram URL' : 'Add Instagram URL in Sheet');
-                return false
-            }
+
+        const instagramUrl = setting(['instagramUrl', 'instagramURL', 'instagramLink', 'instagram'], [], '');
+        const facebookUrl = setting(['facebookUrl', 'facebookURL', 'facebookLink', 'facebookPageUrl'], [], '');
+        const ig = byId('footerInstagramLink');
+        const fb = byId('footerFacebookLink');
+        if (ig) {
+            ig.href = normalizeExternalUrl(instagramUrl);
+            ig.onclick = instagramUrl ? null : function(e) {
+                e.preventDefault();
+                showToast(currentLang === 'zh' ? 'Instagram 链接尚未设置' : 'Instagram link is not set');
+            };
         }
-        const fbEl = byId('footerFacebookLink');
-        if (fbEl) {
-            fbEl.href = fb || '#contact';
-            fbEl.onclick = fb ? null : () => {
-                showToast(currentLang === 'zh' ? '请先在 Sheet 加入 Facebook URL' : 'Add Facebook URL in Sheet');
-                return false
-            }
+        if (fb) {
+            fb.href = normalizeExternalUrl(facebookUrl);
+            fb.onclick = facebookUrl ? null : function(e) {
+                e.preventDefault();
+                showToast(currentLang === 'zh' ? 'Facebook 链接尚未设置' : 'Facebook link is not set');
+            };
         }
     }
     function sendCartViaWa() {
         if (!cart.length)
             return;
-        const lines = cart.map((item, i) => `${i + 1}. ${item.name}${item.variant ? ' — ' + item.variant : ''}`);
-        const msg = (currentLang === 'zh' ? '您好，我想咨询以下商品：' : 'Hello, I would like to enquire about these items:') + '\n\n' + lines.join('\n');
-        window.open(waLink(msg), '_blank')
+        const msg = (currentLang === 'zh' ? '您好，我想咨询以下商品：' : 'Hello, I would like to enquire about these items:') + '\n\n' + cart.map((it, i) => `${i + 1}. ${it.name}${it.variant ? ' - ' + it.variant : ''}`).join('\n');
+        window.open(waLink(msg), '_blank');
     }
     function orderOne(id) {
-        const p = products.find(x => x.id === id);
+        const p = products.find(x => String(x.id) === String(id));
         if (!p)
             return;
         const msg = (currentLang === 'zh' ? '您好，我想咨询：' : 'Hello, I would like to enquire about:') + ' ' + local(p.name, p.nameCn);
-        window.open(waLink(msg), '_blank')
+        window.open(waLink(msg), '_blank');
     }
     function submitContactForm() {
         const name = byId('cf-name')?.value || '';
@@ -3394,12 +3454,12 @@
         const interest = byId('cf-interest')?.value || '';
         const msg = byId('cf-message')?.value || '';
         const text = `${currentLang === 'zh' ? '您好，我想咨询。' : 'Hello, I would like to enquire.'}\nName: ${name}\nPhone: ${phone}\nEmail: ${email}\nInterest: ${interest}\nMessage: ${msg}`;
-        window.open(waLink(text), '_blank')
+        window.open(waLink(text), '_blank');
     }
     function showLoading() {
         const grid = byId('grid');
         if (grid)
-            grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:4rem;color:var(--gold);opacity:.6">${esc(tr('loading'))}</div>`
+            grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:4rem;color:var(--gold);opacity:.6">${esc(tr('loading'))}</div>`;
     }
     function showToast(msg) {
         const toast = byId('toast');
@@ -3407,16 +3467,17 @@
             return;
         toast.textContent = msg;
         toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2500)
+        setTimeout(() => toast.classList.remove('show'), 2500);
     }
     function toggleFaq(btn) {
-        btn.parentElement.classList.toggle('open')
+        const item = btn.parentElement;
+        item.classList.toggle('open');
     }
     function toggleMobileNav() {
-        byId('mobileNav')?.classList.toggle('open')
+        byId('mobileNav').classList.toggle('open');
     }
     function closeMobileNav() {
-        byId('mobileNav')?.classList.remove('open')
+        byId('mobileNav').classList.remove('open');
     }
     function navScrollTo(eventOrId, maybeId) {
         const id = maybeId || eventOrId;
@@ -3426,29 +3487,12 @@
         if (el)
             el.scrollIntoView({
                 behavior: 'smooth'
-            })
+            });
     }
-    function initLogoImage() {
-        const img = byId('siteLogoImg');
-        if (!img)
-            return;
-        if (img.dataset.ready)
-            return;
-        let idx = 0;
-        img.onerror = () => {
-            idx++;
-            if (idx < LOGO_PATHS.length) {
-                img.src = LOGO_PATHS[idx]
-            } else {
-                img.style.display = 'none'
-            }
-        };
-        img.dataset.ready = '1'
-    }
+
     document.addEventListener('DOMContentLoaded', () => {
         renderCart();
-        initLogoImage();
-        fetchFromSheet()
+        fetchFromSheet();
     });
     </script>
 </body>
