@@ -2142,8 +2142,22 @@
         text-transform: none !important;
     }
 
+    #faq .faq-list .faq-item .faq-q-cn {
+        font-family: 'Noto Serif SC', 'Songti SC', 'STSong', 'PingFang SC', serif !important;
+        font-size: 1.35rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0 !important;
+        line-height: 1.55 !important;
+        text-transform: none !important;
+    }
+
     @media (max-width: 480px) {
         body.lang-zh #faq .faq-list .faq-item .faq-q {
+            font-size: 1.18rem !important;
+            line-height: 1.5 !important;
+        }
+
+        #faq .faq-list .faq-item .faq-q-cn {
             font-size: 1.18rem !important;
             line-height: 1.5 !important;
         }
@@ -2395,7 +2409,7 @@
         </div>
         <div class="faq-list" id="faqList">
             <div class="faq-item">
-                <button class="faq-q" onclick="toggleFaq(this)">
+                <button class="faq-q faq-q-cn" onclick="toggleFaq(this)">
                     Why are prices not shown? 
                     <span class="faq-icon">+</span>
                 </button>
@@ -2404,7 +2418,7 @@
                 </div>
             </div>
             <div class="faq-item">
-                <button class="faq-q" onclick="toggleFaq(this)">
+                <button class="faq-q faq-q-cn" onclick="toggleFaq(this)">
                     How does WhatsApp ordering work? 
                     <span class="faq-icon">+</span>
                 </button>
@@ -2413,7 +2427,7 @@
                 </div>
             </div>
             <div class="faq-item">
-                <button class="faq-q" onclick="toggleFaq(this)">
+                <button class="faq-q faq-q-cn" onclick="toggleFaq(this)">
                     Can I enquire about multiple items? 
                     <span class="faq-icon">+</span>
                 </button>
@@ -2422,7 +2436,7 @@
                 </div>
             </div>
             <div class="faq-item">
-                <button class="faq-q" onclick="toggleFaq(this)">
+                <button class="faq-q faq-q-cn" onclick="toggleFaq(this)">
                     Can products be updated from Google Sheet? 
                     <span class="faq-icon">+</span>
                 </button>
@@ -3280,7 +3294,9 @@
             const aCn = pick(f, ['answerCn', 'answerCN', 'Answer CN'], fb.aCn || defaultCn.answerCn || '');
             const q = currentLang === 'zh' ? (qCn || qEn) : qEn;
             const a = currentLang === 'zh' ? (aCn || aEn) : aEn;
-            return `<div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">${esc(q)} <span class="faq-icon">+</span></button><div class="faq-a"><p>${esc(a)}</p></div></div>`;
+            const qClass = currentLang === 'zh' ? 'faq-q faq-q-cn' : 'faq-q';
+            const qStyle = currentLang === 'zh' ? ' style="font-size:1.35rem;font-weight:700;letter-spacing:0;line-height:1.55;text-transform:none"' : '';
+            return `<div class="faq-item"><button class="${qClass}"${qStyle} onclick="toggleFaq(this)">${esc(q)} <span class="faq-icon">+</span></button><div class="faq-a"><p>${esc(a)}</p></div></div>`;
         }).join('');
     }
     function renderTestimonials() {
