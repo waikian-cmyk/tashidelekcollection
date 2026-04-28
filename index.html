@@ -288,27 +288,31 @@
         animation:fadeUp 1s ease both
     }
 
- .hero-h1 {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: clamp(2rem, 4.8vw, 4.2rem);
-  font-weight: 400;
-  line-height: 1.18;
-  color: var(--warm-white);
-  margin-bottom: 1.2rem;
-  letter-spacing: 0.04em;
-}
-
-.hero-h1 span {
-  color: var(--gold);
-  display: block;
-  margin-top: 0.35rem;
-  font-size: 0.72em;
-  letter-spacing: 0.12em;
-}
+    .hero-h1 {
+        font-family: 'Cinzel Decorative', serif;
+        font-size: clamp(2rem, 4.8vw, 4.2rem);
+        font-weight: 700;
+        line-height: 1.12;
+        color: var(--warm-white);
+        margin: 0 auto 1.2rem;
+        letter-spacing: .08em;
+        max-width: 1120px;
+        overflow-wrap: anywhere;
+        text-transform: uppercase;
+    }
 
     .hero-h1 span {
-        color: var(--gold);
         display:block
+    }
+
+    .hero-title-sub {
+        color: var(--gold);
+        font-family: 'Cinzel', serif;
+        font-size: clamp(1.15rem, 3.3vw, 3rem);
+        font-weight: 500;
+        letter-spacing: .13em;
+        line-height: 1.18;
+        margin-top:.45rem
     }
 
     .hero-p {
@@ -1819,6 +1823,20 @@
             padding:1.2rem 1.5rem
         }
 
+        .logo {
+            font-size:.82rem
+        }
+
+        .logo-sub {
+            font-size:.56rem;
+            letter-spacing:.12em
+        }
+
+        .site-logo-img {
+            width: 38px;
+            height:38px
+        }
+
         nav {
             display:none
         }
@@ -1845,6 +1863,17 @@
         .grid {
           grid-template-columns: repeat(2, 1fr);
              gap: 1rem;
+        }
+
+        .hero-h1 {
+            font-size: clamp(1.9rem, 9vw, 3rem);
+            letter-spacing:.05em
+        }
+
+        .hero-title-sub {
+            font-size: clamp(1rem, 5.6vw, 1.8rem);
+            letter-spacing:.08em;
+            line-height:1.22
         }
 @media (max-width: 768px) {
   .grid {
@@ -1918,6 +1947,51 @@
     }
 
     @media (max-width: 480px) {
+        #home {
+            padding-top: 4.8rem;
+            padding-bottom:4rem
+        }
+
+        .logo-with-image {
+            gap:.45rem
+        }
+
+        .logo {
+            font-size:.72rem;
+            letter-spacing:.08em
+        }
+
+        .logo-sub {
+            max-width: 148px;
+            font-size:.5rem;
+            letter-spacing:.06em;
+            line-height:1.35
+        }
+
+        header .bag-wrap {
+            display:none
+        }
+
+        .lang-toggle {
+            gap:.25rem
+        }
+
+        .lang-toggle button {
+            padding:.34rem .5rem
+        }
+
+        .hero-h1 {
+            font-size: clamp(1.75rem, 11vw, 2.45rem);
+            letter-spacing:.035em;
+            line-height:1.08
+        }
+
+        .hero-title-sub {
+            font-size: clamp(.9rem, 6.4vw, 1.3rem);
+            letter-spacing:.05em;
+            line-height:1.22
+        }
+
         .hero-ctas {
             flex-direction: column;
             align-items:center
@@ -1926,6 +2000,10 @@
         .trust-strip {
             gap: 1.5rem;
             padding:1rem 1.5rem
+        }
+
+        body.lang-zh .trust-text {
+            font-size:.82rem
         }
 
         .steps-grid, .about-values {
@@ -1971,20 +2049,38 @@
     body.lang-zh .section-eyebrow, body.lang-zh .trust-text, body.lang-zh nav a, body.lang-zh .filter-pill, body.lang-zh .card-category, body.lang-zh .var-label, body.lang-zh .pattern-pill, body.lang-zh .spill, body.lang-zh .wa-card-btn, body.lang-zh .channel-label, body.lang-zh .form-label, body.lang-zh .footer-col h4 {
         letter-spacing: .12em
     }/* Polished Chinese language display */
+    body.lang-zh header nav a {
+        font-size: .78rem;
+        letter-spacing: .08em
+    }
+
+    body.lang-zh .mobile-nav a {
+        font-size: .9rem;
+        letter-spacing: .1em
+    }
+
+    body.lang-zh .trust-text {
+        font-family: 'Noto Serif SC', 'Songti SC', 'STSong', 'PingFang SC', serif;
+        font-size: .78rem;
+        letter-spacing: .08em;
+        text-transform:none
+    }
+
     .hero-eyebrow {
         display: none !important
     }
 
     .lang-zh .hero-h1 {
-        font-family: 'Noto Serif SC', 'Songti SC', 'STSong', 'PingFang SC', serif;
-        font-weight: 500;
+        font-family: 'Cinzel Decorative', serif;
+        font-weight: 700;
         letter-spacing: .08em;
-        line-height: 1.28;
+        line-height: 1.12;
     }
 
-    .lang-zh .hero-h1 span {
-        font-weight: 600;
-        letter-spacing: .1em;
+    .lang-zh .hero-title-sub {
+        font-family: 'Cinzel', serif;
+        font-weight: 500;
+        letter-spacing: .13em;
     }
 
     .lang-zh .section-title, .lang-zh .logo, .lang-zh .card-name, .lang-zh .modal-name {
@@ -2000,19 +2096,20 @@
     <header>
         <button class="hamburger" onclick="toggleMobileNav()" aria-label="Menu">☰</button>
         
-<div class="logo-wrap logo-with-image">
-  <img src="logo.png" alt="Tashi Delek Collection Logo" class="site-logo-img">
-  <div>
-    <span class="logo" id="brandLogo">Tashi Delek Collection</span>
-    <span class="logo-sub" id="brandSub">藏传珍宝佛具流通处 天珠 · 藏香 · 佛珠</span>
-  </div>
+        <div class="logo-wrap logo-with-image">
+            <img src="logo.png" alt="Tashi Delek Collection Logo" class="site-logo-img">
+            <div>
+                <span class="logo" id="brandLogo">Tashi Delek Collection</span>
+                <span class="logo-sub" id="brandSub">藏传珍宝佛具流通处 天珠 · 藏香 · 佛珠</span>
+            </div>
+        </div>
         <nav>
-            <a onclick="navScrollTo('shop')">Shop</a>
-            <a onclick="navScrollTo('how')">How to Order</a>
-            <a onclick="navScrollTo('about')">About</a>
-            <a onclick="navScrollTo('reviews')">Reviews</a>
-            <a onclick="navScrollTo('faq')">FAQ</a>
-            <a onclick="navScrollTo('contact')">Contact</a>
+            <a href="#shop" onclick="navScrollTo(event,'shop')">Shop</a>
+            <a href="#how" onclick="navScrollTo(event,'how')">How to Order</a>
+            <a href="#about" onclick="navScrollTo(event,'about')">About</a>
+            <a href="#reviews" onclick="navScrollTo(event,'reviews')">Reviews</a>
+            <a href="#faq" onclick="navScrollTo(event,'faq')">FAQ</a>
+            <a href="#contact" onclick="navScrollTo(event,'contact')">Contact</a>
         </nav>
         <div style="display:flex;gap:.8rem;align-items:center">
             <div class="bag-wrap">
@@ -2027,12 +2124,12 @@
         </div>
     </header>
     <div class="mobile-nav" id="mobileNav">
-        <a onclick="navScrollTo('shop');closeMobileNav()">Shop</a>
-        <a onclick="navScrollTo('how');closeMobileNav()">How to Order</a>
-        <a onclick="navScrollTo('about');closeMobileNav()">About Us</a>
-        <a onclick="navScrollTo('reviews');closeMobileNav()">Reviews</a>
-        <a onclick="navScrollTo('faq');closeMobileNav()">FAQ</a>
-        <a onclick="navScrollTo('contact');closeMobileNav()">Contact</a>
+        <a href="#shop" onclick="navScrollTo(event,'shop');closeMobileNav()">Shop</a>
+        <a href="#how" onclick="navScrollTo(event,'how');closeMobileNav()">How to Order</a>
+        <a href="#about" onclick="navScrollTo(event,'about');closeMobileNav()">About Us</a>
+        <a href="#reviews" onclick="navScrollTo(event,'reviews');closeMobileNav()">Reviews</a>
+        <a href="#faq" onclick="navScrollTo(event,'faq');closeMobileNav()">FAQ</a>
+        <a href="#contact" onclick="navScrollTo(event,'contact');closeMobileNav()">Contact</a>
         <a onclick="openCart();closeMobileNav()" style="color:var(--gold)">🛍 Enquiry Bag</a>
     </div>
     <section id="home">
@@ -2050,8 +2147,8 @@
         </svg>
         <span class="hero-eyebrow section-eyebrow" id="heroEyebrow">Authentic · Consecrated · Rare</span>
         <h1 class="hero-h1" id="heroTitle">
-            TASHI DELEK COLLECTION 
-            <span>Sacred Tibetan Treasures</span>
+            <span class="hero-title-main">TASHI DELEK</span>
+            <span class="hero-title-sub">SACRED TIBETAN TREASURES</span>
         </h1>
         <p class="hero-p" id="heroText">Dzi beads of ancient power, healing crystals of the earth, incense and hand-knotted mala for your practice. Choose a few pieces and enquire once through WhatsApp.</p>
         <div class="hero-ctas">
@@ -3014,11 +3111,9 @@
         const md = setting(['metaDescription'], ['metaDescriptionCn'], '');
         if (meta && md)
             meta.setAttribute('content', md);
-        const h1 = setting(['heroTitleLine1'], ['heroTitleLine1Cn'], currentLang === 'zh' ? '如意吉祥' : 'Sacred');
-        const h2 = setting(['heroTitleLine2'], ['heroTitleLine2Cn'], currentLang === 'zh' ? '藏传珍宝佛具流通处' : 'Tibetan Treasures');
         const hero = byId('heroTitle');
         if (hero)
-            hero.innerHTML = esc(h1) + '<span>' + esc(h2) + '</span>';
+            hero.innerHTML = '<span class="hero-title-main">TASHI DELEK</span><span class="hero-title-sub">SACRED TIBETAN TREASURES</span>';
         setText('heroText', setting(['heroSubtitle', 'heroText'], ['heroSubtitleCn', 'heroTextCn'], currentLang === 'zh' ? '精选天珠、藏香、佛珠与藏传佛教供养佛具，以恭敬心整理呈现，方便您咨询结缘。' : 'Dzi beads, Tibetan incense and Buddhist mala for your practice. Choose a few pieces and enquire once through WhatsApp.'));
         setText('heroButton1', currentLang === 'zh' ? (settings.heroButton1Cn || '浏览系列') : (settings.heroButton1 || 'Browse Collection'));
         setText('heroButton2', currentLang === 'zh' ? (settings.heroButton2Cn || '如何下单') : (settings.heroButton2 || 'How to Order'));
@@ -3118,12 +3213,13 @@
         if (!list)
             return;
         const items = faqItems.length ? faqItems : DEFAULT_FAQ;
-        list.innerHTML = items.map(f => {
+        list.innerHTML = items.map((f, i) => {
             const qEn = pick(f, ['question', 'Question'], '');
             const aEn = pick(f, ['answer', 'Answer'], '');
             const fb = faqFallbackCn(qEn, aEn);
-            const qCn = pick(f, ['questionCn', 'questionCN', 'Question CN'], fb.qCn);
-            const aCn = pick(f, ['answerCn', 'answerCN', 'Answer CN'], fb.aCn);
+            const defaultCn = DEFAULT_FAQ[i] || {};
+            const qCn = pick(f, ['questionCn', 'questionCN', 'Question CN'], fb.qCn || defaultCn.questionCn || '');
+            const aCn = pick(f, ['answerCn', 'answerCN', 'Answer CN'], fb.aCn || defaultCn.answerCn || '');
             const q = currentLang === 'zh' ? (qCn || qEn) : qEn;
             const a = currentLang === 'zh' ? (aCn || aEn) : aEn;
             return `<div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">${esc(q)} <span class="faq-icon">+</span></button><div class="faq-a"><p>${esc(a)}</p></div></div>`;
@@ -3283,7 +3379,10 @@
     function closeMobileNav() {
         byId('mobileNav').classList.remove('open');
     }
-    function navScrollTo(id) {
+    function navScrollTo(eventOrId, maybeId) {
+        const id = maybeId || eventOrId;
+        if (maybeId && eventOrId && typeof eventOrId.preventDefault === 'function')
+            eventOrId.preventDefault();
         const el = byId(id);
         if (el)
             el.scrollIntoView({
