@@ -2204,7 +2204,7 @@
         <a href="#reviews" onclick="navScrollTo(event,'reviews');closeMobileNav()">Reviews</a>
         <a href="#faq" onclick="navScrollTo(event,'faq');closeMobileNav()">FAQ</a>
         <a href="#contact" onclick="navScrollTo(event,'contact');closeMobileNav()">Contact</a>
-        <a onclick="openCart();closeMobileNav()" style="color:var(--gold)">🛍 Enquiry Bag</a>
+        <a href="#enquiry-bag" onclick="event.preventDefault();openCart();closeMobileNav()" style="color:var(--gold)">🛍 Enquiry Bag</a>
     </div>
     <section id="home">
         <svg class="hero-mandala" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
@@ -2226,8 +2226,8 @@
         </h1>
         <p class="hero-p" id="heroText">Dzi beads of ancient power, healing crystals of the earth, incense and hand-knotted mala for your practice. Choose a few pieces and enquire once through WhatsApp.</p>
         <div class="hero-ctas">
-            <a href="#shop" class="btn-primary" id="heroButton1">Browse Collection</a>
-            <a href="#how" class="btn-outline" id="heroButton2">How to Order</a>
+            <a href="#" class="btn-primary" id="heroButton1">Browse Collection</a>
+            <a href="#" class="btn-outline" id="heroButton2">How to Order</a>
         </div>
     </section>
     <div class="trust-strip">
@@ -2534,16 +2534,16 @@
                 <h4>Shop</h4>
                 <ul>
                     <li>
-                        <a href="#shop" onclick="applyFilter('dzi')">Dzi Beads</a>
+                        <a href="#shop" onclick="navScrollTo(event,'shop');applyFilter('dzi')">Dzi Beads</a>
                     </li>
                     <li>
-                        <a href="#shop" onclick="applyFilter('incense')">Incense</a>
+                        <a href="#shop" onclick="navScrollTo(event,'shop');applyFilter('incense')">Incense</a>
                     </li>
                     <li>
-                        <a href="#shop" onclick="applyFilter('crystal')">Crystals</a>
+                        <a href="#shop" onclick="navScrollTo(event,'shop');applyFilter('crystal')">Crystals</a>
                     </li>
                     <li>
-                        <a href="#shop" onclick="applyFilter('mala')">Buddhist Mala</a>
+                        <a href="#shop" onclick="navScrollTo(event,'shop');applyFilter('mala')">Buddhist Mala</a>
                     </li>
                 </ul>
             </div>
@@ -2551,16 +2551,16 @@
                 <h4>Information</h4>
                 <ul>
                     <li>
-                        <a href="#about">About Us</a>
+                        <a href="#about" onclick="navScrollTo(event,'about')">About Us</a>
                     </li>
                     <li>
-                        <a href="#how">How to Order</a>
+                        <a href="#how" onclick="navScrollTo(event,'how')">How to Order</a>
                     </li>
                     <li>
-                        <a href="#faq">FAQ</a>
+                        <a href="#faq" onclick="navScrollTo(event,'faq')">FAQ</a>
                     </li>
                     <li>
-                        <a href="#reviews">Reviews</a>
+                        <a href="#reviews" onclick="navScrollTo(event,'reviews')">Reviews</a>
                     </li>
                 </ul>
             </div>
@@ -3203,8 +3203,18 @@
                 ? '精选天珠、藏香、佛珠与藏传佛教供养佛具，以恭敬心整理呈现，方便您咨询结缘。'
                 : 'Dzi beads of ancient power, healing crystals of the earth, incense and hand-knotted mala for your practice. Choose a few pieces and enquire once through WhatsApp.'
         ));
-        setText('heroButton1', currentLang === 'zh' ? (settings.heroButton1Cn || '浏览系列') : (settings.heroButton1 || 'Browse Collection'));
-        setText('heroButton2', currentLang === 'zh' ? (settings.heroButton2Cn || '如何下单') : (settings.heroButton2 || 'How to Order'));
+        setText('heroButton1', setting(
+            ['heroButton1', 'heroButton1Text', 'heroPrimaryButton', 'heroPrimaryButtonText', 'primaryButtonText', 'cta1Text'],
+            ['heroButton1Cn', 'heroButton1CN', 'heroButton1TextCn', 'heroPrimaryButtonCn', 'heroPrimaryButtonTextCn', 'primaryButtonTextCn', 'cta1TextCn'],
+            currentLang === 'zh' ? '浏览系列' : 'Browse Collection'
+        ));
+        setText('heroButton2', setting(
+            ['heroButton2', 'heroButton2Text', 'heroSecondaryButton', 'heroSecondaryButtonText', 'secondaryButtonText', 'cta2Text'],
+            ['heroButton2Cn', 'heroButton2CN', 'heroButton2TextCn', 'heroSecondaryButtonCn', 'heroSecondaryButtonTextCn', 'secondaryButtonTextCn', 'cta2TextCn'],
+            currentLang === 'zh' ? '如何下单' : 'How to Order'
+        ));
+        bindSmartLink('heroButton1', pick(settings, ['heroButton1Link', 'heroButton1Url', 'heroButton1URL', 'heroPrimaryLink', 'heroPrimaryUrl', 'primaryButtonLink', 'primaryButtonUrl', 'cta1Link', 'cta1Url'], ''), '#shop');
+        bindSmartLink('heroButton2', pick(settings, ['heroButton2Link', 'heroButton2Url', 'heroButton2URL', 'heroSecondaryLink', 'heroSecondaryUrl', 'secondaryButtonLink', 'secondaryButtonUrl', 'cta2Link', 'cta2Url'], ''), '#how');
         setHtml('aboutTitle', setting(['aboutTitle'], ['aboutTitleCn'], currentLang === 'zh' ? '不只是收藏|更是一条有意义的道路' : 'More Than a Collection|A Path of Meaning'));
         setText('aboutBadgeNumber', setting(['yearsInBusiness', 'aboutBadgeNumber'], [], '17+'));
         setText('aboutBadgeText', setting(['aboutBadgeText'], ['aboutBadgeTextCn'], currentLang === 'zh' ? '年寻访经验' : 'Years Sourcing'));
@@ -3235,8 +3245,26 @@
         const cats = [...new Map(products.map(p => [p.cat, local(p.catLabel, p.catLabelCn)])).entries()];
         bar.innerHTML = `<button class="filter-pill ${currentFilter === 'all' ? 'active' : ''}" onclick="applyFilter('all')">${esc(tr('allPieces'))} <span class="pill-count">${products.length}</span></button>` + cats.map(([cat, label]) => `<button class="filter-pill ${currentFilter === cat ? 'active' : ''}" onclick="applyFilter('${esc(cat)}')">${esc(label)} <span class="pill-count">${products.filter(p => p.cat === cat).length}</span></button>`).join('');
     }
+    function resolveCategoryFilter(cat) {
+        const key = slug(cat || 'all');
+        if (key === 'all')
+            return 'all';
+        if (products.some(p => p.cat === key))
+            return key;
+        const aliases = {
+            dzi: ['dzi_bead', 'dzi_beads'],
+            dzi_bead: ['dzi'],
+            crystal: ['crystals'],
+            crystals: ['crystal'],
+            mala: ['buddhist_mala', 'prayer_beads'],
+            buddhist_mala: ['mala'],
+            incense: ['tibetan_incense']
+        };
+        const candidates = aliases[key] || [];
+        return candidates.find(alias => products.some(p => p.cat === alias)) || key;
+    }
     function applyFilter(cat) {
-        currentFilter = cat || 'all';
+        currentFilter = resolveCategoryFilter(cat);
         buildFilterBar();
         renderGrid();
     }
@@ -3387,6 +3415,83 @@
             return value;
         return 'https://' + value;
     }
+    function socialUrlFromHandle(platform, value) {
+        const raw = clean(value);
+        if (!raw)
+            return '';
+        if (raw.startsWith('http://') || raw.startsWith('https://'))
+            return raw;
+        const handle = raw.replace(/^@/, '').replace(/^\/+|\/+$/g, '');
+        if (!handle)
+            return '';
+        if (platform === 'instagram')
+            return 'https://instagram.com/' + handle;
+        if (platform === 'facebook')
+            return 'https://facebook.com/' + handle.replace(/\s+/g, '');
+        return raw;
+    }
+    function resolveSiteLink(value, fallback='#') {
+        const raw = clean(value) || fallback;
+        const key = raw.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const sectionMap = {
+            home: '#home',
+            shop: '#shop',
+            collection: '#shop',
+            products: '#shop',
+            catalogue: '#shop',
+            catalog: '#shop',
+            how: '#how',
+            howtoorder: '#how',
+            order: '#how',
+            about: '#about',
+            aboutus: '#about',
+            reviews: '#reviews',
+            testimonials: '#reviews',
+            faq: '#faq',
+            contact: '#contact'
+        };
+        if (sectionMap[key])
+            return sectionMap[key];
+        if (['whatsapp', 'wa', 'whatsappus', 'enquire', 'enquiry'].includes(key)) {
+            const greeting = setting(['defaultGreeting', 'whatsappGreeting'], ['defaultGreetingCn', 'whatsappGreetingCn'], currentLang === 'zh' ? '您好，我想咨询商品。' : 'Hello, I would like to enquire about your products.');
+            return waLink(greeting);
+        }
+        if (['cart', 'bag', 'enquirybag'].includes(key))
+            return '#enquiry-bag';
+        return normalizeExternalUrl(raw);
+    }
+    function bindSmartLink(id, linkValue, fallback) {
+        const el = byId(id);
+        if (!el)
+            return;
+        const href = resolveSiteLink(linkValue, fallback);
+        el.href = href;
+        el.onclick = null;
+        if (href === '#enquiry-bag') {
+            el.onclick = function(e) {
+                e.preventDefault();
+                openCart();
+            };
+            el.removeAttribute('target');
+            el.removeAttribute('rel');
+            return;
+        }
+        if (href.startsWith('#')) {
+            el.onclick = function(e) {
+                navScrollTo(e, href.slice(1));
+            };
+            el.removeAttribute('target');
+            el.removeAttribute('rel');
+            return;
+        }
+        if (href.startsWith('mailto:') || href.startsWith('tel:')) {
+            el.removeAttribute('target');
+            el.removeAttribute('rel');
+            return;
+        }
+        el.target = '_blank';
+        el.rel = 'noopener';
+    }
     function initWaLinks() {
         const greeting = setting(['defaultGreeting', 'whatsappGreeting'], ['defaultGreetingCn', 'whatsappGreetingCn'], currentLang === 'zh' ? '您好，我想咨询商品。' : 'Hello, I would like to enquire about your products.');
         const waHref = waLink(greeting);
@@ -3405,8 +3510,8 @@
                 el.href = 'mailto:' + email;
         });
 
-        const instagramUrl = setting(['instagramUrl', 'instagramURL', 'instagramLink', 'instagram'], [], '');
-        const facebookUrl = setting(['facebookUrl', 'facebookURL', 'facebookLink', 'facebookPageUrl'], [], '');
+        const instagramUrl = setting(['instagramUrl', 'instagramURL', 'instagramLink', 'instagram'], [], '') || socialUrlFromHandle('instagram', setting(['instagramHandle'], [], ''));
+        const facebookUrl = setting(['facebookUrl', 'facebookURL', 'facebookLink', 'facebookPageUrl'], [], '') || socialUrlFromHandle('facebook', setting(['facebookPage', 'facebookHandle'], [], ''));
         const ig = byId('footerInstagramLink');
         const fb = byId('footerFacebookLink');
         if (ig) {
@@ -3482,6 +3587,8 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         renderCart();
+        bindSmartLink('heroButton1', '', '#shop');
+        bindSmartLink('heroButton2', '', '#how');
         fetchFromSheet();
     });
     </script>
